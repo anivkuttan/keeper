@@ -39,11 +39,11 @@ class _HomePageState extends State<HomePage> {
             Tab(child: Text('Cleaned')),
           ]),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             HomePageTabView(),
-            QuickPageTabView(),
-            ClearPageTabView(),
+             QuickPageTabView(),
+            const ClearPageTabView(),
           ],
         ),
       ),

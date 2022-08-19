@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:keeper/Controllers/person_controller.dart';
+import 'package:keeper/Model/person.dart';
+import 'package:keeper/Model/task.dart';
 import 'package:keeper/Pages/add_task_page.dart';
 
-class QuickPageTabView extends StatefulWidget {
-  const QuickPageTabView({Key? key}) : super(key: key);
+class QuickPageTabView extends StatelessWidget {
+  QuickPageTabView({Key? key}) : super(key: key);
+  final controller = Get.find<PersonController>();
+  final TextEditingController _nameController = TextEditingController();
 
-  @override
-  State<QuickPageTabView> createState() => _QuickPageTabViewState();
-}
-
-class _QuickPageTabViewState extends State<QuickPageTabView> {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -53,6 +54,7 @@ class _QuickPageTabViewState extends State<QuickPageTabView> {
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () {
+                    _nameController.clear();
                     showAddingPage(context);
                   },
                   child: const Text('Add New Person to List'),
@@ -62,16 +64,15 @@ class _QuickPageTabViewState extends State<QuickPageTabView> {
       ),
     );
   }
-}
 
-showAddingPage(BuildContext context) {
-  return showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Container(
+  showAddingPage(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+        ),
+        builder: (context) {
+          return Container(
             height: 600,
             decoration: const BoxDecoration(
               color: Colors.yellow,
@@ -89,6 +90,7 @@ showAddingPage(BuildContext context) {
                   ),
                   const SizedBox(height: 30),
                   TextField(
+                    controller: _nameController,
                     decoration: InputDecoration(
                       label: const Text("Name"),
                       border: OutlineInputBorder(
@@ -99,12 +101,19 @@ showAddingPage(BuildContext context) {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
+                      Person newPereon = Person(personName: _nameController.text, personAmount: 0, listOfTask: [
+                        Task(taskName: "Just Created", taskAmount: 0, editedTime: DateTime.now()),
+                      ]);
+                      controller.personList.add(newPereon);
+
                       Navigator.pop(context);
                     },
                     child: const Text("Add New Person"),
                   ),
                 ]),
               ),
-            ));
-      });
+            ),
+          );
+        });
+  }
 }
