@@ -4,6 +4,7 @@ import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 import 'package:keeper/Pages/add_task_page.dart';
+import 'package:keeper/Pages/view_notes.dart';
 
 class QuickPageTabView extends StatelessWidget {
   QuickPageTabView({Key? key}) : super(key: key);
@@ -23,7 +24,12 @@ class QuickPageTabView extends StatelessWidget {
               SizedBox(
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Route route = MaterialPageRoute(builder: (context) {
+                      return const ViewNotes();
+                    });
+                    Navigator.of(context).push(route);
+                  },
                   child: const Text('View All Notes'),
                 ),
               ),
@@ -32,7 +38,9 @@ class QuickPageTabView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Route route = MaterialPageRoute(builder: (context) {
-                      return const AddTaskPage(buttonName: "All",);
+                      return const AddTaskPage(
+                        buttonName: "All",
+                      );
                     });
                     Navigator.push(context, route);
                   },
@@ -44,7 +52,9 @@ class QuickPageTabView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Route route = MaterialPageRoute(builder: (context) {
-                      return const AddTaskPage(buttonName: "SomeOne",);
+                      return const AddTaskPage(
+                        buttonName: "SomeOne",
+                      );
                     });
                     Navigator.push(context, route);
                   },
@@ -101,7 +111,7 @@ class QuickPageTabView extends StatelessWidget {
                     TextFormField(
                       controller: _nameController,
                       validator: (currentText) {
-                        if (currentText == null|| currentText.isEmpty) {
+                        if (currentText == null || currentText.isEmpty) {
                           return "Please Enter Name";
                         }
                         return null;
