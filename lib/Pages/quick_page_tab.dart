@@ -26,7 +26,7 @@ class QuickPageTabView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Route route = MaterialPageRoute(builder: (context) {
-                      return const ViewNotes();
+                      return  ViewNotes();
                     });
                     Navigator.of(context).push(route);
                   },
