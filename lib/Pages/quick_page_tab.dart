@@ -26,7 +26,7 @@ class QuickPageTabView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Route route = MaterialPageRoute(builder: (context) {
-                      return  ViewNotes();
+                      return ViewNotes();
                     });
                     Navigator.of(context).push(route);
                   },
@@ -44,23 +44,23 @@ class QuickPageTabView extends StatelessWidget {
                     });
                     Navigator.push(context, route);
                   },
-                  child: const Text('Add Task to SomeOne'),
+                  child: const Text('Add Task'),
                 ),
               ),
-              SizedBox(
-                height: 60,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Route route = MaterialPageRoute(builder: (context) {
-                      return const AddTaskPage(
-                        buttonName: "SomeOne",
-                      );
-                    });
-                    Navigator.push(context, route);
-                  },
-                  child: const Text('Add Task to All'),
-                ),
-              ),
+              // SizedBox(
+              //   height: 60,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       Route route = MaterialPageRoute(builder: (context) {
+              //         return const AddTaskPage(
+              //           buttonName: "SomeOne",
+              //         );
+              //       });
+              //       Navigator.push(context, route);
+              //     },
+              //     child: const Text('Add Task to All'),
+              //   ),
+              // ),
               SizedBox(
                 height: 60,
                 child: ElevatedButton(
@@ -68,7 +68,7 @@ class QuickPageTabView extends StatelessWidget {
                     _nameController.clear();
                     showAddingPage(context);
                   },
-                  child: const Text('Add New Person to List'),
+                  child: const Text('Add New Person'),
                 ),
               ),
             ]),
@@ -126,9 +126,13 @@ class QuickPageTabView extends StatelessWidget {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () {
+                        final editedTime = DateTime.now();
+
+                        String editedTime1 =
+                            "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
                         if (formKey.currentState!.validate()) {
                           Person newPereon = Person(personName: _nameController.text, personAmount: 0, listOfTask: [
-                            Task(taskName: "Just Created", taskAmount: 0, editedTime: DateTime.now()),
+                            Task(taskName: "Just Created", taskAmount: 0, editedTime: editedTime1),
                           ]);
                           controller.personList.add(newPereon);
 

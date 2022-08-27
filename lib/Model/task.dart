@@ -1,7 +1,7 @@
 class Task {
   String taskName;
   int taskAmount;
-  DateTime? editedTime;
+  String? editedTime;
  
   Task({
     required this.taskName,

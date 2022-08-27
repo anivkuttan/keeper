@@ -10,14 +10,14 @@ class PersonController extends GetxController {
       personName: "User1FromController",
       personAmount: 100,
       listOfTask: [
-        Task(taskName: "Sambar", taskAmount: 40, editedTime: DateTime.now()),
+        Task(taskName: "Sambar", taskAmount: 40, editedTime: ""),
       ],
     ),
     Person(
       personName: "User2FromController",
       personAmount: 200,
       listOfTask: [
-        Task(taskName: "FishKari", taskAmount: 40, editedTime: DateTime.now()),
+        Task(taskName: "FishKari", taskAmount: 40, editedTime: ''),
       ],
     ),
   ].obs;
