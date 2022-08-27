@@ -99,37 +99,48 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 const SizedBox(
                   height: 30,
                 ),
-                Row(
-                  children: const [
-                    Text("Apply to "),
-                  ],
-                ),
+                const Text("Apply to "),
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: 260,
-                  child: Obx(() {
-                    return ListView.builder(
-                      itemCount: controller.personList.length,
-                      itemBuilder: ((context, index) {
-                        final person = controller.personList[index];
-                        return CheckboxListTile(
-                            title: Text(person.personName),
-                            value: widget.buttonName == "SomeOne" ? true : person.isSelected,
-                            subtitle: person.isSelected
-                                ? Obx((() => Text(
-                                    'Amount : ${person.personAmount} + (${controller.taskAmountCount.value}) = ${person.personAmount + controller.taskAmountCount.value}')),)
-                                : Text("Amount : ${person.personAmount}"),
-                            onChanged: (value) {
-                              setState(() {
-                                person.isSelected = value!;
-                              });
-                            });
-                      }),
-                    );
-                  }),
+                  height: 200,
+                  child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    itemCount: controller.personList.length,
+                    itemBuilder: (context, index) {
+                      return GetBuilder<PersonController>(builder: (personController) {
+                        var person = personController.personList[index];
+                        return ListTile(
+                          title: Text(person.personName),
+                          leading: const CircleAvatar(radius: 30),
+                          subtitle: const Text('Hello subTilte'),
+                          trailing: person.isSelected
+                              ? const Icon(
+                                  Icons.check_circle_rounded,
+                                  color: Colors.green,
+                                )
+                              : const Icon(Icons.check_circle_outline),
+                          onTap: () {
+                            controller.checkBoxValueChanged(index);
+                          },
+                        );
+                      });
+                    },
+                    separatorBuilder: (context, index) => const SizedBox(height: 2),
+                  ),
                 ),
+                Obx(() {
+                  return CheckboxListTile(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: const Text("Selete All/ Deselect All"),
+                      value: controller.sellectAllValue.value,
+                      onChanged: (value) {
+                        controller.sellectAllValue.value = value!;
+                        controller.masterCheckBoxValueChanged(value);
+                      });
+                }),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 SizedBox(
                   height: 50,
