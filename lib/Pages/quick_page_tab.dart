@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:keeper/Controllers/image_controller.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
@@ -11,6 +15,7 @@ class QuickPageTabView extends StatelessWidget {
   final controller = Get.find<PersonController>();
   final TextEditingController _nameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
+  final ImageController imageController = Get.put(ImageController());
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +52,6 @@ class QuickPageTabView extends StatelessWidget {
                   child: const Text('Add Task'),
                 ),
               ),
-              // SizedBox(
-              //   height: 60,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       Route route = MaterialPageRoute(builder: (context) {
-              //         return const AddTaskPage(
-              //           buttonName: "SomeOne",
-              //         );
-              //       });
-              //       Navigator.push(context, route);
-              //     },
-              //     child: const Text('Add Task to All'),
-              //   ),
-              // ),
               SizedBox(
                 height: 60,
                 child: ElevatedButton(
@@ -104,8 +95,45 @@ class QuickPageTabView extends StatelessWidget {
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
                   child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    const CircleAvatar(
-                      radius: 45,
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Do you want to Open Galary? or Camera?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      imageController.pickImage(ImageSource.gallery);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Galary'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      imageController.pickImage(ImageSource.camera);
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Camera'),
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                      child: imageController.imageFile == null
+                          ? Container(
+                              color: Colors.green,
+                              child: const CircleAvatar(),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.file(
+                                imageController.imageFile!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     const SizedBox(height: 30),
                     TextFormField(

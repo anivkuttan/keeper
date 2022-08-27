@@ -188,12 +188,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // addTaskToAllFunction(Task task) {
-  //   for (var person in controller.personList) {
-  //     person.listOfTask.add(task);
-  //     person.personAmount += controller.taskAmountCount.value;
-  //   }
-  // }
 
   addTaskToSomeOneFunction(Task task) {
     for (var person in controller.personList) {
