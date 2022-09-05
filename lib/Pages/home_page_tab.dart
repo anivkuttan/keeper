@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:keeper/Controllers/person_controller.dart';
 
+import 'package:keeper/Controllers/person_controller.dart';
 
 class HomePageTabView extends StatelessWidget {
   HomePageTabView({Key? key}) : super(key: key);
@@ -11,30 +11,33 @@ class HomePageTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: double.infinity,
-        width: double.infinity,
-        // color: Colors.pink,
-        alignment: Alignment.center,
-        child: Obx(() {
-          return ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: ((context, index) {
-              return PersonCard(index: index);
-            }),
-            itemCount: controller.personList.length,
-            separatorBuilder: (context, index) {
-              return const Divider(height: 20);
-            },
-          );
-        }),);
+      height: double.infinity,
+      width: double.infinity,
+      // color: Colors.pink,
+      alignment: Alignment.center,
+      child: Obx(() {
+        return ListView.separated(
+          physics: const BouncingScrollPhysics(),
+          itemBuilder: ((context, index) {
+            return PersonCard(index: index);
+          }),
+          itemCount: controller.personList.length,
+          separatorBuilder: (context, index) {
+            return const Divider(height: 20);
+          },
+        );
+      }),
+    );
   }
 }
 
 class PersonCard extends StatelessWidget {
   final int index;
   final PersonController controller = Get.find<PersonController>();
+
   final SizedBox space5 = const SizedBox(height: 5);
   PersonCard({Key? key, required this.index}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var person = controller.personList[index];
@@ -69,7 +72,7 @@ class PersonCard extends StatelessWidget {
             const Spacer(),
             const CircleAvatar(
               radius: 40,
-            )
+            ),
           ],
         ),
       ),
