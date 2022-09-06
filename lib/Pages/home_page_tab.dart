@@ -70,9 +70,17 @@ class PersonCard extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            const CircleAvatar(
-              radius: 40,
-            ),
+            ClipOval(
+              child: SizedBox.fromSize(
+                size: const Size.fromRadius(40),
+                child: person.personImage ??
+                    CircleAvatar(
+                      child: Text(
+                        person.personName[0].toUpperCase(),
+                      ),
+                    ),
+              ),
+            )
           ],
         ),
       ),
