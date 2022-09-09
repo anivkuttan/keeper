@@ -56,14 +56,15 @@
 // }
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:keeper/Controllers/image_controller.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
+import 'package:keeper/Service/db_repository.dart';
 
 class AddNewPerson extends StatefulWidget {
   const AddNewPerson({Key? key}) : super(key: key);
@@ -73,6 +74,7 @@ class AddNewPerson extends StatefulWidget {
 }
 
 class _AddNewPersonState extends State<AddNewPerson> {
+  late final Box<Person> dbPerson;
   ImageController imageController = Get.put(ImageController());
   final personController = Get.find<PersonController>();
   final TextEditingController _nameController = TextEditingController();
@@ -80,6 +82,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
   @override
   void initState() {
     super.initState();
+    dbPerson = Hive.box(DbRepository.dbName);
     imageController.image = null;
   }
 
@@ -166,7 +169,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
                     String editedTime1 =
                         "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
                     log("Anikuttan First line okay ");
-                    Person newPereon = Person(
+                    Person newPerson = Person(
                       personName: _nameController.text,
                       personAmount: 0,
                       listOfTask: [
@@ -174,13 +177,11 @@ class _AddNewPersonState extends State<AddNewPerson> {
                       ],
                       personImage: imageController.image == null
                           ? null
-                          : Image.file(
-                              imageController.image!,
-                              fit: BoxFit.cover,
-                            ),
+                          : imageController.imageAsByts
                     );
                     log("Ainkuttan This line okay");
-                    personController.personList.add(newPereon);
+                    personController.personList.add(newPerson);
+                    personController.personBox.add(newPerson);
                     log('person list added');
                     Navigator.pop(context);
                   }

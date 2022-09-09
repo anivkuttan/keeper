@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Pages/add_new_person.dart';
 import 'package:keeper/Pages/add_task_page.dart';
+import 'package:keeper/Pages/delete_page.dart';
 import 'package:keeper/Pages/view_notes.dart';
 
 class QuickPageTabView extends StatelessWidget {
@@ -51,9 +52,21 @@ class QuickPageTabView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Route route = MaterialPageRoute(builder: (context) {
+                      return const DeletePage();
+                    });
+                    Navigator.push(context, route);
+                  },
+                  child: const Text('Delete Persons'),
+                ),
+              ),
+              SizedBox(
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Route route = MaterialPageRoute(builder: (context) {
                       return const AddNewPerson();
                     });
-                    
+
                     Navigator.push(context, route);
                   },
                   child: const Text('Add New Person'),
