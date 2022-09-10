@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
+import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -113,12 +114,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      itemCount: controller.personList.length,
+                      itemCount: controller.personBoxCount,
                       itemBuilder: (context, index) {
                         return GetBuilder<PersonController>(builder: (personController) {
-                          var person = personController.personList[index];
+                          Person? person = personController.personBox.getAt(index);
                           return ListTile(
-                            title: Text(person.personName),
+                            title: Text(person!.personName),
                             leading: const CircleAvatar(radius: 30),
                             subtitle: const Text('Hello subTilte'),
                             trailing: person.isSelected
@@ -167,10 +168,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               taskName: _taskNameController.text,
                               taskAmount: controller.taskAmountCount.value,
                               editedTime: editedTime1);
-                          bool isAllSelected = controller.personList.every((element) => element.isSelected == false);
+                          bool isAllSelected = controller.personBox.values.every((element) => element.isSelected == false);
 
                           if (!isAllSelected) {
-                            addTaskToSomeOneFunction(newTask);
+                          controller.addTaskToSomeOneFunction(newTask);
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             Navigator.of(context).pop();
                           } else {
@@ -189,14 +190,5 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
 
-  addTaskToSomeOneFunction(Task task) {
-    for (var person in controller.personList) {
-      if (person.isSelected) {
-        person.listOfTask.add(task);
-        person.personAmount += controller.taskAmountCount.value;
-      } else {
-        null;
-      }
-    }
-  }
+  
 }

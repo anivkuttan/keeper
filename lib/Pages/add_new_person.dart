@@ -1,60 +1,3 @@
-// import 'dart:io';
-// import 'package:flutter/services.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:flutter/material.dart';
-
-// class ImagePage extends StatefulWidget {
-//   const ImagePage({Key? key}) : super(key: key);
-
-//   @override
-//   State<ImagePage> createState() => _ImagePageState();
-// }
-
-// class _ImagePageState extends State<ImagePage> {
-//   File? image;
-//   Future pickImage(ImageSource source) async {
-//     try {
-//       var imagePath = await ImagePicker().pickImage(source: source);
-//       if (imagePath == null) return;
-//       setState(() {
-//         image = File(imagePath.path);
-//       });
-//     } on PlatformException catch (e) {
-//       // ignore: avoid_print
-//       print("$e");
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('ImagePicker'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//           children: [
-//             image != null ? ClipOval(child: Image.file(image!)) : const FlutterLogo(size: 120),
-//             ElevatedButton(
-//               child: const Text('From Galary'),
-//               onPressed: () {
-//                 pickImage(ImageSource.gallery);
-//               },
-//             ),
-//             ElevatedButton(
-//               onPressed: () {
-//                 pickImage(ImageSource.camera);
-//               },
-//               child: const Text('From Camera'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -168,20 +111,17 @@ class _AddNewPersonState extends State<AddNewPerson> {
                     final editedTime = DateTime.now();
                     String editedTime1 =
                         "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
-                    log("Anikuttan First line okay ");
+
                     Person newPerson = Person(
-                      personName: _nameController.text,
-                      personAmount: 0,
-                      listOfTask: [
-                        Task(taskName: "Just Created", taskAmount: 0, editedTime: editedTime1),
-                      ],
-                      personImage: imageController.image == null
-                          ? null
-                          : imageController.imageAsByts
-                    );
-                    log("Ainkuttan This line okay");
-                    personController.personList.add(newPerson);
-                    personController.personBox.add(newPerson);
+                        personName: _nameController.text,
+                        personAmount: 0,
+                        listOfTask: [
+                          Task(taskName: "Just Created", taskAmount: 0, editedTime: editedTime1),
+                        ],
+                        personImage: imageController.image == null ? null : imageController.imageAsByts);
+
+                    // personController.personList.add(newPerson);
+                    personController.createPerson(person: newPerson);
                     log('person list added');
                     Navigator.pop(context);
                   }

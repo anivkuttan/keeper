@@ -22,11 +22,11 @@ class HomePageTabView extends StatelessWidget {
           return ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemBuilder: ((context, index) {
-             
-                return PersonCard(index: index);
-              
+              log("personBoxCount ${controller.personBoxCount}");
+
+              return PersonCard(index: index);
             }),
-            itemCount: controller.personList.length,
+            itemCount: controller.personBoxCount,
             separatorBuilder: (context, index) {
               return const Divider(height: 20);
             },
@@ -46,7 +46,7 @@ class PersonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Person person = controller.personList[index];
+    Person? person = controller.personBox.getAt(index);
     // Person? person = controller.observableBox.getAt(index);
     return GestureDetector(
       onLongPress: (() {
@@ -59,14 +59,18 @@ class PersonCard extends StatelessWidget {
                     width: 400,
                     child: Column(
                       children: [
-                        Text('Do You Want to delete ${person.personName} ?'),
+                        Text('Do You Want to delete ${person!.personName} ?'),
                         Row(
                           children: [
                             const Spacer(),
                             TextButton(
                               child: const Text('Yes'),
                               onPressed: () {
-                                controller.deletePerson(index: index);
+                                if (controller.personBoxCount == 1) {
+                                  controller.deleteAllPerson();
+                                } else {
+                                  controller.deletePerson(index: index);
+                                }
                                 log('person button deleted pressed');
                                 Navigator.pop(context);
                               },
@@ -76,7 +80,9 @@ class PersonCard extends StatelessWidget {
                                 'No',
                                 style: TextStyle(color: Colors.red),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                              Navigator.pop(context);  
+                              },
                             ),
                           ],
                         )
@@ -99,7 +105,7 @@ class PersonCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    person.personName,
+                    person!.personName,
                     style: const TextStyle(fontSize: 25),
                   ),
                   space5,

@@ -14,25 +14,25 @@ class DeletePage extends StatelessWidget {
       ),
       body: Center(
         child: Container(
-      height: double.infinity,
-      width: double.infinity,
-      // color: Colors.pink,
-      alignment: Alignment.center,
-      child: GetBuilder<PersonController>(
-        builder: (controller) {
-          return ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: ((context, index) {
-              return PersonCard(index: index);
-            }),
-            itemCount: controller.personList.length,
-            separatorBuilder: (context, index) {
-              return const Divider(height: 20);
+          height: double.infinity,
+          width: double.infinity,
+          // color: Colors.pink,
+          alignment: Alignment.center,
+          child: GetBuilder<PersonController>(
+            builder: (controller) {
+              return ListView.separated(
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: ((context, index) {
+                  return PersonCard(index: index);
+                }),
+                itemCount: controller.personBoxCount,
+                separatorBuilder: (context, index) {
+                  return const Divider(height: 20);
+                },
+              );
             },
-          );
-        },
-      ),
-    ),
+          ),
+        ),
       ),
     );
   }

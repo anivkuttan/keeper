@@ -1,13 +1,14 @@
+// import 'dart:io';
 import 'dart:typed_data';
 
-
+import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import 'task.dart';
 part 'person.g.dart';
 
 @HiveType(typeId: 1)
-class Person extends HiveObject{
+class Person extends HiveObject with EquatableMixin {
   @HiveField(1)
   Uint8List? personImage;
 
@@ -30,4 +31,12 @@ class Person extends HiveObject{
     this.listOfTask = const <Task>[],
     this.isSelected = false,
   });
+@override
+bool get stringify => true;
+
+  @override
+  List<Object?> get props => [personAmount,personName,listOfTask,isSelected];
+
+ 
+  
 }
