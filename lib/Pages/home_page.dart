@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:keeper/Pages/clear_page_tab.dart';
 import 'package:keeper/Pages/home_page_tab.dart';
 import 'package:keeper/Pages/quick_page_tab.dart';
@@ -11,6 +12,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -42,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         body: TabBarView(
           children: [
             HomePageTabView(),
-             QuickPageTabView(),
+            QuickPageTabView(),
             const ClearPageTabView(),
           ],
         ),

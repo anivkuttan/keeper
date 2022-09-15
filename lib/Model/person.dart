@@ -9,6 +9,8 @@ part 'person.g.dart';
 
 @HiveType(typeId: 1)
 class Person extends HiveObject with EquatableMixin {
+ 
+
   @HiveField(1)
   Uint8List? personImage;
 
@@ -25,18 +27,16 @@ class Person extends HiveObject with EquatableMixin {
   bool isSelected;
 
   Person({
+    
     required this.personName,
     required this.personAmount,
     this.personImage,
     this.listOfTask = const <Task>[],
     this.isSelected = false,
   });
-@override
-bool get stringify => true;
+  @override
+  bool get stringify => true;
 
   @override
-  List<Object?> get props => [personAmount,personName,listOfTask,isSelected];
-
- 
-  
+  List<Object?> get props => [personAmount, personName, listOfTask, isSelected];
 }

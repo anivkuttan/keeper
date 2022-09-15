@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -112,7 +111,9 @@ class _AddNewPersonState extends State<AddNewPerson> {
                     String editedTime1 =
                         "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
 
+                   
                     Person newPerson = Person(
+                       
                         personName: _nameController.text,
                         personAmount: 0,
                         listOfTask: [
@@ -122,7 +123,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
 
                     // personController.personList.add(newPerson);
                     personController.createPerson(person: newPerson);
-                    log('person list added');
+
                     Navigator.pop(context);
                   }
                 },

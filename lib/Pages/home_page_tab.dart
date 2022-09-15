@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
+import 'package:keeper/Pages/person_view_page.dart';
 
 class HomePageTabView extends StatelessWidget {
   HomePageTabView({Key? key}) : super(key: key);
@@ -49,6 +50,15 @@ class PersonCard extends StatelessWidget {
     Person? person = controller.personBox.getAt(index);
     // Person? person = controller.observableBox.getAt(index);
     return GestureDetector(
+      onTap: (() {
+        Route route = MaterialPageRoute(builder: (context) {
+          return ViewPage(
+            person: person!,
+          );
+        });
+
+        Navigator.push(context, route);
+      }),
       onLongPress: (() {
         showDialog(
             context: context,
@@ -81,7 +91,7 @@ class PersonCard extends StatelessWidget {
                                 style: TextStyle(color: Colors.red),
                               ),
                               onPressed: () {
-                              Navigator.pop(context);  
+                                Navigator.pop(context);
                               },
                             ),
                           ],
@@ -116,23 +126,29 @@ class PersonCard extends StatelessWidget {
                   space5,
                   Text("last Added Task : ${person.listOfTask.last.taskName}"),
                   space5,
-                  Text("EditedTime : ${person.listOfTask.last.editedTime}")
+                  Text("EditedTime : ${person.listOfTask.last.editedTime}"),
+                  space5,
+                 
+                  space5,
                 ],
               ),
               const Spacer(),
-              ClipOval(
-                child: SizedBox.fromSize(
-                  size: const Size.fromRadius(40),
-                  child: person.personImage != null
-                      ? Image.memory(
-                          person.personImage!,
-                          fit: BoxFit.cover,
-                        )
-                      : CircleAvatar(
-                          child: Text(
-                            person.personName[0].toUpperCase(),
+              Hero(
+                tag: "Image",
+                child: ClipOval(
+                  child: SizedBox.fromSize(
+                    size: const Size.fromRadius(40),
+                    child: person.personImage != null
+                        ? Image.memory(
+                            person.personImage!,
+                            fit: BoxFit.cover,
+                          )
+                        : CircleAvatar(
+                            child: Text(
+                              person.personName[0].toUpperCase(),
+                            ),
                           ),
-                        ),
+                  ),
                 ),
               ),
             ],

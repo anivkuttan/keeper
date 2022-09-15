@@ -10,7 +10,9 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<Person>(PersonAdapter());
   Hive.registerAdapter<Task>(TaskAdapter());
-  await DbRepository.openBox();
+  await DbRepository.openPersonBox();
+  await DbRepository.openTaskbox();
+   
   runApp(const MyApp());
 }
 

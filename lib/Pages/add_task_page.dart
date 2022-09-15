@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
@@ -120,7 +122,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           Person? person = personController.personBox.getAt(index);
                           return ListTile(
                             title: Text(person!.personName),
-                            leading: const CircleAvatar(radius: 30),
+                            leading: ClipOval(
+                              child: SizedBox.fromSize(
+                                size: const Size.fromRadius(30),
+                                child: person.personImage != null
+                                    ? Image.memory(
+                                        person.personImage!,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : CircleAvatar(
+                                        child: Text(
+                                          person.personName[0].toUpperCase(),
+                                        ),
+                                      ),
+                              ),
+                            ),
                             subtitle: const Text('Hello subTilte'),
                             trailing: person.isSelected
                                 ? const Icon(
@@ -168,10 +184,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               taskName: _taskNameController.text,
                               taskAmount: controller.taskAmountCount.value,
                               editedTime: editedTime1);
-                          bool isAllSelected = controller.personBox.values.every((element) => element.isSelected == false);
-
+                          bool isAllSelected =
+                              controller.personBox.values.every((element) => element.isSelected == false);
+                          
                           if (!isAllSelected) {
-                          controller.addTaskToSomeOneFunction(newTask);
+                            controller.addTaskToSomeOneFunction(newTask);
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             Navigator.of(context).pop();
                           } else {
@@ -188,7 +205,4 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
     );
   }
-
-
-  
 }

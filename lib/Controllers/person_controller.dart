@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:keeper/Model/person.dart';
@@ -8,31 +8,13 @@ import 'package:keeper/Service/db_repository.dart';
 
 class PersonController extends GetxController {
   Box<Person> personBox = DbRepository.getBox();
-  int get personBoxCount => personBox.length;
+  Box<Task> taskBox = DbRepository.getTaskBox();
 
-  // addDefaultPerson() {
-  //   Person defaultPerson = Person(
-  //     personName: "HiveDefault",
-  //     personAmount: 400,
-  //     listOfTask: [
-  //       Task(taskName: "LocalDatabase", taskAmount: 50, editedTime: "Hive DataBase"),
-  //     ],
-  //   );
-  //   personBox.add(defaultPerson);
-  //   log("default person added");
-  // }
+  int get personBoxCount => personBox.length;
 
   RxInt taskAmountCount = 0.obs;
   RxBool sellectAllValue = false.obs;
-  // List<Person> personList = <Person>[
-  //   Person(
-  //     personName: "User1FromController",
-  //     personAmount: 100,
-  //     listOfTask: [
-  //       Task(taskName: "Sambar", taskAmount: 40, editedTime: ""),
-  //     ],
-  //   ),
-  // ];
+
   void counterIncrment(String buttonName) {
     taskAmountCount.value += int.parse(buttonName);
   }
@@ -70,11 +52,15 @@ class PersonController extends GetxController {
 
   addTaskToSomeOneFunction(Task task) {
     for (Person person in personBox.values) {
-      log('add task function ${person.toString()}');
-
       if (person.isSelected) {
+        // log("before Adding new task $person");
         person.listOfTask.add(task);
+
+        // log("after Adding new task $person");
         person.personAmount += taskAmountCount.value;
+        ////save function only available when you extends hive Object in your class
+        ///save mentod can save the editing or updating changes....
+        person.save();
         update();
       } else {
         null;
@@ -83,34 +69,34 @@ class PersonController extends GetxController {
   }
 
   createPerson({required Person person}) async {
-    log("befor adding person ${personBox.keys}");
+    // log("befor adding person keys count ${personBox.keys}");
+    // log("personbox Length ${personBox.length}");
+
     await personBox.add(person);
-    log("personlist length ${personBox.length}");
+
+    // log("person list length ${personBox.length}");
     update();
-    log("afterAdding person ${personBox.keys}");
-    log('  personbox is empty => ${personBox.values}');
+    // log("afterAdding person key count ${personBox.keys}");
+    // log('  personbox values => ${personBox.values}');
   }
 
-  updatePerson({required Person newPerson, required int index}) {
-    
-    update();
-  }
+  
 
   Future<void> deletePerson({required int index}) async {
-    log('delete function called');
-    log("personlist length befor deleting ${personBox.length}");
+    // log('delete function called');
+    // log("personlist length befor deleting ${personBox.length}");
     await personBox.deleteAt(index);
     update();
-    log("personlist length after deleting ${personBox.length}");
-    log('delete sussefully');
+    // log("personlist length after deleting ${personBox.length}");
+    // log('delete sussefully');
   }
 
   Future<void> deleteAllPerson() async {
-    log('delete All function called');
-    log("personlist length befor deleting ${personBox.length}");
+    // log('delete All function called');
+    // log("personlist length befor deleting ${personBox.length}");
     await personBox.clear();
     update();
-    log("personlist length after deleting ${personBox.length}");
-    log('delete sussefully');
+    // log("personlist length after deleting ${personBox.length}");
+    // log('delete sussefully');
   }
 }
