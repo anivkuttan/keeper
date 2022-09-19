@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:keeper/Model/notes.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 import 'package:keeper/Service/db_repository.dart';
@@ -10,9 +11,9 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<Person>(PersonAdapter());
   Hive.registerAdapter<Task>(TaskAdapter());
+  Hive.registerAdapter<Notes>(NotesAdapter());
   await DbRepository.openPersonBox();
-  await DbRepository.openTaskbox();
-   
+  await DbRepository.openNotesbox();
   runApp(const MyApp());
 }
 

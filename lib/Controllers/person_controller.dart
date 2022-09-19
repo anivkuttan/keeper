@@ -1,14 +1,11 @@
-
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 // import 'package:keeper/Model/task.dart';
-import 'package:keeper/Service/db_repository.dart';
 
 class PersonController extends GetxController {
-  Box<Person> personBox = DbRepository.getBox();
-  Box<Task> taskBox = DbRepository.getTaskBox();
+  Box<Person> personBox = Hive.box<Person>("Person");
 
   int get personBoxCount => personBox.length;
 
@@ -79,8 +76,6 @@ class PersonController extends GetxController {
     // log("afterAdding person key count ${personBox.keys}");
     // log('  personbox values => ${personBox.values}');
   }
-
-  
 
   Future<void> deletePerson({required int index}) async {
     // log('delete function called');

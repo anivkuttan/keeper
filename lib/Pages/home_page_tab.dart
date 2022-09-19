@@ -16,10 +16,13 @@ class HomePageTabView extends StatelessWidget {
     return Container(
       height: double.infinity,
       width: double.infinity,
-      // color: Colors.pink,
+      color: Colors.yellow[50],
       alignment: Alignment.center,
       child: GetBuilder<PersonController>(
         builder: (controller) {
+          if (controller.personBoxCount == 0) {
+            return const Center(child: Text('Empty List'));
+          }
           return ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemBuilder: ((context, index) {
@@ -48,7 +51,7 @@ class PersonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Person? person = controller.personBox.getAt(index);
-    // Person? person = controller.observableBox.getAt(index);
+    
     return GestureDetector(
       onTap: (() {
         Route route = MaterialPageRoute(builder: (context) {
@@ -102,6 +105,7 @@ class PersonCard extends StatelessWidget {
             });
       }),
       child: Card(
+        color: person!.personAmount.isNegative ? Colors.red[300] : Colors.green[200],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -115,12 +119,12 @@ class PersonCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    person!.personName,
+                    person.personName,
                     style: const TextStyle(fontSize: 25),
                   ),
                   space5,
                   Text(
-                    'Amount :${person.personAmount}',
+                    'Amount  ${person.personAmount}',
                     style: const TextStyle(fontSize: 20),
                   ),
                   space5,
@@ -128,8 +132,7 @@ class PersonCard extends StatelessWidget {
                   space5,
                   Text("EditedTime : ${person.listOfTask.last.editedTime}"),
                   space5,
-                 
-                  space5,
+                  
                 ],
               ),
               const Spacer(),

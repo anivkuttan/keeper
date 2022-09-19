@@ -6,7 +6,7 @@ import 'package:keeper/Controllers/image_controller.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
-import 'package:keeper/Service/db_repository.dart';
+
 
 class AddNewPerson extends StatefulWidget {
   const AddNewPerson({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
   @override
   void initState() {
     super.initState();
-    dbPerson = Hive.box(DbRepository.dbName);
+    dbPerson = Hive.box("Person");
     imageController.image = null;
   }
 
