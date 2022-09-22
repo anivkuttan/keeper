@@ -6,6 +6,7 @@ import 'package:keeper/Model/task.dart';
 
 class PersonController extends GetxController {
   Box<Person> personBox = Hive.box<Person>("Person");
+  RxBool isDark = false.obs;
 
   int get personBoxCount => personBox.length;
 

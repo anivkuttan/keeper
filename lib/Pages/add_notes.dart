@@ -1,8 +1,8 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:keeper/Controllers/notes_controller.dart';
 import 'package:keeper/Model/notes.dart';
 
@@ -21,18 +21,13 @@ class _AddNotesPageState extends State<AddNotesPage> {
   final TextEditingController _noteController = TextEditingController();
 
   final NotesController notesController = Get.find<NotesController>();
+
   final GlobalKey<FormState> formkey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     setController();
-  }
-
-  @override
-  void dispose() {
-    Hive.box("Notes").close();
-    super.dispose();
   }
 
   void setController() {
@@ -111,9 +106,9 @@ class _AddNotesPageState extends State<AddNotesPage> {
               title: _titleController.text,
               notes: _noteController.text,
             );
-            log('log created');
+           
            widget.notes==null? notesController.addNotes(newNote):notesController.updateNotes(newNote,widget.index!);
-            log('${notesController.noteBox.length}');
+           
             Navigator.pop(context);
           } else {
            return;

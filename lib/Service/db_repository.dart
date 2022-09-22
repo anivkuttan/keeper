@@ -11,4 +11,5 @@ class DbRepository {
   static Box<Person> getPersonBox() => Hive.box<Person>(dbName);
   static Box<Notes> getNotesBox() => Hive.box<Notes>('Notes');
   static closeBox() async => await Hive.box(dbName).close();
+  
 }

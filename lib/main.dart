@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:keeper/Controllers/theme_controller.dart';
 import 'package:keeper/Model/notes.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 import 'package:keeper/Service/db_repository.dart';
+
 import 'Pages/home_page.dart';
 
 Future<void> main() async {
@@ -22,9 +25,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
-      debugShowCheckedModeBanner: false,
+    MyTheme controller = Get.put(MyTheme());
+    return Obx(
+      () {
+        return MaterialApp(
+          home: const HomePage(),
+          debugShowCheckedModeBanner: false,
+          themeMode: controller.getThemeMode(),
+          theme: controller.ligthTheme,
+          darkTheme: controller.darkTheme,
+        );
+      }
     );
   }
 }

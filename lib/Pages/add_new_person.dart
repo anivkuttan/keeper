@@ -122,7 +122,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
                           ],
                           personImage: imageController.image == null ? null : imageController.imageAsByts);
           
-                      // personController.personList.add(newPerson);
+                    
                       personController.createPerson(person: newPerson);
           
                       Navigator.pop(context);
