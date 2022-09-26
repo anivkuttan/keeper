@@ -52,7 +52,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      filled: true,
+                      // filled: true,
                       fillColor: Colors.grey.shade300,
                       label: const Text("Task Name"),
                       counterText: "$editedTime",
@@ -112,7 +112,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   const Text("Apply to "),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 200,
+                    height:150,
+                  
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,

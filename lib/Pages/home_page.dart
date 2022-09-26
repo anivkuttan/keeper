@@ -15,6 +15,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final MyTheme themeController = Get.find<MyTheme>();
+  Box<dynamic> settingBox = Hive.box("Setting");
+  @override
+  void initState() {
+    super.initState();
+    // getLocalSavedTheme();
+  }
+
+  // getLocalSavedTheme() {
+  //   // bool localSavedTheme = settingBox.get("Dark_Mode");
+    
+  // }
+
   @override
   void dispose() {
     Hive.close();
@@ -27,33 +39,34 @@ class _HomePageState extends State<HomePage> {
         builder: (context) {
           return AlertDialog(
             content: SizedBox(
-                height: 100,
-                width: 400,
-                child: Column(
-                  children: [
-                    const Text('Do You Want to Exit the app?'),
-                    Row(
-                      children: [
-                        const Spacer(),
-                        TextButton(
-                          child: const Text('Yes'),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
+              height: 100,
+              width: 400,
+              child: Column(
+                children: [
+                  const Text('Do You Want to Exit the app?'),
+                  Row(
+                    children: [
+                      const Spacer(),
+                      TextButton(
+                        child: const Text('Yes'),
+                        onPressed: () {
+                          Navigator.pop(context, true);
+                        },
+                      ),
+                      TextButton(
+                        child: const Text(
+                          'No',
+                          style: TextStyle(color: Colors.red),
                         ),
-                        TextButton(
-                          child: const Text(
-                            'No',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context, false);
-                          },
-                        ),
-                      ],
-                    )
-                  ],
-                )),
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
           );
         });
   }
@@ -82,6 +95,8 @@ class _HomePageState extends State<HomePage> {
                       value: themeController.isDarkMode.value,
                       onChanged: (value) {
                         themeController.isDarkMode.value = value;
+                        settingBox.put(
+                            'Dark_Mode', themeController.isDarkMode.value);
                       });
                 },
               ),

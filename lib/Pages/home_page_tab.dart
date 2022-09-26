@@ -13,15 +13,11 @@ class HomePageTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      color: Colors.yellow[50],
-      alignment: Alignment.center,
-      child: GetBuilder<PersonController>(
+    return Scaffold(
+      body: GetBuilder<PersonController>(
         builder: (controller) {
           if (controller.personBoxCount == 0) {
-            return const Center(child: Text('Empty List'));
+            return const Center(child: Text('Empty List'),);
           }
           return ListView.separated(
             physics: const BouncingScrollPhysics(),

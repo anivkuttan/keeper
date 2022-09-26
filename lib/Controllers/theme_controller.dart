@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:keeper/Service/constance.dart';
 
 class MyTheme extends GetxController {
   RxBool isDarkMode = false.obs;
@@ -9,8 +10,15 @@ class MyTheme extends GetxController {
   }
 
   ThemeData ligthTheme = ThemeData(
-    brightness: Brightness.light,
+    colorScheme: ColorScheme.fromSwatch(
+      brightness: Brightness.light,
+      // primarySwatch:MaterialColor(),
+    ),
+    scaffoldBackgroundColor: colorWhite,
   );
 
-  ThemeData darkTheme = ThemeData(brightness: Brightness.dark);
+  ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    colorScheme: const ColorScheme.dark(),
+  );
 }

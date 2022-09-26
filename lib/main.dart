@@ -6,7 +6,6 @@ import 'package:keeper/Model/notes.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 import 'package:keeper/Service/db_repository.dart';
-
 import 'Pages/home_page.dart';
 
 Future<void> main() async {
@@ -17,6 +16,7 @@ Future<void> main() async {
   Hive.registerAdapter<Notes>(NotesAdapter());
   await DbRepository.openPersonBox();
   await DbRepository.openNotesbox();
+  await DbRepository.openSettingsbox();
   runApp(const MyApp());
 }
 
