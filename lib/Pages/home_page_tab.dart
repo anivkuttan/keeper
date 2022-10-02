@@ -96,12 +96,12 @@ class PersonCard extends StatelessWidget {
                           ],
                         )
                       ],
-                    )),
+                    ),),
               );
             });
       }),
       child: Card(
-        color: person!.personAmount.isNegative ? Colors.red[300] : Colors.green[200],
+        color: person!.personAmount.isNegative ? Colors.red[300] :const Color.fromARGB(255, 33, 216, 39),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -134,19 +134,23 @@ class PersonCard extends StatelessWidget {
               const Spacer(),
               Hero(
                 tag: "Image",
-                child: ClipOval(
-                  child: SizedBox.fromSize(
-                    size: const Size.fromRadius(40),
-                    child: person.personImage != null
-                        ? Image.memory(
-                            person.personImage!,
-                            fit: BoxFit.cover,
-                          )
-                        : CircleAvatar(
-                            child: Text(
-                              person.personName[0].toUpperCase(),
+                child: CircleAvatar(
+                  backgroundColor: Colors.black,
+                  radius: 42,
+                  child: ClipOval(
+                    child: SizedBox.fromSize(
+                      size: const Size.fromRadius(40),
+                      child: person.personImage != null
+                          ? Image.memory(
+                              person.personImage!,
+                              fit: BoxFit.cover,
+                            )
+                          : CircleAvatar(
+                              child: Text(
+                                person.personName[0].toUpperCase(),
+                              ),
                             ),
-                          ),
+                    ),
                   ),
                 ),
               ),

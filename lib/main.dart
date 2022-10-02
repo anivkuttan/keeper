@@ -17,6 +17,13 @@ Future<void> main() async {
   await DbRepository.openPersonBox();
   await DbRepository.openNotesbox();
   await DbRepository.openSettingsbox();
+ 
+  MyTheme controller = Get.put(MyTheme());
+  Box<dynamic> settingBox = Hive.box("Setting");
+  bool? isDarkMode = settingBox.get("Dark_Mode");
+  if (isDarkMode != null) {
+    controller.isDarkMode.value = isDarkMode;
+  }
   runApp(const MyApp());
 }
 
@@ -25,17 +32,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyTheme controller = Get.put(MyTheme());
-    return Obx(
-      () {
-        return MaterialApp(
-          home: const HomePage(),
-          debugShowCheckedModeBanner: false,
-          themeMode: controller.getThemeMode(),
-          theme: controller.ligthTheme,
-          darkTheme: controller.darkTheme,
-        );
-      }
-    );
+    MyTheme controller = Get.find<MyTheme>();
+    return Obx(() {
+      return MaterialApp(
+        home: const HomePage(),
+        debugShowCheckedModeBanner: false,
+        themeMode: controller.getThemeMode(),
+        theme: controller.ligthTheme,
+        darkTheme: controller.darkTheme,
+      );
+    });
   }
 }

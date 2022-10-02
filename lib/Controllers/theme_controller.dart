@@ -12,13 +12,13 @@ class MyTheme extends GetxController {
   ThemeData ligthTheme = ThemeData(
     colorScheme: ColorScheme.fromSwatch(
       brightness: Brightness.light,
-      // primarySwatch:MaterialColor(),
+    
     ),
     scaffoldBackgroundColor: colorWhite,
   );
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    colorScheme: const ColorScheme.dark(),
+    // colorScheme: const ColorScheme.dark(),
   );
 }

@@ -7,7 +7,6 @@ import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 
-
 class AddNewPerson extends StatefulWidget {
   const AddNewPerson({Key? key}) : super(key: key);
 
@@ -46,27 +45,33 @@ class _AddNewPersonState extends State<AddNewPerson> {
                     onTap: () {
                       showModalBottomSheet(
                           context: context,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(23),
-                          ),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(23),
+                                  topRight: Radius.circular(23))),
                           builder: (context) {
                             return SizedBox(
                               height: 100,
                               child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.camera, size: 50),
                                       onPressed: () {
-                                        imageController.pickImage(ImageSource.camera);
+                                        imageController
+                                            .pickImage(ImageSource.camera);
                                         Navigator.pop(context);
                                       },
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.library_books_outlined, size: 50),
+                                      icon: const Icon(
+                                          Icons.library_books_outlined,
+                                          size: 50),
                                       onPressed: () {
-                                        imageController.pickImage(ImageSource.gallery);
+                                        imageController
+                                            .pickImage(ImageSource.gallery);
                                         Navigator.pop(context);
                                       },
                                     ),
@@ -74,15 +79,22 @@ class _AddNewPersonState extends State<AddNewPerson> {
                             );
                           });
                     },
-                    child: ClipOval(
-                      child: SizedBox.fromSize(
-                        size: const Size.fromRadius(80),
-                        child: controller.image == null
-                            ? const CircleAvatar()
-                            : Image.file(
-                                controller.image!,
-                                fit: BoxFit.cover,
-                              ),
+                    child: CircleAvatar(
+                      radius:82 ,
+                      backgroundColor: Colors.black,
+                      child: ClipOval(
+                        child: SizedBox.fromSize(
+                          size: const Size.fromRadius(80),
+                          child: controller.image == null
+                              ? const CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage('assets/cube_keeper.png'),
+                                )
+                              : Image.file(
+                                  controller.image!,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                       ),
                     ),
                   );
@@ -111,20 +123,22 @@ class _AddNewPersonState extends State<AddNewPerson> {
                       final editedTime = DateTime.now();
                       String editedTime1 =
                           "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
-          
-                     
+
                       Person newPerson = Person(
-                         
                           personName: _nameController.text,
                           personAmount: 0,
                           listOfTask: [
-                            Task(taskName: "Just Created", taskAmount: 0, editedTime: editedTime1),
+                            Task(
+                                taskName: "Just Created",
+                                taskAmount: 0,
+                                editedTime: editedTime1),
                           ],
-                          personImage: imageController.image == null ? null : imageController.imageAsByts);
-          
-                    
+                          personImage: imageController.image == null
+                              ? null
+                              : imageController.imageAsByts);
+
                       personController.createPerson(person: newPerson);
-          
+
                       Navigator.pop(context);
                     }
                   },

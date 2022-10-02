@@ -19,13 +19,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // getLocalSavedTheme();
+   
   }
 
-  // getLocalSavedTheme() {
-  //   // bool localSavedTheme = settingBox.get("Dark_Mode");
-    
-  // }
 
   @override
   void dispose() {
