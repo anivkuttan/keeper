@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Pages/person_view_page.dart';
+import 'package:keeper/Widgets/alert_dialog.dart';
 
 class HomePageTabView extends StatelessWidget {
   HomePageTabView({Key? key}) : super(key: key);
@@ -17,7 +18,9 @@ class HomePageTabView extends StatelessWidget {
       body: GetBuilder<PersonController>(
         builder: (controller) {
           if (controller.personBoxCount == 0) {
-            return const Center(child: Text('Empty List'),);
+            return const Center(
+              child: Text('Empty List'),
+            );
           }
           return ListView.separated(
             physics: const BouncingScrollPhysics(),
@@ -47,7 +50,7 @@ class PersonCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Person? person = controller.personBox.getAt(index);
-    
+
     return GestureDetector(
       onTap: (() {
         Route route = MaterialPageRoute(builder: (context) {
@@ -62,46 +65,28 @@ class PersonCard extends StatelessWidget {
         showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
-                content: SizedBox(
-                    height: 100,
-                    width: 400,
-                    child: Column(
-                      children: [
-                        Text('Do You Want to delete ${person!.personName} ?'),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            TextButton(
-                              child: const Text('Yes'),
-                              onPressed: () {
-                                if (controller.personBoxCount == 1) {
-                                  controller.deleteAllPerson();
-                                } else {
-                                  controller.deletePerson(index: index);
-                                }
-                                log('person button deleted pressed');
-                                Navigator.pop(context);
-                              },
-                            ),
-                            TextButton(
-                              child: const Text(
-                                'No',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    ),),
+            
+              return DialogBox(
+                title: 'Do you want to Delete ${person!.personName}',
+                yesButtonTaped: () {
+                  if (controller.personBoxCount == 1) {
+                    controller.deleteAllPerson();
+                  } else {
+                    controller.deletePerson(index: index);
+                  }
+                  log('person button deleted pressed');
+                  Navigator.pop(context);
+                },
+                noButtonTaped: () {
+                  Navigator.pop(context);
+                },
               );
             });
       }),
       child: Card(
-        color: person!.personAmount.isNegative ? Colors.red[300] :const Color.fromARGB(255, 33, 216, 39),
+        // color: person!.personAmount.isNegative
+        //     ? Colors.red[300]
+        //     : const Color.fromARGB(255, 33, 216, 39),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -115,28 +100,33 @@ class PersonCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    person.personName,
-                    style: const TextStyle(fontSize: 25),
+                    person!.personName,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   space5,
                   Text(
                     'Amount  ${person.personAmount}',
-                    style: const TextStyle(fontSize: 20),
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   space5,
-                  Text("last Added Task : ${person.listOfTask.last.taskName}"),
+                  Text(
+                    "last Added Task : ${person.listOfTask.last.taskName}",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                   space5,
-                  Text("EditedTime : ${person.listOfTask.last.editedTime}"),
+                  Text(
+                    "EditedTime : ${person.listOfTask.last.editedTime}",
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   space5,
-                  
                 ],
               ),
               const Spacer(),
               Hero(
                 tag: "Image",
                 child: CircleAvatar(
-                  backgroundColor: Colors.black,
-                  radius: 42,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  radius: 43,
                   child: ClipOval(
                     child: SizedBox.fromSize(
                       size: const Size.fromRadius(40),

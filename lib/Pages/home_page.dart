@@ -5,6 +5,7 @@ import 'package:keeper/Controllers/theme_controller.dart';
 import 'package:keeper/Pages/clear_page_tab.dart';
 import 'package:keeper/Pages/home_page_tab.dart';
 import 'package:keeper/Pages/quick_page_tab.dart';
+import 'package:keeper/Widgets/alert_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,9 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-   
   }
-
 
   @override
   void dispose() {
@@ -33,37 +32,15 @@ class _HomePageState extends State<HomePage> {
     return showDialog<bool?>(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            content: SizedBox(
-              height: 100,
-              width: 400,
-              child: Column(
-                children: [
-                  const Text('Do You Want to Exit the app?'),
-                  Row(
-                    children: [
-                      const Spacer(),
-                      TextButton(
-                        child: const Text('Yes'),
-                        onPressed: () {
-                          Navigator.pop(context, true);
-                        },
-                      ),
-                      TextButton(
-                        child: const Text(
-                          'No',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context, false);
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
+          
+          return DialogBox(
+              title: 'Dou you want to close the app?',
+              yesButtonTaped: () {
+                Navigator.pop(context, true);
+              },
+              noButtonTaped: () {
+                Navigator.pop(context, false);
+              });
         });
   }
 

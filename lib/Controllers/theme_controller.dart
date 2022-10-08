@@ -12,13 +12,19 @@ class MyTheme extends GetxController {
   ThemeData ligthTheme = ThemeData(
     colorScheme: ColorScheme.fromSwatch(
       brightness: Brightness.light,
-    
     ),
     scaffoldBackgroundColor: colorWhite,
   );
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    // colorScheme: const ColorScheme.dark(),
+colorScheme: ColorScheme.fromSwatch(
+      brightness: Brightness.dark,
+      
+    ),
+    // cardColor: Colors.deepOrange,
+    textTheme: const TextTheme(
+     
+    ),
   );
 }
