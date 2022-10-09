@@ -32,13 +32,16 @@ class _HomePageState extends State<HomePage> {
     return showDialog<bool?>(
         context: context,
         builder: (context) {
-          
           return DialogBox(
               title: 'Dou you want to close the app?',
-              yesButtonTaped: () {
+              firstButtonName: "Yes",
+              firstButtonColor: Colors.red,
+              firstButtonTaped: () {
                 Navigator.pop(context, true);
               },
-              noButtonTaped: () {
+              secondButtonName: "No",
+              secondButtonColor: Colors.green,
+              secondButtonTaped: () {
                 Navigator.pop(context, false);
               });
         });

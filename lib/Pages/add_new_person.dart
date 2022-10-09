@@ -6,6 +6,8 @@ import 'package:keeper/Controllers/image_controller.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
+import 'package:keeper/Widgets/alert_dialog.dart';
+import 'package:keeper/Widgets/circle_avatar.dart';
 
 class AddNewPerson extends StatefulWidget {
   const AddNewPerson({Key? key}) : super(key: key);
@@ -43,59 +45,73 @@ class _AddNewPersonState extends State<AddNewPerson> {
                 GetBuilder<ImageController>(builder: (controller) {
                   return GestureDetector(
                     onTap: () {
-                      showModalBottomSheet(
+                      showDialog(
                           context: context,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(23),
-                                  topRight: Radius.circular(23))),
                           builder: (context) {
-                            return SizedBox(
-                              height: 100,
-                              child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.camera, size: 50),
-                                      onPressed: () {
-                                        imageController
-                                            .pickImage(ImageSource.camera);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.library_books_outlined,
-                                          size: 50),
-                                      onPressed: () {
-                                        imageController
-                                            .pickImage(ImageSource.gallery);
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ]),
+                            return DialogBox(
+                              title: "Choose Image From",
+                              firstButtonName: 'Camera',
+                              firstButtonColor: Theme.of(context).primaryColor,
+                              firstButtonTaped: () {
+                                imageController.pickImage(ImageSource.camera);
+                                Navigator.pop(context);
+                              },
+                              secondButtonName: 'Gallery',
+                              secondButtonColor: Theme.of(context).primaryColor,
+                              secondButtonTaped: () {
+                                imageController.pickImage(ImageSource.gallery);
+                                Navigator.pop(context);
+                              },
                             );
                           });
+                      // showModalBottomSheet(
+                      //     context: context,
+                      //     shape: const RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.only(
+                      //             topLeft: Radius.circular(23),
+                      //             topRight: Radius.circular(23))),
+                      //     builder: (context) {
+                      //       return SizedBox(
+                      //         height: 100,
+                      //         child: Row(
+                      //             mainAxisSize: MainAxisSize.min,
+                      //             mainAxisAlignment:
+                      //                 MainAxisAlignment.spaceEvenly,
+                      //             children: [
+                      //               IconButton(
+                      //                 icon:
+                      //                     const Icon(Icons.camera, size: 50),
+                      //                 onPressed: () {
+                      //                   imageController
+                      //                       .pickImage(ImageSource.camera);
+                      //                   Navigator.pop(context);
+                      //                 },
+                      //               ),
+                      //               IconButton(
+                      //                 icon: const Icon(
+                      //                     Icons.library_books_outlined,
+                      //                     size: 50),
+                      //                 onPressed: () {
+                      //                   imageController
+                      //                       .pickImage(ImageSource.gallery);
+                      //                   Navigator.pop(context);
+                      //                 },
+                      //               ),
+                      //             ]),
+                      //       );
+                      //     });
                     },
-                    child: CircleAvatar(
-                      radius:82 ,
-                      backgroundColor: Colors.black,
-                      child: ClipOval(
-                        child: SizedBox.fromSize(
-                          size: const Size.fromRadius(80),
-                          child: controller.image == null
-                              ? const CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage('assets/cube_keeper.png'),
-                                )
-                              : Image.file(
-                                  controller.image!,
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                      ),
+                    child: CircleImage(
+                      circleRadius: 82,
+                      child: controller.image == null
+                          ? const CircleAvatar(
+                              backgroundImage:
+                                  AssetImage('assets/cube_keeper.png'),
+                            )
+                          : Image.file(
+                              controller.image!,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   );
                 }),

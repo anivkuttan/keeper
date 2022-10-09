@@ -6,6 +6,7 @@ import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Pages/person_view_page.dart';
 import 'package:keeper/Widgets/alert_dialog.dart';
+import 'package:keeper/Widgets/circle_avatar.dart';
 
 class HomePageTabView extends StatelessWidget {
   HomePageTabView({Key? key}) : super(key: key);
@@ -65,10 +66,11 @@ class PersonCard extends StatelessWidget {
         showDialog(
             context: context,
             builder: (context) {
-            
               return DialogBox(
                 title: 'Do you want to Delete ${person!.personName}',
-                yesButtonTaped: () {
+                firstButtonName: 'Yes',
+                firstButtonColor: Theme.of(context).primaryColor,
+                firstButtonTaped: () {
                   if (controller.personBoxCount == 1) {
                     controller.deleteAllPerson();
                   } else {
@@ -77,7 +79,9 @@ class PersonCard extends StatelessWidget {
                   log('person button deleted pressed');
                   Navigator.pop(context);
                 },
-                noButtonTaped: () {
+                secondButtonName: "No",
+                secondButtonColor: Colors.red,
+                secondButtonTaped: () {
                   Navigator.pop(context);
                 },
               );
@@ -124,24 +128,18 @@ class PersonCard extends StatelessWidget {
               const Spacer(),
               Hero(
                 tag: "Image",
-                child: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  radius: 43,
-                  child: ClipOval(
-                    child: SizedBox.fromSize(
-                      size: const Size.fromRadius(40),
-                      child: person.personImage != null
-                          ? Image.memory(
-                              person.personImage!,
-                              fit: BoxFit.cover,
-                            )
-                          : CircleAvatar(
-                              child: Text(
-                                person.personName[0].toUpperCase(),
-                              ),
-                            ),
-                    ),
-                  ),
+                child: CircleImage(
+                  circleRadius: 50,
+                  child: person.personImage != null
+                      ? Image.memory(
+                          person.personImage!,
+                          fit: BoxFit.cover,
+                        )
+                      : CircleAvatar(
+                          child: Text(
+                            person.personName[0].toUpperCase(),
+                          ),
+                        ),
                 ),
               ),
             ],

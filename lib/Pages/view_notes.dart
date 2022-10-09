@@ -4,6 +4,7 @@ import 'package:keeper/Controllers/notes_controller.dart';
 import 'package:keeper/Model/notes.dart';
 
 import 'package:keeper/Pages/add_notes.dart';
+import 'package:keeper/Widgets/alert_dialog.dart';
 
 class ViewNotes extends StatelessWidget {
   ViewNotes({Key? key}) : super(key: key);
@@ -38,39 +39,54 @@ class ViewNotes extends StatelessWidget {
                   showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialog(
-                          content: SizedBox(
-                              height: 100,
-                              width: 400,
-                              child: Column(
-                                children: [
-                                  Text(
-                                      'Do You Want to delete ${notes.title} ?'),
-                                  Row(
-                                    children: [
-                                      const Spacer(),
-                                      TextButton(
-                                        child: const Text('Yes'),
-                                        onPressed: () {
-                                          notesController.deleteNote(index);
+                        return  DialogBox(
+                title: 'Do you want to Delete ${notes.title}',
+                firstButtonName: 'Yes',
+                firstButtonColor: Colors.blue,
+                firstButtonTaped: () {
+                  notesController.deleteNote(index);
 
                                           Navigator.pop(context);
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: const Text(
-                                          'No',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),),
-                        );
+                },
+                secondButtonName: "No",
+                secondButtonColor: Colors.red,
+                secondButtonTaped: () {
+                  Navigator.pop(context);
+                },
+              );
+                        // return AlertDialog(
+                        //   content: SizedBox(
+                        //       height: 100,
+                        //       width: 400,
+                        //       child: Column(
+                        //         children: [
+                        //           Text(
+                        //               'Do You Want to delete ${notes.title} ?'),
+                        //           Row(
+                        //             children: [
+                        //               const Spacer(),
+                        //               TextButton(
+                        //                 child: const Text('Yes'),
+                        //                 onPressed: () {
+                                          // notesController.deleteNote(index);
+
+                                          // Navigator.pop(context);
+                        //                 },
+                        //               ),
+                        //               TextButton(
+                        //                 child: const Text(
+                        //                   'No',
+                        //                   style: TextStyle(color: Colors.red),
+                        //                 ),
+                        //                 onPressed: () {
+                        //                   Navigator.pop(context);
+                        //                 },
+                        //               ),
+                        //             ],
+                        //           )
+                        //         ],
+                        //       ),),
+                        // );
                       });
                 },
               );

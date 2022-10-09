@@ -3,13 +3,21 @@ import 'package:keeper/Widgets/button.dart';
 
 class DialogBox extends StatelessWidget {
   final String title;
-  final void Function() yesButtonTaped;
-  final void Function() noButtonTaped;
+  final String firstButtonName;
+  final String secondButtonName;
+  final Color firstButtonColor;
+  final Color secondButtonColor;
+  final void Function() firstButtonTaped;
+  final void Function() secondButtonTaped;
   const DialogBox(
       {Key? key,
       required this.title,
-      required this.yesButtonTaped,
-      required this.noButtonTaped})
+      required this.firstButtonTaped,
+      required this.secondButtonTaped,
+      required this.firstButtonName,
+      required this.secondButtonName,
+      required this.firstButtonColor,
+      required this.secondButtonColor})
       : super(key: key);
 
   @override
@@ -18,14 +26,14 @@ class DialogBox extends StatelessWidget {
       title: Text(title),
       actions: [
         DialogButton(
-          buttonText: "Yes",
-          buttonColor: Colors.blue,
-          buttonTaped: yesButtonTaped,
+          buttonText: firstButtonName,
+          buttonColor: firstButtonColor,
+          buttonTaped: firstButtonTaped,
         ),
         DialogButton(
-          buttonText: "No",
-          buttonColor: Colors.red,
-          buttonTaped: noButtonTaped,
+          buttonText: secondButtonName,
+          buttonColor: secondButtonColor,
+          buttonTaped: secondButtonTaped,
         )
       ],
     );

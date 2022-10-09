@@ -1,10 +1,9 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
+import 'package:keeper/Widgets/circle_avatar.dart';
 
 class AddTaskPage extends StatefulWidget {
   final String? buttonName;
@@ -55,7 +54,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       // filled: true,
                       fillColor: Colors.grey.shade300,
                       label: const Text("Task Name"),
-                      counterText: "$editedTime",
+                      counterText: "${editedTime.day}/${editedTime.month}/${editedTime.year} \n ${editedTime.hour}:${editedTime.minute}",
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -112,33 +111,37 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   const Text("Apply to "),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height:150,
-                  
+                    height: 150,
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemCount: controller.personBoxCount,
                       itemBuilder: (context, index) {
-                        return GetBuilder<PersonController>(builder: (personController) {
-                          Person? person = personController.personBox.getAt(index);
+                        return GetBuilder<PersonController>(
+                            builder: (personController) {
+                          Person? person =
+                              personController.personBox.getAt(index);
                           return ListTile(
                             title: Text(person!.personName),
-                            leading: ClipOval(
-                              child: SizedBox.fromSize(
-                                size: const Size.fromRadius(30),
-                                child: person.personImage != null
-                                    ? Image.memory(
-                                        person.personImage!,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : CircleAvatar(
-                                        child: Text(
-                                          person.personName[0].toUpperCase(),
-                                        ),
+                            leading: CircleImage(
+                              circleRadius: 30,
+                              child: person.personImage != null
+                                  ? Image.memory(
+                                      person.personImage!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : CircleAvatar(
+                                      child: Text(
+                                        person.personName[0].toUpperCase(),
                                       ),
-                              ),
+                                    ),
                             ),
-                            subtitle: const Text('Hello subTilte'),
+                            subtitle: person.isSelected
+                                ? Obx(() {
+                                    return Text(
+                                        'Amount:${person.personAmount}\nNewAmount:${person.personAmount + controller.taskAmountCount.value}');
+                                  })
+                                :  Text("Amount:${person.personAmount}"),
                             trailing: person.isSelected
                                 ? const Icon(
                                     Icons.check_circle_rounded,
@@ -151,7 +154,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           );
                         });
                       },
-                      separatorBuilder: (context, index) => const SizedBox(height: 2),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 2),
                     ),
                   ),
                   Obx(() {
@@ -185,16 +189,19 @@ class _AddTaskPageState extends State<AddTaskPage> {
                               taskName: _taskNameController.text,
                               taskAmount: controller.taskAmountCount.value,
                               editedTime: editedTime1);
-                          bool isAllSelected =
-                              controller.personBox.values.every((element) => element.isSelected == false);
-                          
+                          bool isAllSelected = controller.personBox.values
+                              .every((element) => element.isSelected == false);
+
                           if (!isAllSelected) {
                             controller.addTaskToSomeOneFunction(newTask);
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                             Navigator.of(context).pop();
                           } else {
-                            SnackBar errorSnackBar = const SnackBar(content: Text('Atlest Select One Of them'));
-                            ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+                            SnackBar errorSnackBar = const SnackBar(
+                                content: Text('Atlest Select One Of them'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(errorSnackBar);
                           }
                         }
                       },
