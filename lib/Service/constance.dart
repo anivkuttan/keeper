@@ -1,10 +1,25 @@
-import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 
-const Color colorWhite = Color(0xffE5E5E5);
-const Color colorBlue = Color(0xff14213D);
-const Color colorBlue2 = Color(0xff003049);
-const Color colorYellow = Color(0xffFCA311);
-const Color colorBlack = Color(0xff000000);
-const Color colorSandel = Color(0xffF4F1DE);
-const Color colorSandel2 = Color(0xffEAE2B7);
-const Color colorRed = Color(0xffD62828);
+const Color kprimaryColor = Color(0xff283655);
+const Color kbackgroundColor = Color(0xffd0e1f9);
+const Color kassentColor = Color(0xffffcc5c);
+
+const Color textTitleColor = Color(0xff1E1F26);
+const Color subTitleTitleColor = Color(0xff536878);
+const Color bodyTextColor = Color(0xff9CA8B4);
+
+MaterialColor primarySwatchColor = const MaterialColor(
+  0xff283655,
+  {
+    50: Color(0xffCEDDFF),
+    100: Color(0xffB6CBF9),
+    200: Color(0xffA4BCF1),
+    300: Color(0xff8CA5DE),
+    400: Color(0xff7A8CB5),
+    500: Color(0xff576584),
+    600: Color(0xff4B5876),
+    700: Color(0xff465678),
+    800: Color(0xff465678),
+    900: Color(0xff283655),
+  },
+);

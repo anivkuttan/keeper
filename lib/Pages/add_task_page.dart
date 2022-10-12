@@ -19,6 +19,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TextEditingController _taskNameController = TextEditingController();
   final editedTime = DateTime.now();
   @override
+  void initState() {
+   controller.taskAmountCount.value=0;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

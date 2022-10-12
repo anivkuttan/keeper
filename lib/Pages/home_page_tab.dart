@@ -57,6 +57,7 @@ class PersonCard extends StatelessWidget {
         Route route = MaterialPageRoute(builder: (context) {
           return ViewPage(
             person: person!,
+            index: index,
           );
         });
 
@@ -105,13 +106,12 @@ class PersonCard extends StatelessWidget {
                 children: [
                   Text(
                     person!.personName,
-                    style: Theme.of(context).textTheme.headlineMedium,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
                   space5,
-                  Text(
-                    'Amount  ${person.personAmount}',
-                    style: Theme.of(context).textTheme.headline5,
-                  ),
+                  Text(person.personAmount.isNegative
+                      ? "Balance : ${person.personAmount}"
+                      : "Advance : ${person.personAmount}"),
                   space5,
                   Text(
                     "last Added Task : ${person.listOfTask.last.taskName}",

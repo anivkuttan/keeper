@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       child: DefaultTabController(
         length: 3,
         child: Scaffold(
+          // backgroundColor: Colors.grey[300],
           appBar: AppBar(
             title: const Text('HomePage'),
             centerTitle: true,

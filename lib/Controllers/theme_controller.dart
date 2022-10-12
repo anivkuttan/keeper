@@ -10,21 +10,14 @@ class MyTheme extends GetxController {
   }
 
   ThemeData ligthTheme = ThemeData(
-    colorScheme: ColorScheme.fromSwatch(
-      brightness: Brightness.light,
-    ),
-    scaffoldBackgroundColor: colorWhite,
+    brightness: Brightness.light,
+    primarySwatch: primarySwatchColor,
+  
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: kassentColor, foregroundColor: kprimaryColor),
   );
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-colorScheme: ColorScheme.fromSwatch(
-      brightness: Brightness.dark,
-      
-    ),
-    // cardColor: Colors.deepOrange,
-    textTheme: const TextTheme(
-     
-    ),
   );
 }

@@ -20,3 +20,30 @@ class DialogButton extends StatelessWidget {
     );
   }
 }
+
+class Button extends StatelessWidget {
+  final String buttonName;
+  final void Function()? onTap;
+  const Button({
+    Key? key,
+    required this.buttonName,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      // decoration: BoxDecoration(borderRadius: BorderRadius.circular(23)),
+      height: 60,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          shape: const StadiumBorder(),
+        ),
+        child: Text(buttonName),
+      ),
+    );
+  }
+}

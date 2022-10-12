@@ -78,6 +78,11 @@ class PersonController extends GetxController {
     // log('  personbox values => ${personBox.values}');
   }
 
+  Future<void> updatePerson({required int index,required Person person})async{
+    await personBox.putAt(index, person);
+    update();
+  }
+
   Future<void> deletePerson({required int index}) async {
     // log('delete function called');
     // log("personlist length befor deleting ${personBox.length}");

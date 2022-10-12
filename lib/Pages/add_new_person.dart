@@ -64,42 +64,6 @@ class _AddNewPersonState extends State<AddNewPerson> {
                               },
                             );
                           });
-                      // showModalBottomSheet(
-                      //     context: context,
-                      //     shape: const RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.only(
-                      //             topLeft: Radius.circular(23),
-                      //             topRight: Radius.circular(23))),
-                      //     builder: (context) {
-                      //       return SizedBox(
-                      //         height: 100,
-                      //         child: Row(
-                      //             mainAxisSize: MainAxisSize.min,
-                      //             mainAxisAlignment:
-                      //                 MainAxisAlignment.spaceEvenly,
-                      //             children: [
-                      //               IconButton(
-                      //                 icon:
-                      //                     const Icon(Icons.camera, size: 50),
-                      //                 onPressed: () {
-                      //                   imageController
-                      //                       .pickImage(ImageSource.camera);
-                      //                   Navigator.pop(context);
-                      //                 },
-                      //               ),
-                      //               IconButton(
-                      //                 icon: const Icon(
-                      //                     Icons.library_books_outlined,
-                      //                     size: 50),
-                      //                 onPressed: () {
-                      //                   imageController
-                      //                       .pickImage(ImageSource.gallery);
-                      //                   Navigator.pop(context);
-                      //                 },
-                      //               ),
-                      //             ]),
-                      //       );
-                      //     });
                     },
                     child: CircleImage(
                       circleRadius: 82,
