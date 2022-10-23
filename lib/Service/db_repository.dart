@@ -8,8 +8,9 @@ class DbRepository {
   static openNotesbox() async => await Hive.openBox<Notes>("Notes");
   
   static openSettingsbox() async => await Hive.openBox<dynamic>("Setting");
-
+  static openDeletedBox( )async => await Hive.openBox<Person>('DeletedBox');
   static Box<Person> getPersonBox() => Hive.box<Person>(dbName);
   static Box<Notes> getNotesBox() => Hive.box<Notes>('Notes');
   static closeBox() async => await Hive.box(dbName).close();
+  static closeDeletedBox() async => await Hive.box('DeletedBox').close();
 }

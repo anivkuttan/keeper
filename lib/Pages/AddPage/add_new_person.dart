@@ -31,101 +31,107 @@ class _AddNewPersonState extends State<AddNewPerson> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add New Person'),
-      ),
-      body: Form(
-        key: formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                GetBuilder<PersonController>(builder: (controller) {
-                  return GestureDetector(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return DialogBox(
-                              title: "Choose Image From",
-                              firstButtonName: 'Camera',
-                              firstButtonColor: Theme.of(context).primaryColor,
-                              firstButtonTaped: () {
-                                controller.pickImage(ImageSource.camera);
-                                Navigator.pop(context);
-                              },
-                              secondButtonName: 'Gallery',
-                              secondButtonColor: Theme.of(context).primaryColor,
-                              secondButtonTaped: () {
-                                controller.pickImage(ImageSource.gallery);
-                                Navigator.pop(context);
-                              },
-                            );
-                          });
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Add New Person'),
+        ),
+        body: Form(
+          key: formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  GetBuilder<PersonController>(builder: (controller) {
+                    return GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return DialogBox(
+                                title: "Choose Image From",
+                                firstButtonName: 'Camera',
+                                firstButtonColor:
+                                    Theme.of(context).primaryColor,
+                                firstButtonTaped: () {
+                                  controller.pickImage(ImageSource.camera);
+                                  Navigator.pop(context);
+                                },
+                                secondButtonName: 'Gallery',
+                                secondButtonColor:
+                                    Theme.of(context).primaryColor,
+                                secondButtonTaped: () {
+                                  controller.pickImage(ImageSource.gallery);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            });
+                      },
+                      child: CircleImage(
+                        circleRadius: 82,
+                        child: controller.selectedImage == null
+                            ? const CircleAvatar(
+                                backgroundImage: AssetImage('assets/1.png'),
+                              )
+                            : Image.file(
+                                controller.selectedImage!,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      hintText: 'Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(23),
+                      ),
+                    ),
+                    validator: (currentText) {
+                      if (currentText == null || currentText.isEmpty) {
+                        return "Please Enter Name";
+                      }
+                      return null;
                     },
-                    child: CircleImage(
-                      circleRadius: 82,
-                      child: controller.selectedImage == null
-                          ? const CircleAvatar(
-                              backgroundImage:
-                                  AssetImage('assets/1.png'),
-                            )
-                          : Image.file(
-                              controller.selectedImage!,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  );
-                }),
-                const SizedBox(height: 30),
-                TextFormField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(23),
-                    ),
                   ),
-                  validator: (currentText) {
-                    if (currentText == null || currentText.isEmpty) {
-                      return "Please Enter Name";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    bool isValidated = formKey.currentState!.validate();
-                    if (isValidated) {
-                      final editedTime = DateTime.now();
-                      // var file = File('assets/defauitImage.png');
-                      String editedTime1 =
-                          "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
+                  const SizedBox(height: 40),
+                  ElevatedButton(
+                    onPressed: () {
+                      bool isValidated = formKey.currentState!.validate();
+                      if (isValidated) {
+                        final editedTime = DateTime.now();
+                        // var file = File('assets/defauitImage.png');
+                        String editedTime1 =
+                            "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
 
-                      Person newPerson = Person(
-                          personName: _nameController.text,
-                          personAmount: 0,
-                          listOfTask: [
-                            Task(
-                                taskName: "Just Created",
-                                taskAmount: 0,
-                                editedTime: editedTime1),
-                          ],
-                          personImage: personController.selectedImage == null
-                              ? personController.localImage
-                              : personController.imageAsByts);
+                        Person newPerson = Person(
+                            personName: _nameController.text,
+                            personAmount: 0,
+                            listOfTask: [
+                              Task(
+                                  taskName: "Just Created",
+                                  taskAmount: 0,
+                                  editedTime: editedTime1),
+                            ],
+                            personImage: personController.selectedImage == null
+                                ? personController.localImage
+                                : personController.imageAsByts);
 
-                      personController.createPerson(person: newPerson);
+                        personController.createPerson(person: newPerson);
 
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text('Add Person '),
-                )
-              ],
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text('Add Person '),
+                  )
+                ],
+              ),
             ),
           ),
         ),

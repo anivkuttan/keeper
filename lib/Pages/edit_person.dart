@@ -37,12 +37,8 @@ class _EditPageState extends State<EditPage> {
                     return ClipOval(
                       child: SizedBox.fromSize(
                         size: const Size.fromRadius(60),
-                        child: widget.person.personImage == null
-                            ? CircleAvatar(
-                                child: Text(
-                                  widget.person.personName[0].toUpperCase(),
-                                ),
-                              )
+                        child: controller.selectedImage == null
+                            ? Image.memory(controller.localImage)
                             : Image.file(
                                 controller.selectedImage!,
                                 fit: BoxFit.cover,

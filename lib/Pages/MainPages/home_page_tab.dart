@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:keeper/Controllers/deleted_controller.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Pages/edit_person.dart';
@@ -46,6 +47,7 @@ class HomePageTabView extends StatelessWidget {
 class PersonCard extends StatelessWidget {
   final int index;
   final PersonController controller = Get.find<PersonController>();
+  // final DeleteController deleteController = Get.put(DeleteController());
 
   final SizedBox space5 = const SizedBox(height: 5);
   PersonCard({Key? key, required this.index}) : super(key: key);
@@ -60,12 +62,12 @@ class PersonCard extends StatelessWidget {
           return ViewPage(
             person: person!,
             index: index,
+            from: "EDITED_PAGE",
           );
         });
 
         Navigator.push(context, route);
       }),
-    
       child: Slidable(
         startActionPane: ActionPane(motion: const StretchMotion(), children: [
           SlidableAction(
@@ -73,16 +75,15 @@ class PersonCard extends StatelessWidget {
             label: 'Edit',
             flex: 1,
             backgroundColor: Theme.of(context).primaryColor,
-            
             onPressed: (context) {
-                Route route = MaterialPageRoute(builder: (context) {
-          return EditPage(
-            person: person!,
-            index: index,
-          );
-        });
+              Route route = MaterialPageRoute(builder: (context) {
+                return EditPage(
+                  person: person!,
+                  index: index,
+                );
+              });
 
-        Navigator.push(context, route);
+              Navigator.push(context, route);
             },
           ),
           SlidableAction(
@@ -91,14 +92,11 @@ class PersonCard extends StatelessWidget {
             flex: 1,
             backgroundColor: Colors.red,
             onPressed: (context) {
-              // controller.deletePerson(index: index,);
+              controller.deletePerson(index: index, deletedPerson: person);
             },
           )
         ]),
         child: Card(
-          // color: person!.personAmount.isNegative
-          //     ? Colors.red[300]
-          //     : const Color.fromARGB(255, 33, 216, 39),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -120,13 +118,28 @@ class PersonCard extends StatelessWidget {
                         ? "Balance : ${person.personAmount}"
                         : "Advance : ${person.personAmount}"),
                     space5,
-                    Text(
-                      "last Added Task : ${person.listOfTask.last.taskName}",
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    Row(
+                      children: [
+                        Text(
+                          "last Task :",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        SizedBox(
+                          width: 200,
+                          child: Text(
+                            person.listOfTask.last.taskName,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
                     ),
                     space5,
-                    Text(
-                      "EditedTime : ${person.listOfTask.last.editedTime}",
+                    Text('Edited at:${person.listOfTask.last.editedTime}',
+
+                     
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     space5,

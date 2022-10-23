@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 class ViewPage extends StatefulWidget {
   final Person person;
   final int index;
-  const ViewPage({Key? key, required this.person, required this.index})
+  final String from;
+  const ViewPage(
+      {Key? key, required this.person, required this.index, required this.from})
       : super(key: key);
 
   @override
@@ -37,11 +39,7 @@ class _ViewPageState extends State<ViewPage> {
                             widget.person.personImage!,
                             fit: BoxFit.cover,
                           )
-                        : CircleAvatar(
-                            child: Text(
-                              widget.person.personName[0].toUpperCase(),
-                            ),
-                          ),
+                        : Image.memory(controller.localImage),
                   ),
                 );
               }),
@@ -78,15 +76,21 @@ class _ViewPageState extends State<ViewPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Route route = MaterialPageRoute(builder: (context) {
-            return EditPage(
-              person: widget.person,
-              index: widget.index,
-            );
-          });
-          Navigator.of(context).push(route);
+          if (widget.from == 'EDITED_PAGE') {
+            Route route = MaterialPageRoute(builder: (context) {
+              return EditPage(
+                person: widget.person,
+                index: widget.index,
+              );
+            });
+            Navigator.of(context).push(route);
+          } else {
+            Navigator.of(context).pop();
+          }
         },
-        child: const Icon(Icons.edit),
+        child: widget.from == 'EDITED_PAGE'
+            ? const Icon(Icons.edit)
+            : const Icon(Icons.arrow_back),
       ),
     );
   }

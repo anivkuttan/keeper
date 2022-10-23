@@ -17,6 +17,8 @@ Future<void> main() async {
   await DbRepository.openPersonBox();
   await DbRepository.openNotesbox();
   await DbRepository.openSettingsbox();
+  await DbRepository.openDeletedBox();
+  
 
   MyTheme controller = Get.put(MyTheme());
   Box<dynamic> settingBox = Hive.box("Setting");

@@ -8,10 +8,12 @@ import 'package:keeper/Model/task.dart';
 
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 class PersonController extends GetxController {
   Box<Person> personBox = Hive.box<Person>("Person");
+   Box<Person> deletedBox = Hive.box<Person>('DeletedBox');
+  
   late Uint8List localImage;
   @override
   void onInit() async {
@@ -129,12 +131,12 @@ class PersonController extends GetxController {
   Future<void> deletePerson(
       {required int index, required Person? deletedPerson}) async {
     await personBox.deleteAt(index);
-    // await deletedBox.add(deletedPerson!);
+    await deletedBox.add(deletedPerson!);
     update();
   }
-
-  // Future<void> deleteAllPerson() async {
-  //   await personBox.clear();
-  //   update();
-  // }
+ deleteFromDeleteBox({required int index}) {
+    deletedBox.deleteAt(index);
+    update();
+  }
+ 
 }
