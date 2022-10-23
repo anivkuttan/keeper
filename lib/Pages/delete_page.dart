@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
-import 'package:keeper/Pages/home_page_tab.dart';
+import 'package:keeper/Pages/MainPages/home_page_tab.dart';
 
 class DeletePage extends StatelessWidget {
   const DeletePage({Key? key}) : super(key: key);

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:keeper/Controllers/notes_controller.dart';
 import 'package:keeper/Model/notes.dart';
 
-import 'package:keeper/Pages/add_notes.dart';
+import 'package:keeper/Pages/AddPage/add_notes.dart';
 import 'package:keeper/Widgets/alert_dialog.dart';
 
 class ViewNotes extends StatelessWidget {

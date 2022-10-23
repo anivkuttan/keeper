@@ -20,9 +20,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final editedTime = DateTime.now();
   @override
   void initState() {
-   controller.taskAmountCount.value=0;
+    controller.taskAmountCount.value = 0;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +60,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       // filled: true,
                       fillColor: Colors.grey.shade300,
                       label: const Text("Task Name"),
-                      counterText: "${editedTime.day}/${editedTime.month}/${editedTime.year} \n ${editedTime.hour}:${editedTime.minute}",
+                      counterText:
+                          "${editedTime.day}/${editedTime.month}/${editedTime.year} \n ${editedTime.hour}:${editedTime.minute}",
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -146,7 +148,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     return Text(
                                         'Amount:${person.personAmount}\nNewAmount:${person.personAmount + controller.taskAmountCount.value}');
                                   })
-                                :  Text("Amount:${person.personAmount}"),
+                                : Text("Amount:${person.personAmount}"),
                             trailing: person.isSelected
                                 ? const Icon(
                                     Icons.check_circle_rounded,
@@ -204,7 +206,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             Navigator.of(context).pop();
                           } else {
                             SnackBar errorSnackBar = const SnackBar(
-                                content: Text('Atlest Select One Of them'));
+                              content: Text('Atlest Select One Of them'),
+                            );
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(errorSnackBar);
                           }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:keeper/Controllers/person_controller.dart';
-import 'package:keeper/Pages/add_new_person.dart';
-import 'package:keeper/Pages/add_task_page.dart';
+import 'package:keeper/Pages/AddPage/add_new_person.dart';
+import 'package:keeper/Pages/AddPage/add_task_page.dart';
 import 'package:keeper/Pages/delete_page.dart';
 import 'package:keeper/Pages/view_notes.dart';
 import 'package:keeper/Widgets/button.dart';

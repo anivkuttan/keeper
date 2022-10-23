@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Pages/edit_person.dart';
+import 'package:get/get.dart';
 
 class ViewPage extends StatefulWidget {
   final Person person;
@@ -26,9 +28,8 @@ class _ViewPageState extends State<ViewPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Hero(
-                tag: "Image",
-                child: ClipOval(
+              child: GetBuilder<PersonController>(builder: (controller) {
+                return ClipOval(
                   child: SizedBox.fromSize(
                     size: const Size.fromRadius(60),
                     child: widget.person.personImage != null
@@ -42,15 +43,22 @@ class _ViewPageState extends State<ViewPage> {
                             ),
                           ),
                   ),
-                ),
-              ),
+                );
+              }),
             ),
-            Text(
-              widget.person.personName,
-              style: const TextStyle(fontSize: 40),
+            Column(
+              children: [
+                Text(
+                  widget.person.personName,
+                  style: const TextStyle(fontSize: 40),
+                ),
+                Text(widget.person.personAmount.isNegative
+                    ? "Balance : ${widget.person.personAmount}"
+                    : "Advance : ${widget.person.personAmount}"),
+              ],
             ),
             SizedBox(
-              height: 400,
+              height: 600,
               width: double.infinity,
               child: ListView.builder(
                   itemCount: widget.person.listOfTask.length,

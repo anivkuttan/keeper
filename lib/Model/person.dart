@@ -1,4 +1,5 @@
 // import 'dart:io';
+
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
@@ -30,7 +31,7 @@ class Person extends HiveObject with EquatableMixin {
     
     required this.personName,
     required this.personAmount,
-    this.personImage,
+    this.personImage ,
     this.listOfTask = const <Task>[],
     this.isSelected = false,
   });

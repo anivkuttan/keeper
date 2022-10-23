@@ -6,7 +6,7 @@ import 'package:keeper/Model/notes.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
 import 'package:keeper/Service/db_repository.dart';
-import 'Pages/home_page.dart';
+import 'Pages/MainPages/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ Future<void> main() async {
   await DbRepository.openPersonBox();
   await DbRepository.openNotesbox();
   await DbRepository.openSettingsbox();
- 
+
   MyTheme controller = Get.put(MyTheme());
   Box<dynamic> settingBox = Hive.box("Setting");
   bool? isDarkMode = settingBox.get("Dark_Mode");

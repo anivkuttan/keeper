@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:keeper/Controllers/image_controller.dart';
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
@@ -18,7 +18,7 @@ class AddNewPerson extends StatefulWidget {
 
 class _AddNewPersonState extends State<AddNewPerson> {
   late final Box<Person> dbPerson;
-  ImageController imageController = Get.put(ImageController());
+
   final personController = Get.find<PersonController>();
   final TextEditingController _nameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -26,7 +26,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
   void initState() {
     super.initState();
     dbPerson = Hive.box("Person");
-    imageController.image = null;
+    personController.selectedImage = null;
   }
 
   @override
@@ -42,7 +42,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                GetBuilder<ImageController>(builder: (controller) {
+                GetBuilder<PersonController>(builder: (controller) {
                   return GestureDetector(
                     onTap: () {
                       showDialog(
@@ -53,13 +53,13 @@ class _AddNewPersonState extends State<AddNewPerson> {
                               firstButtonName: 'Camera',
                               firstButtonColor: Theme.of(context).primaryColor,
                               firstButtonTaped: () {
-                                imageController.pickImage(ImageSource.camera);
+                                controller.pickImage(ImageSource.camera);
                                 Navigator.pop(context);
                               },
                               secondButtonName: 'Gallery',
                               secondButtonColor: Theme.of(context).primaryColor,
                               secondButtonTaped: () {
-                                imageController.pickImage(ImageSource.gallery);
+                                controller.pickImage(ImageSource.gallery);
                                 Navigator.pop(context);
                               },
                             );
@@ -67,13 +67,13 @@ class _AddNewPersonState extends State<AddNewPerson> {
                     },
                     child: CircleImage(
                       circleRadius: 82,
-                      child: controller.image == null
+                      child: controller.selectedImage == null
                           ? const CircleAvatar(
                               backgroundImage:
-                                  AssetImage('assets/cube_keeper.png'),
+                                  AssetImage('assets/1.png'),
                             )
                           : Image.file(
-                              controller.image!,
+                              controller.selectedImage!,
                               fit: BoxFit.cover,
                             ),
                     ),
@@ -101,6 +101,7 @@ class _AddNewPersonState extends State<AddNewPerson> {
                     bool isValidated = formKey.currentState!.validate();
                     if (isValidated) {
                       final editedTime = DateTime.now();
+                      // var file = File('assets/defauitImage.png');
                       String editedTime1 =
                           "${editedTime.day}/${editedTime.month}/${editedTime.year} Time : ${editedTime.hour}:${editedTime.minute}";
 
@@ -113,9 +114,9 @@ class _AddNewPersonState extends State<AddNewPerson> {
                                 taskAmount: 0,
                                 editedTime: editedTime1),
                           ],
-                          personImage: imageController.image == null
-                              ? null
-                              : imageController.imageAsByts);
+                          personImage: personController.selectedImage == null
+                              ? personController.localImage
+                              : personController.imageAsByts);
 
                       personController.createPerson(person: newPerson);
 

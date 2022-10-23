@@ -1,12 +1,28 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Model/task.dart';
-// import 'package:keeper/Model/task.dart';
+
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PersonController extends GetxController {
   Box<Person> personBox = Hive.box<Person>("Person");
+  late Uint8List localImage;
+  @override
+  void onInit() async {
+    localImage = await fileToUnit8List();
+    super.onInit();
+  }
+
   RxBool isDark = false.obs;
+
+  File? selectedImage;
+  Uint8List? imageAsByts;
 
   int get personBoxCount => personBox.length;
 
@@ -51,10 +67,8 @@ class PersonController extends GetxController {
   addTaskToSomeOneFunction(Task task) {
     for (Person person in personBox.values) {
       if (person.isSelected) {
-        // log("before Adding new task $person");
         person.listOfTask.add(task);
 
-        // log("after Adding new task $person");
         person.personAmount += taskAmountCount.value;
         ////save function only available when you extends hive Object in your class
         ///save mentod can save the editing or updating changes....
@@ -66,38 +80,61 @@ class PersonController extends GetxController {
     }
   }
 
+  Future<Uint8List> fileToUnit8List() async {
+    // var localFile = rootBundle.load('assets/1.png');
+    // Unit8List byts = localFile.buffer.asUn
+    final ByteData bytes = await rootBundle.load('assets/1.png');
+    final Uint8List list = bytes.buffer.asUint8List();
+    return localImage = list;
+  }
+
+  Future<Uint8List?> convertImageAsUnit8List(File? image) async {
+    if (image != null) {
+      imageAsByts = await selectedImage!.readAsBytes();
+      return imageAsByts;
+    } else {
+      return null;
+    }
+  }
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final temparyImage = await ImagePicker().pickImage(source: source);
+      if (temparyImage == null) return;
+      selectedImage = File(temparyImage.path);
+      imageAsByts = await convertImageAsUnit8List(selectedImage);
+      update();
+    } on PlatformException catch (e) {
+      log("Anikuttan ==> Error from ImagePicker this is Error =>$e");
+    }
+    return null;
+  }
+
   createPerson({required Person person}) async {
-    // log("befor adding person keys count ${personBox.keys}");
-    // log("personbox Length ${personBox.length}");
-
     await personBox.add(person);
-
-    // log("person list length ${personBox.length}");
     update();
-    // log("afterAdding person key count ${personBox.keys}");
-    // log('  personbox values => ${personBox.values}');
   }
 
-  Future<void> updatePerson({required int index,required Person person})async{
+  Future<void> updatePerson({
+    required int index,
+    required Person person,
+  }) async {
+    log(person.personImage.toString());
+
     await personBox.putAt(index, person);
+    person.save();
     update();
   }
 
-  Future<void> deletePerson({required int index}) async {
-    // log('delete function called');
-    // log("personlist length befor deleting ${personBox.length}");
+  Future<void> deletePerson(
+      {required int index, required Person? deletedPerson}) async {
     await personBox.deleteAt(index);
+    // await deletedBox.add(deletedPerson!);
     update();
-    // log("personlist length after deleting ${personBox.length}");
-    // log('delete sussefully');
   }
 
-  Future<void> deleteAllPerson() async {
-    // log('delete All function called');
-    // log("personlist length befor deleting ${personBox.length}");
-    await personBox.clear();
-    update();
-    // log("personlist length after deleting ${personBox.length}");
-    // log('delete sussefully');
-  }
+  // Future<void> deleteAllPerson() async {
+  //   await personBox.clear();
+  //   update();
+  // }
 }

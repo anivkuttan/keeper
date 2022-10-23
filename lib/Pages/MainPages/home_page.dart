@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:keeper/Controllers/theme_controller.dart';
-import 'package:keeper/Pages/clear_page_tab.dart';
-import 'package:keeper/Pages/home_page_tab.dart';
-import 'package:keeper/Pages/quick_page_tab.dart';
+import 'package:keeper/Pages/MainPages/clear_page_tab.dart';
+import 'package:keeper/Pages/MainPages/home_page_tab.dart';
+import 'package:keeper/Pages/MainPages/quick_page_tab.dart';
 import 'package:keeper/Widgets/alert_dialog.dart';
 
 class HomePage extends StatefulWidget {

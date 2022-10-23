@@ -6,6 +6,7 @@ class DbRepository {
   static const String dbName = 'Person';
   static openPersonBox() async => await Hive.openBox<Person>(dbName);
   static openNotesbox() async => await Hive.openBox<Notes>("Notes");
+  
   static openSettingsbox() async => await Hive.openBox<dynamic>("Setting");
 
   static Box<Person> getPersonBox() => Hive.box<Person>(dbName);
