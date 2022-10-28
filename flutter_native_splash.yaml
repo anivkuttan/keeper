@@ -1,4 +1,4 @@
 flutter_native_splash:
-  color: "#7e8187"
+  color: "#14213D"
   android: true
-  image: "assets/keeper_icon.png"
+  image: "assets/pen.png"

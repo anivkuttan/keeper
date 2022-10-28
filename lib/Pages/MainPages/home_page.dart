@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -5,7 +6,6 @@ import 'package:keeper/Controllers/theme_controller.dart';
 import 'package:keeper/Pages/MainPages/clear_page_tab.dart';
 import 'package:keeper/Pages/MainPages/home_page_tab.dart';
 import 'package:keeper/Pages/MainPages/quick_page_tab.dart';
-import 'package:keeper/Widgets/alert_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,36 +28,42 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<bool?> askUserToExit() async {
-    return showDialog<bool?>(
-        context: context,
-        builder: (context) {
-          return DialogBox(
-              title: 'Dou you want to close the app?',
-              firstButtonName: "Yes",
-              firstButtonColor: Colors.red,
-              firstButtonTaped: () {
-                Navigator.pop(context, true);
-              },
-              secondButtonName: "No",
-              secondButtonColor: Colors.green,
-              secondButtonTaped: () {
-                Navigator.pop(context, false);
-              });
-        });
+  DateTime? lastPressed;
+
+  Future<bool> onWillPop() async {
+    final now = DateTime.now();
+    const maxDuration = Duration(seconds: 2);
+    final isWarning =
+        lastPressed == null || now.difference(lastPressed!) > maxDuration;
+
+    if (isWarning) {
+      lastPressed = now;
+      SnackBar exitSnack =    const SnackBar(
+        content: Text("Double Tap to Close The App"),
+        duration: maxDuration,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(30),
+        shape: StadiumBorder(),
+        // width: 300,
+      );
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(exitSnack);
+      return Future.value(false);
+    } else {
+      return Future.value(true);
+    }
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final userChoice = await askUserToExit();
-        return userChoice ?? false;
-      },
-      child: DefaultTabController(
-        length: 3,
+    return DefaultTabController(
+      length: 3,
+      child: WillPopScope(
+        onWillPop: onWillPop,
         child: Scaffold(
-          // backgroundColor: Colors.grey[300],
           appBar: AppBar(
             title: const Text('HomePage'),
             centerTitle: true,

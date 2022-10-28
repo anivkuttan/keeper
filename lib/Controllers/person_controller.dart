@@ -29,6 +29,7 @@ class PersonController extends GetxController {
   int get personBoxCount => personBox.length;
 
   RxInt taskAmountCount = 0.obs;
+  int previousAmount=0;
   RxBool sellectAllValue = false.obs;
 
   void counterIncrment(String buttonName) {

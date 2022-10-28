@@ -115,10 +115,25 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const Text("Apply to "),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Apply to "),
+                      Obx(() {
+                        return Checkbox(
+                            // controlAffinity: ListTileControlAffinity.leading,
+                            // title: const Text("Selete All/ Deselect All"),
+                            value: controller.sellectAllValue.value,
+                            onChanged: (value) {
+                              controller.sellectAllValue.value = value!;
+                              controller.masterCheckBoxValueChanged(value);
+                            });
+                      }),
+                    ],
+                  ),
                   const SizedBox(height: 10),
                   SizedBox(
-                    height: 150,
+                    height: 170,
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
@@ -165,16 +180,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
                           const SizedBox(height: 2),
                     ),
                   ),
-                  Obx(() {
-                    return CheckboxListTile(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: const Text("Selete All/ Deselect All"),
-                        value: controller.sellectAllValue.value,
-                        onChanged: (value) {
-                          controller.sellectAllValue.value = value!;
-                          controller.masterCheckBoxValueChanged(value);
-                        });
-                  }),
                   const SizedBox(
                     height: 20,
                   ),

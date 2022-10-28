@@ -19,5 +19,7 @@ class MyTheme extends GetxController {
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
+    primaryColor: kassentColor
+
   );
 }

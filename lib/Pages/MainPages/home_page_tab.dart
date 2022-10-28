@@ -1,8 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:keeper/Controllers/deleted_controller.dart';
+
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Pages/edit_person.dart';
@@ -29,13 +27,11 @@ class HomePageTabView extends StatelessWidget {
           return ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemBuilder: ((context, index) {
-              log("personBoxCount ${controller.personBoxCount}");
-
               return PersonCard(index: index);
             }),
             itemCount: controller.personBoxCount,
             separatorBuilder: (context, index) {
-              return const Divider(height: 20);
+              return const SizedBox(height: 10);
             },
           );
         },
@@ -97,6 +93,7 @@ class PersonCard extends StatelessWidget {
           )
         ]),
         child: Card(
+         
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -105,53 +102,59 @@ class PersonCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      person!.personName,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    space5,
-                    Text(person.personAmount.isNegative
-                        ? "Balance : ${person.personAmount}"
-                        : "Advance : ${person.personAmount}"),
-                    space5,
-                    Row(
-                      children: [
-                        Text(
-                          "last Task :",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: Text(
-                            person.listOfTask.last.taskName,
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                Container(
+                    color: person!.personAmount.isNegative
+                        ? Colors.red
+                        : Theme.of(context).primaryColor,
+                    width: 6,
+                    height: 90),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        person.personName,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      space5,
+                      Text(person.personAmount.isNegative
+                          ? "Balance : ${person.personAmount}"
+                          : "Advance : ${person.personAmount}"),
+                      space5,
+                      Row(
+                        children: [
+                          Text(
+                            "last Task :",
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                        ),
-                      ],
-                    ),
-                    space5,
-                    Text('Edited at:${person.listOfTask.last.editedTime}',
-
-                     
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    space5,
-                  ],
+                          SizedBox(
+                            width: 150,
+                            child: Text(
+                              person.listOfTask.last.taskName,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                      space5,
+                      Text(
+                        'Edited at:${person.listOfTask.last.editedTime}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      space5,
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 CircleImage(
                   circleRadius: 50,
-                  boderWidth: 5,
-                  backgroundColor: person.personAmount.isNegative
-                      ? Colors.red
-                      : const Color.fromARGB(255, 54, 215, 59),
+                  boderWidth: 3,
+                 
                   child: person.personImage != null
                       ? Image.memory(
                           person.personImage!,
