@@ -12,14 +12,13 @@ class MyTheme extends GetxController {
   ThemeData ligthTheme = ThemeData(
     brightness: Brightness.light,
     primarySwatch: primarySwatchColor,
-  
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: kassentColor, foregroundColor: kprimaryColor),
   );
 
   ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: kassentColor
-
-  );
+      brightness: Brightness.dark,
+      // primarySwatch: primaryDarkModeColor,
+      // colorScheme: const ColorScheme.dark()
+      );
 }

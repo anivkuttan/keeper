@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const Color kprimaryColor = Color(0xff283655);
 const Color kbackgroundColor = Color(0xffd0e1f9);
-const Color kassentColor = Color.fromARGB(255, 152, 121, 54);
+const Color kassentColor = Color.fromARGB(255, 89, 34, 178);
 
 const Color textTitleColor = Color(0xff1E1F26);
 const Color subTitleTitleColor = Color(0xff536878);
@@ -24,5 +24,15 @@ MaterialColor primarySwatchColor = const MaterialColor(
   },
 );
 
-
-
+MaterialColor primaryDarkModeColor = const MaterialColor(0xff49158B, {
+  50: Color(0xffA55EFF),
+  100: Color(0xff944DEE),
+  200: Color(0xff8440DB),
+  300: Color(0xff7230C6),
+  400: Color(0xff6223B4),
+  500: Color(0xff4C178E),
+  600: Color(0xff3E0C7D),
+  700: Color(0xff390977),
+  800: Color(0xff300368),
+  900: Color(0xff29035A),
+});
