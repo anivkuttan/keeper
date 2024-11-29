@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
-
 import 'package:keeper/Controllers/person_controller.dart';
 import 'package:keeper/Model/person.dart';
 import 'package:keeper/Pages/edit_person.dart';
 import 'package:keeper/Pages/view_person_page.dart';
-
 import 'package:keeper/Widgets/circle_avatar.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePageTabView extends StatelessWidget {
-  HomePageTabView({Key? key}) : super(key: key);
+  HomePageTabView({super.key});
 
   final PersonController controller = Get.put(PersonController());
 
@@ -46,7 +44,7 @@ class PersonCard extends StatelessWidget {
   // final DeleteController deleteController = Get.put(DeleteController());
 
   final SizedBox space5 = const SizedBox(height: 5);
-  PersonCard({Key? key, required this.index}) : super(key: key);
+  PersonCard({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +54,7 @@ class PersonCard extends StatelessWidget {
       onTap: (() {
         Route route = MaterialPageRoute(builder: (context) {
           return ViewPage(
-            person: person!,
+            person: person,
             index: index,
             from: "EDITED_PAGE",
           );
@@ -93,7 +91,6 @@ class PersonCard extends StatelessWidget {
           )
         ]),
         child: Card(
-         
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -116,7 +113,7 @@ class PersonCard extends StatelessWidget {
                     children: [
                       Text(
                         person.personName,
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       space5,
                       Text(person.personAmount.isNegative
@@ -154,7 +151,6 @@ class PersonCard extends StatelessWidget {
                 CircleImage(
                   circleRadius: 50,
                   boderWidth: 3,
-                 
                   child: person.personImage != null
                       ? Image.memory(
                           person.personImage!,
