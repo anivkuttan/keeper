@@ -1,5 +1,5 @@
-package com.example.keeper
+package com.keeper.dev.app
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()
