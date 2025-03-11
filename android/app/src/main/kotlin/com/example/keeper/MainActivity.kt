@@ -1,4 +1,4 @@
-package com.keeper.dev.app
+package com.example.keeper
 
 import io.flutter.embedding.android.FlutterActivity
 
