@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:keeper/core/theme/theme.dart';
-import 'package:keeper/hoem_page.dart';
+import 'package:keeper/pages/sign_up_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Keeper',
       theme: AppThemeData.lightTheme,
-      home: const OnBoardingScreen(),
+      home: const SignUpScreen(),
+      // home: const OnBoardingScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
