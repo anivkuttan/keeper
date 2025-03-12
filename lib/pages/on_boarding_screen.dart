@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
+import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/shared/widgets/app_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -63,7 +64,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Image.asset(data.imageUrl),
+                      Expanded(child: Image.asset(data.imageUrl)),
                       Text(
                         data.title,
                         textAlign: TextAlign.center,
@@ -96,17 +97,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   ),
                   Spacer(),
                   AppButton(
-                    onTap: () {
-                      context.go('/signup'); // Navigate to the Sign Up screen
-                    },
                     title: 'Sign Up',
+                    onTap: () {
+                      context.push(AppPage.signUp.path);
+                    },
                   ),
                   Spacer(),
                   AppButton.secondry(
+                    title: 'Sign In',
                     onTap: () {
-                      context.go('/login'); // Navigate to the Login screen
+                      context.push(AppPage.signIn.path);
                     },
-                    title: 'Login',
                   ),
                   Spacer(),
                 ],

@@ -1,0 +1,115 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:keeper/core/const/app_image.dart';
+import 'package:keeper/core/router/app_router.dart';
+import 'package:keeper/core/shared/widgets/app_button.dart';
+import 'package:keeper/pages/sign_up_screen.dart';
+
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  // final bool _showPassword = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("SignIn"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(flex: 2, child: Image.asset(AppImage.signInBG)),
+            const SizedBox(height: 16),
+            AppTextForm(hintText: 'Email'),
+            const SizedBox(height: 16),
+            AppTextForm(hintText: 'Password', isPassword: true),
+            const SizedBox(height: 24),
+            AppButton(title: 'SignIn', onTap: () {}),
+            const SizedBox(height: 16),
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  // Handle Forgot Password tap
+                },
+                child: Text(
+                  'Forgot Password?',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+            const Spacer(),
+            SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClickableText(
+                    prefixText: 'Don’t have an account yet? ',
+                    clickableText: 'Sign Up',
+                    onTap: () {
+                      context.pushReplacement(AppPage.signUp.path);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ClickableText extends StatelessWidget {
+  final String prefixText;
+  final String clickableText;
+  final TextStyle? prefixStyle;
+  final TextStyle? clickableStyle;
+  final VoidCallback onTap;
+
+  const ClickableText({
+    super.key,
+    required this.prefixText,
+    required this.clickableText,
+    required this.onTap,
+    this.prefixStyle,
+    this.clickableStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: prefixText,
+        style: prefixStyle ?? TextStyle(color: Colors.grey),
+        children: [
+          TextSpan(
+            text: clickableText,
+            style:
+                clickableStyle ??
+                TextStyle(color: Theme.of(context).primaryColor),
+            recognizer: TapGestureRecognizer()..onTap = onTap,
+          ),
+        ],
+      ),
+    );
+  }
+}

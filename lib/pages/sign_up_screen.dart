@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:keeper/core/const/app_image.dart';
+import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/shared/widgets/app_button.dart';
 import 'package:keeper/core/theme/theme.dart';
+import 'package:keeper/pages/sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -21,6 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Expanded(flex: 2, child: Image.asset(AppImage.signUpBG)),
             const AppTextForm(hintText: 'Name'),
             const SizedBox(height: 16),
             const AppTextForm(hintText: 'Email'),
@@ -61,17 +66,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      text: 'Already have an account? ',
-                      style: TextStyle(color: Colors.black),
-                      children: [
-                        TextSpan(
-                          text: 'Login',
-                          style: TextStyle(color: AppColor.primaryColor),
-                        ),
-                      ],
-                    ),
+                  ClickableText(
+                    prefixText: 'Already have an account? ',
+                    clickableText: 'SignIn',
+                    onTap: () {
+                      context.pushReplacement(AppPage.signIn.path);
+                    },
                   ),
                 ],
               ),
