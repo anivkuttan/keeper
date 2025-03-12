@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/shared/widgets/app_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -94,9 +95,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
                   ),
                   Spacer(),
-                  AppButton(onTap: () {}, title: 'Sign Up'),
+                  AppButton(
+                    onTap: () {
+                      context.go('/signup'); // Navigate to the Sign Up screen
+                    },
+                    title: 'Sign Up',
+                  ),
                   Spacer(),
-                  AppButton.secondry(onTap: () {}, title: 'Login'),
+                  AppButton.secondry(
+                    onTap: () {
+                      context.go('/login'); // Navigate to the Login screen
+                    },
+                    title: 'Login',
+                  ),
                   Spacer(),
                 ],
               ),
