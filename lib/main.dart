@@ -13,7 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Keeper',
-      routerConfig: AppRouter.router,
+      // routerConfig: AppRouter.router,
+      routerDelegate: AppRouter.router.routerDelegate,
+      routeInformationParser: AppRouter.router.routeInformationParser,
+      routeInformationProvider: AppRouter.router.routeInformationProvider,
       theme: AppThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
     );
