@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/shared/widgets/app_button.dart';
-import 'package:keeper/pages/sign_up_screen.dart';
+import 'package:keeper/src/pages/sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -64,7 +64,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     prefixText: 'Don’t have an account yet? ',
                     clickableText: 'Sign Up',
                     onTap: () {
-                      context.pushReplacement(AppPage.signUp.path);
+                      context.pushReplacement(AppPage.signUpScreen.path);
                     },
                   ),
                 ],

@@ -4,7 +4,7 @@ import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/shared/widgets/app_button.dart';
 import 'package:keeper/core/theme/theme.dart';
-import 'package:keeper/pages/sign_in_screen.dart';
+import 'package:keeper/src/pages/sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -70,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     prefixText: 'Already have an account? ',
                     clickableText: 'SignIn',
                     onTap: () {
-                      context.pushReplacement(AppPage.signIn.path);
+                      context.pushReplacement(AppPage.signInScreen.path);
                     },
                   ),
                 ],

@@ -29,16 +29,16 @@ class _MainScaffoldState extends State<MainScaffold> {
 
     switch (index) {
       case 0:
-        context.goNamed(AppPage.homePage.name);
+        context.goNamed(AppPage.homeScreen.name);
         break;
       case 1:
-        context.goNamed(AppPage.transaction.name);
+        context.goNamed(AppPage.transactionScreen.name);
         break;
       case 2:
-        context.goNamed(AppPage.budget.name);
+        context.goNamed(AppPage.budgetScreen.name);
         break;
       case 3:
-        context.goNamed(AppPage.profile.name);
+        context.goNamed(AppPage.profileScreen.name);
         break;
     }
   }

@@ -99,14 +99,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   AppButton(
                     title: 'Sign Up',
                     onTap: () {
-                      context.push(AppPage.signUp.path);
+                      context.push(AppPage.signUpScreen.path);
                     },
                   ),
                   Spacer(),
                   AppButton.secondry(
                     title: 'Sign In',
                     onTap: () {
-                      context.push(AppPage.signIn.path);
+                      context.push(AppPage.signInScreen.path);
                     },
                   ),
                   Spacer(),

@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:keeper/pages/home_page.dart';
-import 'package:keeper/pages/main_page.dart';
-import 'package:keeper/pages/on_boarding_screen.dart';
-import 'package:keeper/pages/profile_page.dart';
-import 'package:keeper/pages/sign_in_screen.dart';
-import 'package:keeper/pages/sign_up_screen.dart';
-import 'package:keeper/pages/transaction_page.dart';
-import 'package:keeper/pages/user_page.dart';
+import 'package:keeper/src/pages/home_page.dart';
+import 'package:keeper/src/pages/main_page.dart';
+import 'package:keeper/src/pages/on_boarding_screen.dart';
+import 'package:keeper/src/pages/profile_page.dart';
+import 'package:keeper/src/pages/sign_in_screen.dart';
+import 'package:keeper/src/pages/sign_up_screen.dart';
+import 'package:keeper/src/pages/transaction_page.dart';
+import 'package:keeper/src/person/view/new_person_creation.dart';
+import 'package:keeper/src/person/view/user_list_page.dart';
 
 class AppRouter {
   AppRouter._();
 
   static GoRouter router = GoRouter(
-    initialLocation: AppPage.homePage.path,
+    initialLocation: AppPage.homeScreen.path,
     routes: [
       // ShellRoute to manage the bottom navigation
       ShellRoute(
@@ -23,59 +24,67 @@ class AppRouter {
         },
         routes: [
           GoRoute(
-            path: AppPage.homePage.path,
-            name: AppPage.homePage.name,
+            path: AppPage.homeScreen.path,
+            name: AppPage.homeScreen.name,
             pageBuilder:
                 (context, state) => const MaterialPage(child: HomePage()),
           ),
           GoRoute(
-            path: AppPage.transaction.path,
-            name: AppPage.transaction.name,
+            path: AppPage.transactionScreen.path,
+            name: AppPage.transactionScreen.name,
             pageBuilder:
                 (context, state) =>
                     const MaterialPage(child: TransactionPage()),
           ),
           GoRoute(
-            path: AppPage.budget.path,
-            name: AppPage.budget.name,
+            path: AppPage.budgetScreen.path,
+            name: AppPage.budgetScreen.name,
             pageBuilder:
                 (context, state) => const MaterialPage(child: UsersPage()),
           ),
           GoRoute(
-            path: AppPage.profile.path,
-            name: AppPage.profile.name,
+            path: AppPage.profileScreen.path,
+            name: AppPage.profileScreen.name,
             pageBuilder:
                 (context, state) => const MaterialPage(child: ProfilePage()),
           ),
         ],
       ),
       GoRoute(
-        path: AppPage.onboarding.path,
-        name: AppPage.onboarding.name,
+        path: AppPage.onboardingScreen.path,
+        name: AppPage.onboardingScreen.name,
         builder: (context, state) => const OnBoardingScreen(),
       ),
       GoRoute(
-        path: AppPage.signUp.path,
-        name: AppPage.signUp.name,
+        path: AppPage.signUpScreen.path,
+        name: AppPage.signUpScreen.name,
         builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
-        path: AppPage.signIn.path,
-        name: AppPage.signIn.name,
+        path: AppPage.signInScreen.path,
+        name: AppPage.signInScreen.name,
         builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: AppPage.newPersonScreen.path,
+        name: AppPage.newPersonScreen.name,
+        builder: (context, state) {
+          return NewPersonPage();
+        },
       ),
     ],
   );
 }
 
 enum AppPage {
-  onboarding(name: 'onboarding', path: '/s'),
-  signIn(name: 'signIn', path: '/signin'),
-  signUp(name: 'signUp', path: '/signup'),
-  transaction(name: 'transaction', path: '/transaction'),
-  budget(name: 'budget', path: '/budget'),
-  profile(name: 'profile', path: '/profile'),
-  homePage(name: 'homePage', path: '/');
+  onboardingScreen(name: 'onboarding', path: '/'),
+  signInScreen(name: 'signIn', path: '/signin'),
+  signUpScreen(name: 'signUp', path: '/signup'),
+  transactionScreen(name: 'transaction', path: '/transaction'),
+  budgetScreen(name: 'budget', path: '/budget'),
+  profileScreen(name: 'profile', path: '/profile'),
+  newPersonScreen(name: 'newPerson', path: '/newPerson'),
+  homeScreen(name: 'homePage', path: '/homePage');
 
   const AppPage({required this.name, required this.path});
   final String name;
