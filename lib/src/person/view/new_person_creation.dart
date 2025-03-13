@@ -1,5 +1,8 @@
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:keeper/core/db/database.dart';
+import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
 
 class NewPersonPage extends ConsumerWidget {
@@ -65,6 +68,19 @@ class NewPersonPage extends ConsumerWidget {
                       personState.isLoading
                           ? const CircularProgressIndicator()
                           : const Text("Submit"),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    final db = getIt<AppDatabase>();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DriftDbViewer(db),
+                      ),
+                    );
+                  },
+
+                  child: Text("DB"),
                 ),
               ],
             ),

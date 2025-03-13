@@ -3,265 +3,382 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $TodoItemsTable extends TodoItems
-    with TableInfo<$TodoItemsTable, TodoItem> {
+class $PersonTblTable extends PersonTbl
+    with TableInfo<$PersonTblTable, PersonTblData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TodoItemsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  $PersonTblTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _contactNumberMeta = const VerificationMeta(
+    'contactNumber',
+  );
   @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      additionalChecks:
-          GeneratedColumn.checkTextLength(minTextLength: 6, maxTextLength: 32),
-      type: DriftSqlType.string,
-      requiredDuringInsert: true);
-  static const VerificationMeta _contentMeta =
-      const VerificationMeta('content');
+  late final GeneratedColumn<String> contactNumber = GeneratedColumn<String>(
+    'contact_number',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
-  late final GeneratedColumn<String> content = GeneratedColumn<String>(
-      'body', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+    'email',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
   @override
-  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<Uint8List> imageUrl = GeneratedColumn<Uint8List>(
+    'image_url',
+    aliasedName,
+    true,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _owedAmountMeta = const VerificationMeta(
+    'owedAmount',
+  );
   @override
-  List<GeneratedColumn> get $columns => [id, title, content, createdAt];
+  late final GeneratedColumn<double> owedAmount = GeneratedColumn<double>(
+    'owed_amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    name,
+    contactNumber,
+    email,
+    imageUrl,
+    owedAmount,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'todo_items';
+  static const String $name = 'person_tbl';
   @override
-  VerificationContext validateIntegrity(Insertable<TodoItem> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<PersonTblData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('title')) {
+    if (data.containsKey('name')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
     } else if (isInserting) {
-      context.missing(_titleMeta);
+      context.missing(_nameMeta);
     }
-    if (data.containsKey('body')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['body']!, _contentMeta));
+    if (data.containsKey('contact_number')) {
+      context.handle(
+        _contactNumberMeta,
+        contactNumber.isAcceptableOrUnknown(
+          data['contact_number']!,
+          _contactNumberMeta,
+        ),
+      );
     } else if (isInserting) {
-      context.missing(_contentMeta);
+      context.missing(_contactNumberMeta);
     }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    if (data.containsKey('email')) {
+      context.handle(
+        _emailMeta,
+        email.isAcceptableOrUnknown(data['email']!, _emailMeta),
+      );
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+      );
+    }
+    if (data.containsKey('owed_amount')) {
+      context.handle(
+        _owedAmountMeta,
+        owedAmount.isAcceptableOrUnknown(data['owed_amount']!, _owedAmountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_owedAmountMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  TodoItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+  PersonTblData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TodoItem(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      content: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}body'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at']),
+    return PersonTblData(
+      name:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}name'],
+          )!,
+      contactNumber:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}contact_number'],
+          )!,
+      email: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}email'],
+      ),
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}image_url'],
+      ),
+      owedAmount:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.double,
+            data['${effectivePrefix}owed_amount'],
+          )!,
     );
   }
 
   @override
-  $TodoItemsTable createAlias(String alias) {
-    return $TodoItemsTable(attachedDatabase, alias);
+  $PersonTblTable createAlias(String alias) {
+    return $PersonTblTable(attachedDatabase, alias);
   }
 }
 
-class TodoItem extends DataClass implements Insertable<TodoItem> {
-  final int id;
-  final String title;
-  final String content;
-  final DateTime? createdAt;
-  const TodoItem(
-      {required this.id,
-      required this.title,
-      required this.content,
-      this.createdAt});
+class PersonTblData extends DataClass implements Insertable<PersonTblData> {
+  final String name;
+  final String contactNumber;
+  final String? email;
+  final Uint8List? imageUrl;
+  final double owedAmount;
+  const PersonTblData({
+    required this.name,
+    required this.contactNumber,
+    this.email,
+    this.imageUrl,
+    required this.owedAmount,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['title'] = Variable<String>(title);
-    map['body'] = Variable<String>(content);
-    if (!nullToAbsent || createdAt != null) {
-      map['created_at'] = Variable<DateTime>(createdAt);
+    map['name'] = Variable<String>(name);
+    map['contact_number'] = Variable<String>(contactNumber);
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
     }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<Uint8List>(imageUrl);
+    }
+    map['owed_amount'] = Variable<double>(owedAmount);
     return map;
   }
 
-  TodoItemsCompanion toCompanion(bool nullToAbsent) {
-    return TodoItemsCompanion(
-      id: Value(id),
-      title: Value(title),
-      content: Value(content),
-      createdAt: createdAt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(createdAt),
+  PersonTblCompanion toCompanion(bool nullToAbsent) {
+    return PersonTblCompanion(
+      name: Value(name),
+      contactNumber: Value(contactNumber),
+      email:
+          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      imageUrl:
+          imageUrl == null && nullToAbsent
+              ? const Value.absent()
+              : Value(imageUrl),
+      owedAmount: Value(owedAmount),
     );
   }
 
-  factory TodoItem.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory PersonTblData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TodoItem(
-      id: serializer.fromJson<int>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
-      content: serializer.fromJson<String>(json['content']),
-      createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
+    return PersonTblData(
+      name: serializer.fromJson<String>(json['name']),
+      contactNumber: serializer.fromJson<String>(json['contactNumber']),
+      email: serializer.fromJson<String?>(json['email']),
+      imageUrl: serializer.fromJson<Uint8List?>(json['imageUrl']),
+      owedAmount: serializer.fromJson<double>(json['owedAmount']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'title': serializer.toJson<String>(title),
-      'content': serializer.toJson<String>(content),
-      'createdAt': serializer.toJson<DateTime?>(createdAt),
+      'name': serializer.toJson<String>(name),
+      'contactNumber': serializer.toJson<String>(contactNumber),
+      'email': serializer.toJson<String?>(email),
+      'imageUrl': serializer.toJson<Uint8List?>(imageUrl),
+      'owedAmount': serializer.toJson<double>(owedAmount),
     };
   }
 
-  TodoItem copyWith(
-          {int? id,
-          String? title,
-          String? content,
-          Value<DateTime?> createdAt = const Value.absent()}) =>
-      TodoItem(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        content: content ?? this.content,
-        createdAt: createdAt.present ? createdAt.value : this.createdAt,
-      );
-  TodoItem copyWithCompanion(TodoItemsCompanion data) {
-    return TodoItem(
-      id: data.id.present ? data.id.value : this.id,
-      title: data.title.present ? data.title.value : this.title,
-      content: data.content.present ? data.content.value : this.content,
-      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+  PersonTblData copyWith({
+    String? name,
+    String? contactNumber,
+    Value<String?> email = const Value.absent(),
+    Value<Uint8List?> imageUrl = const Value.absent(),
+    double? owedAmount,
+  }) => PersonTblData(
+    name: name ?? this.name,
+    contactNumber: contactNumber ?? this.contactNumber,
+    email: email.present ? email.value : this.email,
+    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
+    owedAmount: owedAmount ?? this.owedAmount,
+  );
+  PersonTblData copyWithCompanion(PersonTblCompanion data) {
+    return PersonTblData(
+      name: data.name.present ? data.name.value : this.name,
+      contactNumber:
+          data.contactNumber.present
+              ? data.contactNumber.value
+              : this.contactNumber,
+      email: data.email.present ? data.email.value : this.email,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      owedAmount:
+          data.owedAmount.present ? data.owedAmount.value : this.owedAmount,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('TodoItem(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('content: $content, ')
-          ..write('createdAt: $createdAt')
+    return (StringBuffer('PersonTblData(')
+          ..write('name: $name, ')
+          ..write('contactNumber: $contactNumber, ')
+          ..write('email: $email, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('owedAmount: $owedAmount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, content, createdAt);
+  int get hashCode => Object.hash(
+    name,
+    contactNumber,
+    email,
+    $driftBlobEquality.hash(imageUrl),
+    owedAmount,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TodoItem &&
-          other.id == this.id &&
-          other.title == this.title &&
-          other.content == this.content &&
-          other.createdAt == this.createdAt);
+      (other is PersonTblData &&
+          other.name == this.name &&
+          other.contactNumber == this.contactNumber &&
+          other.email == this.email &&
+          $driftBlobEquality.equals(other.imageUrl, this.imageUrl) &&
+          other.owedAmount == this.owedAmount);
 }
 
-class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
-  final Value<int> id;
-  final Value<String> title;
-  final Value<String> content;
-  final Value<DateTime?> createdAt;
-  const TodoItemsCompanion({
-    this.id = const Value.absent(),
-    this.title = const Value.absent(),
-    this.content = const Value.absent(),
-    this.createdAt = const Value.absent(),
+class PersonTblCompanion extends UpdateCompanion<PersonTblData> {
+  final Value<String> name;
+  final Value<String> contactNumber;
+  final Value<String?> email;
+  final Value<Uint8List?> imageUrl;
+  final Value<double> owedAmount;
+  final Value<int> rowid;
+  const PersonTblCompanion({
+    this.name = const Value.absent(),
+    this.contactNumber = const Value.absent(),
+    this.email = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.owedAmount = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  TodoItemsCompanion.insert({
-    this.id = const Value.absent(),
-    required String title,
-    required String content,
-    this.createdAt = const Value.absent(),
-  })  : title = Value(title),
-        content = Value(content);
-  static Insertable<TodoItem> custom({
-    Expression<int>? id,
-    Expression<String>? title,
-    Expression<String>? content,
-    Expression<DateTime>? createdAt,
+  PersonTblCompanion.insert({
+    required String name,
+    required String contactNumber,
+    this.email = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    required double owedAmount,
+    this.rowid = const Value.absent(),
+  }) : name = Value(name),
+       contactNumber = Value(contactNumber),
+       owedAmount = Value(owedAmount);
+  static Insertable<PersonTblData> custom({
+    Expression<String>? name,
+    Expression<String>? contactNumber,
+    Expression<String>? email,
+    Expression<Uint8List>? imageUrl,
+    Expression<double>? owedAmount,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (title != null) 'title': title,
-      if (content != null) 'body': content,
-      if (createdAt != null) 'created_at': createdAt,
+      if (name != null) 'name': name,
+      if (contactNumber != null) 'contact_number': contactNumber,
+      if (email != null) 'email': email,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (owedAmount != null) 'owed_amount': owedAmount,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  TodoItemsCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? title,
-      Value<String>? content,
-      Value<DateTime?>? createdAt}) {
-    return TodoItemsCompanion(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      createdAt: createdAt ?? this.createdAt,
+  PersonTblCompanion copyWith({
+    Value<String>? name,
+    Value<String>? contactNumber,
+    Value<String?>? email,
+    Value<Uint8List?>? imageUrl,
+    Value<double>? owedAmount,
+    Value<int>? rowid,
+  }) {
+    return PersonTblCompanion(
+      name: name ?? this.name,
+      contactNumber: contactNumber ?? this.contactNumber,
+      email: email ?? this.email,
+      imageUrl: imageUrl ?? this.imageUrl,
+      owedAmount: owedAmount ?? this.owedAmount,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
     }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
+    if (contactNumber.present) {
+      map['contact_number'] = Variable<String>(contactNumber.value);
     }
-    if (content.present) {
-      map['body'] = Variable<String>(content.value);
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
     }
-    if (createdAt.present) {
-      map['created_at'] = Variable<DateTime>(createdAt.value);
+    if (imageUrl.present) {
+      map['image_url'] = Variable<Uint8List>(imageUrl.value);
+    }
+    if (owedAmount.present) {
+      map['owed_amount'] = Variable<double>(owedAmount.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('TodoItemsCompanion(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('content: $content, ')
-          ..write('createdAt: $createdAt')
+    return (StringBuffer('PersonTblCompanion(')
+          ..write('name: $name, ')
+          ..write('contactNumber: $contactNumber, ')
+          ..write('email: $email, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('owedAmount: $owedAmount, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -270,162 +387,229 @@ class TodoItemsCompanion extends UpdateCompanion<TodoItem> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $TodoItemsTable todoItems = $TodoItemsTable(this);
+  late final $PersonTblTable personTbl = $PersonTblTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [todoItems];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [personTbl];
 }
 
-typedef $$TodoItemsTableCreateCompanionBuilder = TodoItemsCompanion Function({
-  Value<int> id,
-  required String title,
-  required String content,
-  Value<DateTime?> createdAt,
-});
-typedef $$TodoItemsTableUpdateCompanionBuilder = TodoItemsCompanion Function({
-  Value<int> id,
-  Value<String> title,
-  Value<String> content,
-  Value<DateTime?> createdAt,
-});
+typedef $$PersonTblTableCreateCompanionBuilder =
+    PersonTblCompanion Function({
+      required String name,
+      required String contactNumber,
+      Value<String?> email,
+      Value<Uint8List?> imageUrl,
+      required double owedAmount,
+      Value<int> rowid,
+    });
+typedef $$PersonTblTableUpdateCompanionBuilder =
+    PersonTblCompanion Function({
+      Value<String> name,
+      Value<String> contactNumber,
+      Value<String?> email,
+      Value<Uint8List?> imageUrl,
+      Value<double> owedAmount,
+      Value<int> rowid,
+    });
 
-class $$TodoItemsTableFilterComposer
-    extends Composer<_$AppDatabase, $TodoItemsTable> {
-  $$TodoItemsTableFilterComposer({
+class $$PersonTblTableFilterComposer
+    extends Composer<_$AppDatabase, $PersonTblTable> {
+  $$PersonTblTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get contactNumber => $composableBuilder(
+    column: $table.contactNumber,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<String> get content => $composableBuilder(
-      column: $table.content, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnFilters(column),
+  );
 
-  ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<Uint8List> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get owedAmount => $composableBuilder(
+    column: $table.owedAmount,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
-class $$TodoItemsTableOrderingComposer
-    extends Composer<_$AppDatabase, $TodoItemsTable> {
-  $$TodoItemsTableOrderingComposer({
+class $$PersonTblTableOrderingComposer
+    extends Composer<_$AppDatabase, $PersonTblTable> {
+  $$PersonTblTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get contactNumber => $composableBuilder(
+    column: $table.contactNumber,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<String> get content => $composableBuilder(
-      column: $table.content, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get email => $composableBuilder(
+    column: $table.email,
+    builder: (column) => ColumnOrderings(column),
+  );
 
-  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<Uint8List> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get owedAmount => $composableBuilder(
+    column: $table.owedAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
-class $$TodoItemsTableAnnotationComposer
-    extends Composer<_$AppDatabase, $TodoItemsTable> {
-  $$TodoItemsTableAnnotationComposer({
+class $$PersonTblTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PersonTblTable> {
+  $$PersonTblTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
+  GeneratedColumn<String> get contactNumber => $composableBuilder(
+    column: $table.contactNumber,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get content =>
-      $composableBuilder(column: $table.content, builder: (column) => column);
+  GeneratedColumn<String> get email =>
+      $composableBuilder(column: $table.email, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get createdAt =>
-      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+  GeneratedColumn<Uint8List> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<double> get owedAmount => $composableBuilder(
+    column: $table.owedAmount,
+    builder: (column) => column,
+  );
 }
 
-class $$TodoItemsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $TodoItemsTable,
-    TodoItem,
-    $$TodoItemsTableFilterComposer,
-    $$TodoItemsTableOrderingComposer,
-    $$TodoItemsTableAnnotationComposer,
-    $$TodoItemsTableCreateCompanionBuilder,
-    $$TodoItemsTableUpdateCompanionBuilder,
-    (TodoItem, BaseReferences<_$AppDatabase, $TodoItemsTable, TodoItem>),
-    TodoItem,
-    PrefetchHooks Function()> {
-  $$TodoItemsTableTableManager(_$AppDatabase db, $TodoItemsTable table)
-      : super(TableManagerState(
+class $$PersonTblTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PersonTblTable,
+          PersonTblData,
+          $$PersonTblTableFilterComposer,
+          $$PersonTblTableOrderingComposer,
+          $$PersonTblTableAnnotationComposer,
+          $$PersonTblTableCreateCompanionBuilder,
+          $$PersonTblTableUpdateCompanionBuilder,
+          (
+            PersonTblData,
+            BaseReferences<_$AppDatabase, $PersonTblTable, PersonTblData>,
+          ),
+          PersonTblData,
+          PrefetchHooks Function()
+        > {
+  $$PersonTblTableTableManager(_$AppDatabase db, $PersonTblTable table)
+    : super(
+        TableManagerState(
           db: db,
           table: table,
-          createFilteringComposer: () =>
-              $$TodoItemsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$TodoItemsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$TodoItemsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
-            Value<String> content = const Value.absent(),
-            Value<DateTime?> createdAt = const Value.absent(),
-          }) =>
-              TodoItemsCompanion(
-            id: id,
-            title: title,
-            content: content,
-            createdAt: createdAt,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String title,
-            required String content,
-            Value<DateTime?> createdAt = const Value.absent(),
-          }) =>
-              TodoItemsCompanion.insert(
-            id: id,
-            title: title,
-            content: content,
-            createdAt: createdAt,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
+          createFilteringComposer:
+              () => $$PersonTblTableFilterComposer($db: db, $table: table),
+          createOrderingComposer:
+              () => $$PersonTblTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer:
+              () => $$PersonTblTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> name = const Value.absent(),
+                Value<String> contactNumber = const Value.absent(),
+                Value<String?> email = const Value.absent(),
+                Value<Uint8List?> imageUrl = const Value.absent(),
+                Value<double> owedAmount = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PersonTblCompanion(
+                name: name,
+                contactNumber: contactNumber,
+                email: email,
+                imageUrl: imageUrl,
+                owedAmount: owedAmount,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String name,
+                required String contactNumber,
+                Value<String?> email = const Value.absent(),
+                Value<Uint8List?> imageUrl = const Value.absent(),
+                required double owedAmount,
+                Value<int> rowid = const Value.absent(),
+              }) => PersonTblCompanion.insert(
+                name: name,
+                contactNumber: contactNumber,
+                email: email,
+                imageUrl: imageUrl,
+                owedAmount: owedAmount,
+                rowid: rowid,
+              ),
+          withReferenceMapper:
+              (p0) =>
+                  p0
+                      .map(
+                        (e) => (
+                          e.readTable(table),
+                          BaseReferences(db, table, e),
+                        ),
+                      )
+                      .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$TodoItemsTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $TodoItemsTable,
-    TodoItem,
-    $$TodoItemsTableFilterComposer,
-    $$TodoItemsTableOrderingComposer,
-    $$TodoItemsTableAnnotationComposer,
-    $$TodoItemsTableCreateCompanionBuilder,
-    $$TodoItemsTableUpdateCompanionBuilder,
-    (TodoItem, BaseReferences<_$AppDatabase, $TodoItemsTable, TodoItem>),
-    TodoItem,
-    PrefetchHooks Function()>;
+typedef $$PersonTblTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PersonTblTable,
+      PersonTblData,
+      $$PersonTblTableFilterComposer,
+      $$PersonTblTableOrderingComposer,
+      $$PersonTblTableAnnotationComposer,
+      $$PersonTblTableCreateCompanionBuilder,
+      $$PersonTblTableUpdateCompanionBuilder,
+      (
+        PersonTblData,
+        BaseReferences<_$AppDatabase, $PersonTblTable, PersonTblData>,
+      ),
+      PersonTblData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$TodoItemsTableTableManager get todoItems =>
-      $$TodoItemsTableTableManager(_db, _db.todoItems);
+  $$PersonTblTableTableManager get personTbl =>
+      $$PersonTblTableTableManager(_db, _db.personTbl);
 }

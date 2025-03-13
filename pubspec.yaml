@@ -23,6 +23,9 @@ dependencies:
   go_router: ^14.8.1 
   flutter_riverpod: ^2.6.1
   image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  drift_db_viewer: ^2.1.0
+  get_it: ^8.0.3
   
 
 dev_dependencies:
