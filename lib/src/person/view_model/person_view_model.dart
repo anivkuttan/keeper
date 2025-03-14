@@ -27,24 +27,38 @@ class PersonViewModel extends StateNotifier<PersonState> {
   //   super.dispose();
   // }
 
-  Future<void> createOnePerson() async {
+  Future<bool> createOnePerson() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
-
     try {
       final db = getIt<AppDatabase>();
-      await Future.delayed(const Duration(seconds: 2));
-      final person = state.person;
+      final person = state.person!.toCompanian;
       await db
           .into(db.personTbl)
           .insert(
-            PersonTblCompanion.insert(
-              name: person!.name,
-              email: Value(person.email),
-              contactNumber: person.contactNumber,
-              owedAmount: person.owedAmount,
+            person.copyWith(
+              createdAt: Value(DateTime.now()),
+              updatedAt: Value(DateTime.now()),
             ),
           );
-      throw Exception("Failed to create user");
+      state = state.copyWith(isLoading: false);
+      return true;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      return false;
+    }
+  }
+
+  Future<void> getAllPersons() async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    try {
+      final db = getIt<AppDatabase>();
+
+      final personList = await db.select(db.personTbl).get();
+      state = state.copyWith(
+        personList: personList,
+        isLoading: false,
+        errorMessage: null,
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }

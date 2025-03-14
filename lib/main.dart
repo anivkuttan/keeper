@@ -5,6 +5,8 @@ import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
   setup();
   runApp(ProviderScope(child: MyApp()));
 }

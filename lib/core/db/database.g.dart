@@ -3,12 +3,59 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+mixin $PersonTblTableToColumns implements Insertable<Person> {
+  int? get id;
+  String get name;
+  String get contactNumber;
+  String? get email;
+  Uint8List? get imageUrl;
+  double get owedAmount;
+  DateTime? get createdAt;
+  DateTime? get updatedAt;
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<int>(id);
+    }
+    map['name'] = Variable<String>(name);
+    map['contact_number'] = Variable<String>(contactNumber);
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || imageUrl != null) {
+      map['image_url'] = Variable<Uint8List>(imageUrl);
+    }
+    map['owed_amount'] = Variable<double>(owedAmount);
+    if (!nullToAbsent || createdAt != null) {
+      map['created_at'] = Variable<DateTime>(createdAt);
+    }
+    if (!nullToAbsent || updatedAt != null) {
+      map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    return map;
+  }
+}
+
 class $PersonTblTable extends PersonTbl
-    with TableInfo<$PersonTblTable, PersonTblData> {
+    with TableInfo<$PersonTblTable, Person> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $PersonTblTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    true,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -60,13 +107,38 @@ class $PersonTblTable extends PersonTbl
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
+    id,
     name,
     contactNumber,
     email,
     imageUrl,
     owedAmount,
+    createdAt,
+    updatedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -75,11 +147,14 @@ class $PersonTblTable extends PersonTbl
   static const String $name = 'person_tbl';
   @override
   VerificationContext validateIntegrity(
-    Insertable<PersonTblData> instance, {
+    Insertable<Person> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('name')) {
       context.handle(
         _nameMeta,
@@ -119,15 +194,27 @@ class $PersonTblTable extends PersonTbl
     } else if (isInserting) {
       context.missing(_owedAmountMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PersonTblData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Person map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PersonTblData(
+    return Person(
       name:
           attachedDatabase.typeMapping.read(
             DriftSqlType.string,
@@ -138,6 +225,10 @@ class $PersonTblTable extends PersonTbl
             DriftSqlType.string,
             data['${effectivePrefix}contact_number'],
           )!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      ),
       email: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}email'],
@@ -145,6 +236,14 @@ class $PersonTblTable extends PersonTbl
       imageUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.blob,
         data['${effectivePrefix}image_url'],
+      ),
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
       ),
       owedAmount:
           attachedDatabase.typeMapping.read(
@@ -160,195 +259,87 @@ class $PersonTblTable extends PersonTbl
   }
 }
 
-class PersonTblData extends DataClass implements Insertable<PersonTblData> {
-  final String name;
-  final String contactNumber;
-  final String? email;
-  final Uint8List? imageUrl;
-  final double owedAmount;
-  const PersonTblData({
-    required this.name,
-    required this.contactNumber,
-    this.email,
-    this.imageUrl,
-    required this.owedAmount,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['name'] = Variable<String>(name);
-    map['contact_number'] = Variable<String>(contactNumber);
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<Uint8List>(imageUrl);
-    }
-    map['owed_amount'] = Variable<double>(owedAmount);
-    return map;
-  }
-
-  PersonTblCompanion toCompanion(bool nullToAbsent) {
-    return PersonTblCompanion(
-      name: Value(name),
-      contactNumber: Value(contactNumber),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
-      imageUrl:
-          imageUrl == null && nullToAbsent
-              ? const Value.absent()
-              : Value(imageUrl),
-      owedAmount: Value(owedAmount),
-    );
-  }
-
-  factory PersonTblData.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PersonTblData(
-      name: serializer.fromJson<String>(json['name']),
-      contactNumber: serializer.fromJson<String>(json['contactNumber']),
-      email: serializer.fromJson<String?>(json['email']),
-      imageUrl: serializer.fromJson<Uint8List?>(json['imageUrl']),
-      owedAmount: serializer.fromJson<double>(json['owedAmount']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'name': serializer.toJson<String>(name),
-      'contactNumber': serializer.toJson<String>(contactNumber),
-      'email': serializer.toJson<String?>(email),
-      'imageUrl': serializer.toJson<Uint8List?>(imageUrl),
-      'owedAmount': serializer.toJson<double>(owedAmount),
-    };
-  }
-
-  PersonTblData copyWith({
-    String? name,
-    String? contactNumber,
-    Value<String?> email = const Value.absent(),
-    Value<Uint8List?> imageUrl = const Value.absent(),
-    double? owedAmount,
-  }) => PersonTblData(
-    name: name ?? this.name,
-    contactNumber: contactNumber ?? this.contactNumber,
-    email: email.present ? email.value : this.email,
-    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
-    owedAmount: owedAmount ?? this.owedAmount,
-  );
-  PersonTblData copyWithCompanion(PersonTblCompanion data) {
-    return PersonTblData(
-      name: data.name.present ? data.name.value : this.name,
-      contactNumber:
-          data.contactNumber.present
-              ? data.contactNumber.value
-              : this.contactNumber,
-      email: data.email.present ? data.email.value : this.email,
-      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
-      owedAmount:
-          data.owedAmount.present ? data.owedAmount.value : this.owedAmount,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('PersonTblData(')
-          ..write('name: $name, ')
-          ..write('contactNumber: $contactNumber, ')
-          ..write('email: $email, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('owedAmount: $owedAmount')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    name,
-    contactNumber,
-    email,
-    $driftBlobEquality.hash(imageUrl),
-    owedAmount,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is PersonTblData &&
-          other.name == this.name &&
-          other.contactNumber == this.contactNumber &&
-          other.email == this.email &&
-          $driftBlobEquality.equals(other.imageUrl, this.imageUrl) &&
-          other.owedAmount == this.owedAmount);
-}
-
-class PersonTblCompanion extends UpdateCompanion<PersonTblData> {
+class PersonTblCompanion extends UpdateCompanion<Person> {
+  final Value<int?> id;
   final Value<String> name;
   final Value<String> contactNumber;
   final Value<String?> email;
   final Value<Uint8List?> imageUrl;
   final Value<double> owedAmount;
-  final Value<int> rowid;
+  final Value<DateTime?> createdAt;
+  final Value<DateTime?> updatedAt;
   const PersonTblCompanion({
+    this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.contactNumber = const Value.absent(),
     this.email = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.owedAmount = const Value.absent(),
-    this.rowid = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   PersonTblCompanion.insert({
+    this.id = const Value.absent(),
     required String name,
     required String contactNumber,
     this.email = const Value.absent(),
     this.imageUrl = const Value.absent(),
     required double owedAmount,
-    this.rowid = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   }) : name = Value(name),
        contactNumber = Value(contactNumber),
        owedAmount = Value(owedAmount);
-  static Insertable<PersonTblData> custom({
+  static Insertable<Person> custom({
+    Expression<int>? id,
     Expression<String>? name,
     Expression<String>? contactNumber,
     Expression<String>? email,
     Expression<Uint8List>? imageUrl,
     Expression<double>? owedAmount,
-    Expression<int>? rowid,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (contactNumber != null) 'contact_number': contactNumber,
       if (email != null) 'email': email,
       if (imageUrl != null) 'image_url': imageUrl,
       if (owedAmount != null) 'owed_amount': owedAmount,
-      if (rowid != null) 'rowid': rowid,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
   PersonTblCompanion copyWith({
+    Value<int?>? id,
     Value<String>? name,
     Value<String>? contactNumber,
     Value<String?>? email,
     Value<Uint8List?>? imageUrl,
     Value<double>? owedAmount,
-    Value<int>? rowid,
+    Value<DateTime?>? createdAt,
+    Value<DateTime?>? updatedAt,
   }) {
     return PersonTblCompanion(
+      id: id ?? this.id,
       name: name ?? this.name,
       contactNumber: contactNumber ?? this.contactNumber,
       email: email ?? this.email,
       imageUrl: imageUrl ?? this.imageUrl,
       owedAmount: owedAmount ?? this.owedAmount,
-      rowid: rowid ?? this.rowid,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
@@ -364,8 +355,11 @@ class PersonTblCompanion extends UpdateCompanion<PersonTblData> {
     if (owedAmount.present) {
       map['owed_amount'] = Variable<double>(owedAmount.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
     return map;
   }
@@ -373,14 +367,40 @@ class PersonTblCompanion extends UpdateCompanion<PersonTblData> {
   @override
   String toString() {
     return (StringBuffer('PersonTblCompanion(')
+          ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('contactNumber: $contactNumber, ')
           ..write('email: $email, ')
           ..write('imageUrl: $imageUrl, ')
           ..write('owedAmount: $owedAmount, ')
-          ..write('rowid: $rowid')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
+  }
+}
+
+class _$PersonInsertable implements Insertable<Person> {
+  Person _object;
+  _$PersonInsertable(this._object);
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    return PersonTblCompanion(
+      id: Value(_object.id),
+      name: Value(_object.name),
+      contactNumber: Value(_object.contactNumber),
+      email: Value(_object.email),
+      imageUrl: Value(_object.imageUrl),
+      owedAmount: Value(_object.owedAmount),
+      createdAt: Value(_object.createdAt),
+      updatedAt: Value(_object.updatedAt),
+    ).toColumns(false);
+  }
+}
+
+extension PersonToInsertable on Person {
+  _$PersonInsertable toInsertable() {
+    return _$PersonInsertable(this);
   }
 }
 
@@ -397,21 +417,25 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$PersonTblTableCreateCompanionBuilder =
     PersonTblCompanion Function({
+      Value<int?> id,
       required String name,
       required String contactNumber,
       Value<String?> email,
       Value<Uint8List?> imageUrl,
       required double owedAmount,
-      Value<int> rowid,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
     });
 typedef $$PersonTblTableUpdateCompanionBuilder =
     PersonTblCompanion Function({
+      Value<int?> id,
       Value<String> name,
       Value<String> contactNumber,
       Value<String?> email,
       Value<Uint8List?> imageUrl,
       Value<double> owedAmount,
-      Value<int> rowid,
+      Value<DateTime?> createdAt,
+      Value<DateTime?> updatedAt,
     });
 
 class $$PersonTblTableFilterComposer
@@ -423,6 +447,11 @@ class $$PersonTblTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -447,6 +476,16 @@ class $$PersonTblTableFilterComposer
     column: $table.owedAmount,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$PersonTblTableOrderingComposer
@@ -458,6 +497,11 @@ class $$PersonTblTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -482,6 +526,16 @@ class $$PersonTblTableOrderingComposer
     column: $table.owedAmount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PersonTblTableAnnotationComposer
@@ -493,6 +547,9 @@ class $$PersonTblTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
@@ -511,6 +568,12 @@ class $$PersonTblTableAnnotationComposer
     column: $table.owedAmount,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
 class $$PersonTblTableTableManager
@@ -518,17 +581,14 @@ class $$PersonTblTableTableManager
         RootTableManager<
           _$AppDatabase,
           $PersonTblTable,
-          PersonTblData,
+          Person,
           $$PersonTblTableFilterComposer,
           $$PersonTblTableOrderingComposer,
           $$PersonTblTableAnnotationComposer,
           $$PersonTblTableCreateCompanionBuilder,
           $$PersonTblTableUpdateCompanionBuilder,
-          (
-            PersonTblData,
-            BaseReferences<_$AppDatabase, $PersonTblTable, PersonTblData>,
-          ),
-          PersonTblData,
+          (Person, BaseReferences<_$AppDatabase, $PersonTblTable, Person>),
+          Person,
           PrefetchHooks Function()
         > {
   $$PersonTblTableTableManager(_$AppDatabase db, $PersonTblTable table)
@@ -544,35 +604,43 @@ class $$PersonTblTableTableManager
               () => $$PersonTblTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<int?> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String> contactNumber = const Value.absent(),
                 Value<String?> email = const Value.absent(),
                 Value<Uint8List?> imageUrl = const Value.absent(),
                 Value<double> owedAmount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
               }) => PersonTblCompanion(
+                id: id,
                 name: name,
                 contactNumber: contactNumber,
                 email: email,
                 imageUrl: imageUrl,
                 owedAmount: owedAmount,
-                rowid: rowid,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           createCompanionCallback:
               ({
+                Value<int?> id = const Value.absent(),
                 required String name,
                 required String contactNumber,
                 Value<String?> email = const Value.absent(),
                 Value<Uint8List?> imageUrl = const Value.absent(),
                 required double owedAmount,
-                Value<int> rowid = const Value.absent(),
+                Value<DateTime?> createdAt = const Value.absent(),
+                Value<DateTime?> updatedAt = const Value.absent(),
               }) => PersonTblCompanion.insert(
+                id: id,
                 name: name,
                 contactNumber: contactNumber,
                 email: email,
                 imageUrl: imageUrl,
                 owedAmount: owedAmount,
-                rowid: rowid,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
               ),
           withReferenceMapper:
               (p0) =>
@@ -593,17 +661,14 @@ typedef $$PersonTblTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $PersonTblTable,
-      PersonTblData,
+      Person,
       $$PersonTblTableFilterComposer,
       $$PersonTblTableOrderingComposer,
       $$PersonTblTableAnnotationComposer,
       $$PersonTblTableCreateCompanionBuilder,
       $$PersonTblTableUpdateCompanionBuilder,
-      (
-        PersonTblData,
-        BaseReferences<_$AppDatabase, $PersonTblTable, PersonTblData>,
-      ),
-      PersonTblData,
+      (Person, BaseReferences<_$AppDatabase, $PersonTblTable, Person>),
+      Person,
       PrefetchHooks Function()
     >;
 

@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:keeper/core/db/tables/person/person_db_table.dart';
+import 'package:keeper/src/person/model/person.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
@@ -17,8 +18,6 @@ class AppDatabase extends _$AppDatabase {
     return driftDatabase(
       name: 'my_database',
       native: const DriftNativeOptions(
-        // By default, `driftDatabase` from `package:drift_flutter` stores the
-        // database files in `getApplicationDocumentsDirectory()`.
         databaseDirectory: getApplicationSupportDirectory,
       ),
       web: DriftWebOptions(

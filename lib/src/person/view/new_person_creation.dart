@@ -1,6 +1,7 @@
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:keeper/core/db/database.dart';
 import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
@@ -14,6 +15,7 @@ class NewPersonPage extends ConsumerWidget {
     final viewModel = ref.read(personProvider.notifier);
 
     return Scaffold(
+      appBar: AppBar(title: Text("New Person Creating"), centerTitle: true),
       body: Consumer(
         builder: (context, ref, child) {
           ref.listen(personProvider, (previous, next) {
@@ -63,7 +65,20 @@ class NewPersonPage extends ConsumerWidget {
                   onPressed:
                       personState.isLoading
                           ? null
-                          : () => viewModel.createOnePerson(),
+                          : () async {
+                            final success = await viewModel.createOnePerson();
+                            if (success) {
+                              if (!context.mounted) return;
+                              context.pop(true);
+                            } else {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Failed to create person!"),
+                                ),
+                              );
+                            }
+                          },
                   child:
                       personState.isLoading
                           ? const CircularProgressIndicator()
