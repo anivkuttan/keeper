@@ -12,6 +12,7 @@ class PhoneField extends StatelessWidget {
     this.countryButtonStyle,
     this.validator,
     this.onChanged,
+    this.suffixIcon,
     this.initialValue,
   });
   final PhoneController? phoneController;
@@ -23,6 +24,7 @@ class PhoneField extends StatelessWidget {
   final void Function(PhoneNumber?)? onSaved;
   final void Function(PhoneNumber)? onChanged;
   final String? Function(PhoneNumber?)? validator;
+  final Widget? suffixIcon;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,8 +34,9 @@ class PhoneField extends StatelessWidget {
           autofocus: autofocus,
           controller: phoneController,
           onSaved: onSaved,
+
           // decoration: InputDecoration(
-          //   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          //   border: InputBorder.none,
           //   contentPadding: const EdgeInsets.symmetric(
           //     vertical: 12,
           //     horizontal: 10,
@@ -41,7 +44,13 @@ class PhoneField extends StatelessWidget {
           //   label: labelText != null ? Text(labelText!) : null,
           //   hintText: hintText,
           // ),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            hintText: hintText,
+            suffixIcon: suffixIcon,
+          ),
           initialValue: initialValue,
+
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
           // PhoneValidator.compose([

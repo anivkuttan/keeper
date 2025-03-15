@@ -7,6 +7,7 @@ import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/pages/sign_in_screen.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
+import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/phone_number_field.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
@@ -128,38 +129,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AppTextForm extends StatelessWidget {
-  const AppTextForm({
-    super.key,
-    this.controller,
-    this.hintText,
-    this.onChanged,
-    this.isPassword = false,
-  });
-
-  final TextEditingController? controller;
-  final String? hintText;
-  final bool isPassword;
-  final Function(String)? onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: isPassword,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        hintText: hintText,
-        suffixIcon:
-            isPassword
-                ? IconButton(icon: Icon(Icons.visibility), onPressed: () {})
-                : null,
       ),
     );
   }

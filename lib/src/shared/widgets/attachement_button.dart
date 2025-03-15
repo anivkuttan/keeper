@@ -17,19 +17,12 @@ class _AttachementButtonState extends State<AttachementButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        final ImageSource? source = await showModalBottomSheet<ImageSource?>(
-          context: context,
-          showDragHandle: true,
-          builder: (context) {
-            return UploadOptions();
+        await imagePickerBottomSheet(
+          context,
+          onImagePicked: (value) {
+            widget.imagePicked?.call(value);
           },
         );
-        if (source == null) return;
-        if (!context.mounted) return;
-        final Uint8List? image = await pickImage(context, source: source);
-        if (image == null) return;
-        widget.imagePicked?.call(image);
-        return;
       },
       child: Container(
         padding: EdgeInsets.all(15),
@@ -50,8 +43,8 @@ class _AttachementButtonState extends State<AttachementButton> {
   }
 }
 
-class UploadOptions extends StatelessWidget {
-  const UploadOptions({super.key});
+class ImagePickerBottomSheet extends StatelessWidget {
+  const ImagePickerBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,4 +97,23 @@ class UploadOptions extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> imagePickerBottomSheet(
+  BuildContext context, {
+  ValueChanged<Uint8List>? onImagePicked,
+}) async {
+  final ImageSource? source = await showModalBottomSheet<ImageSource?>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) {
+      return ImagePickerBottomSheet();
+    },
+  );
+  if (source == null) return;
+  if (!context.mounted) return;
+  final Uint8List? image = await pickImage(context, source: source);
+  if (image == null) return;
+  onImagePicked?.call(image);
+  return;
 }

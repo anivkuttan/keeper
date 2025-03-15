@@ -38,13 +38,14 @@ class Person {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isUserLoged,
+    bool? removeImage,
   }) {
     return Person(
       id: id ?? this.id,
       name: name ?? this.name,
       contactNumber: contactNumber ?? this.contactNumber,
       email: email ?? this.email,
-      imageUrl: imageUrl ?? this.imageUrl,
+      imageUrl: removeImage == true ? null : imageUrl ?? this.imageUrl,
       owedAmount: owedAmount ?? this.owedAmount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

@@ -164,6 +164,7 @@ class PersonViewModel extends StateNotifier<PersonState> {
     Uint8List? imageUrl,
     double? owedAmount,
     String? password,
+    bool? removeImage,
   }) {
     state = state.copyWith(
       person:
@@ -174,6 +175,7 @@ class PersonViewModel extends StateNotifier<PersonState> {
             imageUrl: imageUrl,
             owedAmount: owedAmount,
             password: password,
+            removeImage: removeImage,
           ) ??
           Person(
             name: name ?? '',
