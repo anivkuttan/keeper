@@ -7,7 +7,9 @@ import 'package:keeper/src/pages/profile_page.dart';
 import 'package:keeper/src/pages/sign_in_screen.dart';
 import 'package:keeper/src/pages/sign_up_screen.dart';
 import 'package:keeper/src/pages/transaction_page.dart';
+import 'package:keeper/src/person/model/person.dart';
 import 'package:keeper/src/person/view/new_person_creation.dart';
+import 'package:keeper/src/person/view/person_details.dart';
 import 'package:keeper/src/person/view/person_list_page.dart';
 
 class AppRouter {
@@ -111,6 +113,14 @@ class AppRouter {
           return NewPersonPage();
         },
       ),
+      GoRoute(
+        path: AppPage.personDetails.path,
+        name: AppPage.personDetails.name,
+        builder: (context, state) {
+          final person = state.extra as Person;
+          return ProfileScreen(person: person);
+        },
+      ),
     ],
   );
 }
@@ -123,6 +133,7 @@ enum AppPage {
   budgetScreen(name: 'budget', path: '/budget'),
   profileScreen(name: 'profile', path: '/profile'),
   newPersonScreen(name: 'newPerson', path: '/newPerson'),
+  personDetails(name: 'personDetails', path: '/personDetails'),
   homeScreen(name: 'homePage', path: '/homePage');
 
   const AppPage({required this.name, required this.path});

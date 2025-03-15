@@ -84,15 +84,20 @@ class PersonListTile extends StatelessWidget {
   final VoidCallback? onDelete;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColor.secondry,
-      height: 70,
-      child: Row(
-        children: [
-          Expanded(flex: 2, child: Container(child: leadingWidget())),
-          Expanded(flex: 8, child: Container(child: nameWidget())),
-          Expanded(flex: 1, child: Container(child: optionWidget())),
-        ],
+    return InkWell(
+      onTap: () {
+        context.pushNamed(AppPage.personDetails.name, extra: person);
+      },
+      child: Container(
+        color: AppColor.secondry,
+        height: 70,
+        child: Row(
+          children: [
+            Expanded(flex: 2, child: Container(child: leadingWidget())),
+            Expanded(flex: 8, child: Container(child: nameWidget())),
+            Expanded(flex: 1, child: Container(child: optionWidget())),
+          ],
+        ),
       ),
     );
   }
