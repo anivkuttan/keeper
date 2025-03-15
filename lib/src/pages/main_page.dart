@@ -15,12 +15,12 @@ class MainScaffold extends StatefulWidget {
 class _MainScaffoldState extends State<MainScaffold> {
   int _selectedIndex = 0;
 
-  final List<String> _appBarTitles = [
-    'Home',
-    'Transactions',
-    'Add New Person',
-    'Profile',
-  ];
+  // final List<String> _appBarTitles = [
+  //   'Home',
+  //   'Transactions',
+  //   'Add New Person',
+  //   'Profile',
+  // ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -46,7 +46,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_appBarTitles[_selectedIndex])),
+      // appBar: AppBar(title: Text(_appBarTitles[_selectedIndex])),
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

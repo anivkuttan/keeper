@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:keeper/core/db/database.dart';
 import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
+import 'package:keeper/src/shared/widgets/phone_number_field.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 class NewPersonPage extends ConsumerWidget {
   const NewPersonPage({super.key});
@@ -32,16 +34,20 @@ class NewPersonPage extends ConsumerWidget {
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
+              spacing: 16,
               children: [
                 TextField(
                   decoration: const InputDecoration(labelText: 'Name'),
                   onChanged: (value) => viewModel.updatePerson(name: value),
                 ),
-                TextField(
-                  decoration: const InputDecoration(
-                    labelText: 'Contact Number',
-                  ),
-                  keyboardType: TextInputType.phone,
+                PhoneField(
+                  validator: PhoneValidator.compose([
+                    PhoneValidator.required(
+                      context,
+                      errorText: "You must enter a value",
+                    ),
+                    PhoneValidator.validMobile(context),
+                  ]),
                   onChanged:
                       (value) => viewModel.updatePerson(contactNumber: value),
                 ),
@@ -60,7 +66,7 @@ class NewPersonPage extends ConsumerWidget {
                         owedAmount: double.tryParse(value) ?? 0.0,
                       ),
                 ),
-                const SizedBox(height: 20),
+
                 ElevatedButton(
                   onPressed:
                       personState.isLoading
@@ -84,7 +90,7 @@ class NewPersonPage extends ConsumerWidget {
                           ? const CircularProgressIndicator()
                           : const Text("Submit"),
                 ),
-                const SizedBox(height: 20),
+
                 ElevatedButton(
                   onPressed: () {
                     final db = getIt<AppDatabase>();

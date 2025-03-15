@@ -4,9 +4,17 @@ import 'package:keeper/core/db/database.dart';
 import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/person/model/person.dart';
 import 'package:keeper/src/person/model/person_state.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 class PersonViewModel extends StateNotifier<PersonState> {
-  PersonViewModel() : super(PersonState());
+  PersonViewModel() : super(PersonState()) {
+    checkUserLoginStatus();
+  }
+  Future<void> checkUserLoginStatus() async {
+    final isLoggedIn = await isAnyUserLoggedIn();
+
+    state = state.copyWith(isUserLoggedIn: isLoggedIn);
+  }
   // final nameController = TextEditingController();
 
   // final contactController = TextEditingController();
@@ -48,6 +56,20 @@ class PersonViewModel extends StateNotifier<PersonState> {
     }
   }
 
+  Future<Person?> getPersonById(int id) async {
+    try {
+      final db = getIt<AppDatabase>();
+
+      final person =
+          await (db.select(db.personTbl)
+            ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+
+      return person;
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<void> getAllPersons() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
@@ -64,12 +86,84 @@ class PersonViewModel extends StateNotifier<PersonState> {
     }
   }
 
+  Future<bool> logOut() async {
+    try {
+      final db = getIt<AppDatabase>();
+
+      await db
+          .update(db.sharedData)
+          .write(
+            SharedDataCompanion(isLogined: Value(false), personId: Value(null)),
+          );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> isAnyUserLoggedIn() async {
+    try {
+      final db = getIt<AppDatabase>();
+
+      final sharedData = await db.select(db.sharedData).getSingleOrNull();
+
+      return sharedData?.isLogined ?? false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> logIn() async {
+    String email = state.person?.email ?? '';
+    String password = state.person?.password ?? "";
+    try {
+      final db = getIt<AppDatabase>();
+
+      final user =
+          await (db.select(db.personTbl)..where(
+            (tbl) => tbl.email.equals(email) & tbl.password.equals(password),
+          )).getSingleOrNull();
+
+      if (user == null) {
+        state = state.copyWith(errorMessage: "User Not Fount please sign-in");
+        return false;
+      }
+
+      final sharedData = await db.select(db.sharedData).getSingleOrNull();
+
+      if (sharedData == null) {
+        await db
+            .into(db.sharedData)
+            .insert(
+              SharedDataCompanion(
+                isLogined: Value(true),
+                personId: Value(user.id),
+              ),
+            );
+      } else {
+        await db
+            .update(db.sharedData)
+            .write(
+              SharedDataCompanion(
+                isLogined: Value(true),
+                personId: Value(user.id),
+              ),
+            );
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   void updatePerson({
     String? name,
-    String? contactNumber,
+    PhoneNumber? contactNumber,
     String? email,
     Uint8List? imageUrl,
     double? owedAmount,
+    String? password,
   }) {
     state = state.copyWith(
       person:
@@ -79,13 +173,15 @@ class PersonViewModel extends StateNotifier<PersonState> {
             email: email,
             imageUrl: imageUrl,
             owedAmount: owedAmount,
+            password: password,
           ) ??
           Person(
             name: name ?? '',
-            contactNumber: contactNumber ?? '',
+            contactNumber: contactNumber,
             email: email,
             imageUrl: imageUrl,
             owedAmount: owedAmount ?? 0.0,
+            password: password,
           ),
     );
   }

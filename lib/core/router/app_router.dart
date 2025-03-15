@@ -8,7 +8,7 @@ import 'package:keeper/src/pages/sign_in_screen.dart';
 import 'package:keeper/src/pages/sign_up_screen.dart';
 import 'package:keeper/src/pages/transaction_page.dart';
 import 'package:keeper/src/person/view/new_person_creation.dart';
-import 'package:keeper/src/person/view/user_list_page.dart';
+import 'package:keeper/src/person/view/person_list_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -16,7 +16,6 @@ class AppRouter {
   static GoRouter router = GoRouter(
     initialLocation: AppPage.homeScreen.path,
     routes: [
-      // ShellRoute to manage the bottom navigation
       ShellRoute(
         navigatorKey: GlobalKey<NavigatorState>(),
         builder: (context, state, child) {
@@ -28,6 +27,28 @@ class AppRouter {
             name: AppPage.homeScreen.name,
             pageBuilder:
                 (context, state) => const MaterialPage(child: HomePage()),
+            // redirect: (context, state) {
+            //   final container = ProviderScope.containerOf(
+            //     context,
+            //     listen: false,
+            //   );
+            //   final isUserLoggedIn =
+            //       container.read(personProvider).isUserLoggedIn;
+
+            //   // If user is NOT logged in, redirect them to Sign-In page (except if already there)
+            //   if (!isUserLoggedIn &&
+            //       state.matchedLocation != AppPage.signInScreen.path) {
+            //     return AppPage.signInScreen.path;
+            //   }
+
+            //   // If user IS logged in and tries to access Sign-In, redirect them to Home
+            //   if (isUserLoggedIn &&
+            //       state.matchedLocation == AppPage.signInScreen.path) {
+            //     return AppPage.homeScreen.path;
+            //   }
+
+            //   return null; // No redirection needed
+            // },
           ),
           GoRoute(
             path: AppPage.transactionScreen.path,
@@ -49,6 +70,24 @@ class AppRouter {
                 (context, state) => const MaterialPage(child: ProfilePage()),
           ),
         ],
+        // redirect: (context, state) {
+        //   final container = ProviderScope.containerOf(context, listen: false);
+        //   final isUserLoggedIn = container.read(personProvider).isUserLoggedIn;
+
+        //   // If user is NOT logged in, redirect them to Sign-In page (except if already there)
+        //   if (!isUserLoggedIn &&
+        //       state.matchedLocation != AppPage.signInScreen.path) {
+        //     return AppPage.signInScreen.path;
+        //   }
+
+        //   // If user IS logged in and tries to access Sign-In, redirect them to Home
+        //   if (isUserLoggedIn &&
+        //       state.matchedLocation == AppPage.signInScreen.path) {
+        //     return AppPage.homeScreen.path;
+        //   }
+
+        //   return null; // No redirection needed
+        // },
       ),
       GoRoute(
         path: AppPage.onboardingScreen.path,
@@ -78,8 +117,8 @@ class AppRouter {
 
 enum AppPage {
   onboardingScreen(name: 'onboarding', path: '/'),
-  signInScreen(name: 'signIn', path: '/signin'),
-  signUpScreen(name: 'signUp', path: '/signup'),
+  signInScreen(name: 'signIn', path: '/sign-in'),
+  signUpScreen(name: 'signUp', path: '/sign-up'),
   transactionScreen(name: 'transaction', path: '/transaction'),
   budgetScreen(name: 'budget', path: '/budget'),
   profileScreen(name: 'profile', path: '/profile'),

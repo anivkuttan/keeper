@@ -68,7 +68,7 @@ class BalanceCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
+        // color: color.withOpacity(0.2),
         borderRadius: BorderRadius.circular(16),
       ),
       width: MediaQuery.of(context).size.width * 0.4,

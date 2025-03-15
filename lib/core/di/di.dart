@@ -3,6 +3,6 @@ import 'package:keeper/core/db/database.dart';
 
 final getIt = GetIt.instance;
 
-void setup() {
+void dependancyInit() {
   getIt.registerSingleton<AppDatabase>(AppDatabase());
 }

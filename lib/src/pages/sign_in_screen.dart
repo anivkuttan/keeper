@@ -1,23 +1,24 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
-import 'package:keeper/core/shared/widgets/app_button.dart';
+import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/src/pages/sign_up_screen.dart';
+import 'package:keeper/src/person/view_model/person_view_model.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  // final bool _showPassword = false;
-
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
+    final viewModel = ref.watch(personProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text("SignIn"),
@@ -35,11 +36,36 @@ class _SignInScreenState extends State<SignInScreen> {
           children: [
             Expanded(flex: 2, child: Image.asset(AppImage.signInBG)),
             const SizedBox(height: 16),
-            AppTextForm(hintText: 'Email'),
+            AppTextForm(
+              hintText: 'Email',
+              onChanged: (value) => viewModel.updatePerson(email: value),
+            ),
             const SizedBox(height: 16),
-            AppTextForm(hintText: 'Password', isPassword: true),
+            AppTextForm(
+              hintText: 'Password',
+              isPassword: true,
+              onChanged: (value) => viewModel.updatePerson(password: value),
+            ),
             const SizedBox(height: 24),
-            AppButton(title: 'SignIn', onTap: () {}),
+            AppButton(
+              title: 'SignIn',
+              onTap: () async {
+                final isSccuss =
+                    await ref.watch(personProvider.notifier).logIn();
+                if (isSccuss) {
+                  if (!context.mounted) return;
+                  context.goNamed(AppPage.homeScreen.name);
+                } else {
+                  if (!context.mounted) return;
+
+                  final errorMessage =
+                      ref.read(personProvider).errorMessage ?? "Login failed!";
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(errorMessage)));
+                }
+              },
+            ),
             const SizedBox(height: 16),
             Center(
               child: GestureDetector(
