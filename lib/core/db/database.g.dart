@@ -4,11 +4,13 @@ part of 'database.dart';
 
 // ignore_for_file: type=lint
 mixin $SharedDataTableToColumns implements Insertable<SharedDataData> {
+  int get id;
   bool get isLogined;
   int? get personId;
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
     map['is_logined'] = Variable<bool>(isLogined);
     if (!nullToAbsent || personId != null) {
       map['person_id'] = Variable<int>(personId);
@@ -23,6 +25,19 @@ class $SharedDataTable extends SharedData
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $SharedDataTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _isLoginedMeta = const VerificationMeta(
     'isLogined',
   );
@@ -49,7 +64,7 @@ class $SharedDataTable extends SharedData
     requiredDuringInsert: false,
   );
   @override
-  List<GeneratedColumn> get $columns => [isLogined, personId];
+  List<GeneratedColumn> get $columns => [id, isLogined, personId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -62,6 +77,9 @@ class $SharedDataTable extends SharedData
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('is_logined')) {
       context.handle(
         _isLoginedMeta,
@@ -80,11 +98,16 @@ class $SharedDataTable extends SharedData
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   SharedDataData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return SharedDataData(
+      id:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.int,
+            data['${effectivePrefix}id'],
+          )!,
       isLogined:
           attachedDatabase.typeMapping.read(
             DriftSqlType.bool,
@@ -105,12 +128,19 @@ class $SharedDataTable extends SharedData
 
 class SharedDataData extends DataClass with $SharedDataTableToColumns {
   @override
+  final int id;
+  @override
   final bool isLogined;
   @override
   final int? personId;
-  const SharedDataData({required this.isLogined, this.personId});
+  const SharedDataData({
+    required this.id,
+    required this.isLogined,
+    this.personId,
+  });
   SharedDataCompanion toCompanion(bool nullToAbsent) {
     return SharedDataCompanion(
+      id: Value(id),
       isLogined: Value(isLogined),
       personId:
           personId == null && nullToAbsent
@@ -125,6 +155,7 @@ class SharedDataData extends DataClass with $SharedDataTableToColumns {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SharedDataData(
+      id: serializer.fromJson<int>(json['id']),
       isLogined: serializer.fromJson<bool>(json['isLogined']),
       personId: serializer.fromJson<int?>(json['personId']),
     );
@@ -133,20 +164,24 @@ class SharedDataData extends DataClass with $SharedDataTableToColumns {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
       'isLogined': serializer.toJson<bool>(isLogined),
       'personId': serializer.toJson<int?>(personId),
     };
   }
 
   SharedDataData copyWith({
+    int? id,
     bool? isLogined,
     Value<int?> personId = const Value.absent(),
   }) => SharedDataData(
+    id: id ?? this.id,
     isLogined: isLogined ?? this.isLogined,
     personId: personId.present ? personId.value : this.personId,
   );
   SharedDataData copyWithCompanion(SharedDataCompanion data) {
     return SharedDataData(
+      id: data.id.present ? data.id.value : this.id,
       isLogined: data.isLogined.present ? data.isLogined.value : this.isLogined,
       personId: data.personId.present ? data.personId.value : this.personId,
     );
@@ -155,6 +190,7 @@ class SharedDataData extends DataClass with $SharedDataTableToColumns {
   @override
   String toString() {
     return (StringBuffer('SharedDataData(')
+          ..write('id: $id, ')
           ..write('isLogined: $isLogined, ')
           ..write('personId: $personId')
           ..write(')'))
@@ -162,64 +198,65 @@ class SharedDataData extends DataClass with $SharedDataTableToColumns {
   }
 
   @override
-  int get hashCode => Object.hash(isLogined, personId);
+  int get hashCode => Object.hash(id, isLogined, personId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SharedDataData &&
+          other.id == this.id &&
           other.isLogined == this.isLogined &&
           other.personId == this.personId);
 }
 
 class SharedDataCompanion extends UpdateCompanion<SharedDataData> {
+  final Value<int> id;
   final Value<bool> isLogined;
   final Value<int?> personId;
-  final Value<int> rowid;
   const SharedDataCompanion({
+    this.id = const Value.absent(),
     this.isLogined = const Value.absent(),
     this.personId = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   SharedDataCompanion.insert({
+    this.id = const Value.absent(),
     required bool isLogined,
     this.personId = const Value.absent(),
-    this.rowid = const Value.absent(),
   }) : isLogined = Value(isLogined);
   static Insertable<SharedDataData> custom({
+    Expression<int>? id,
     Expression<bool>? isLogined,
     Expression<int>? personId,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (isLogined != null) 'is_logined': isLogined,
       if (personId != null) 'person_id': personId,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   SharedDataCompanion copyWith({
+    Value<int>? id,
     Value<bool>? isLogined,
     Value<int?>? personId,
-    Value<int>? rowid,
   }) {
     return SharedDataCompanion(
+      id: id ?? this.id,
       isLogined: isLogined ?? this.isLogined,
       personId: personId ?? this.personId,
-      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (isLogined.present) {
       map['is_logined'] = Variable<bool>(isLogined.value);
     }
     if (personId.present) {
       map['person_id'] = Variable<int>(personId.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -227,9 +264,9 @@ class SharedDataCompanion extends UpdateCompanion<SharedDataData> {
   @override
   String toString() {
     return (StringBuffer('SharedDataCompanion(')
+          ..write('id: $id, ')
           ..write('isLogined: $isLogined, ')
-          ..write('personId: $personId, ')
-          ..write('rowid: $rowid')
+          ..write('personId: $personId')
           ..write(')'))
         .toString();
   }
@@ -238,14 +275,14 @@ class SharedDataCompanion extends UpdateCompanion<SharedDataData> {
 mixin $PersonTblTableToColumns implements Insertable<Person> {
   int? get id;
   String get name;
-  bool get isUserLoged;
-  PhoneNumber? get contactNumber;
+  PhoneNumber get phoneNumber;
   String? get email;
   String? get password;
-  Uint8List? get imageUrl;
-  double get owedAmount;
+  Uint8List? get profileImage;
+  double get amount;
   DateTime? get createdAt;
   DateTime? get updatedAt;
+  String? get about;
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -253,10 +290,9 @@ mixin $PersonTblTableToColumns implements Insertable<Person> {
       map['id'] = Variable<int>(id);
     }
     map['name'] = Variable<String>(name);
-    map['is_user_loged'] = Variable<bool>(isUserLoged);
-    if (!nullToAbsent || contactNumber != null) {
-      map['contact_number'] = Variable<String>(
-        $PersonTblTable.$convertercontactNumbern.toSql(contactNumber),
+    {
+      map['phone_number'] = Variable<String>(
+        $PersonTblTable.$converterphoneNumber.toSql(phoneNumber),
       );
     }
     if (!nullToAbsent || email != null) {
@@ -265,15 +301,18 @@ mixin $PersonTblTableToColumns implements Insertable<Person> {
     if (!nullToAbsent || password != null) {
       map['password'] = Variable<String>(password);
     }
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<Uint8List>(imageUrl);
+    if (!nullToAbsent || profileImage != null) {
+      map['profile_image'] = Variable<Uint8List>(profileImage);
     }
-    map['owed_amount'] = Variable<double>(owedAmount);
+    map['amount'] = Variable<double>(amount);
     if (!nullToAbsent || createdAt != null) {
       map['created_at'] = Variable<DateTime>(createdAt);
     }
     if (!nullToAbsent || updatedAt != null) {
       map['updated_at'] = Variable<DateTime>(updatedAt);
+    }
+    if (!nullToAbsent || about != null) {
+      map['about'] = Variable<String>(about);
     }
     return map;
   }
@@ -307,30 +346,16 @@ class $PersonTblTable extends PersonTbl
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _isUserLogedMeta = const VerificationMeta(
-    'isUserLoged',
-  );
   @override
-  late final GeneratedColumn<bool> isUserLoged = GeneratedColumn<bool>(
-    'is_user_loged',
-    aliasedName,
-    false,
-    type: DriftSqlType.bool,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'CHECK ("is_user_loged" IN (0, 1))',
-    ),
-    defaultValue: Constant(false),
-  );
-  @override
-  late final GeneratedColumnWithTypeConverter<PhoneNumber?, String>
-  contactNumber = GeneratedColumn<String>(
-    'contact_number',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  ).withConverter<PhoneNumber?>($PersonTblTable.$convertercontactNumbern);
+  late final GeneratedColumnWithTypeConverter<PhoneNumber, String> phoneNumber =
+      GeneratedColumn<String>(
+        'phone_number',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+        defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+      ).withConverter<PhoneNumber>($PersonTblTable.$converterphoneNumber);
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
@@ -351,27 +376,27 @@ class $PersonTblTable extends PersonTbl
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
-    'imageUrl',
+  static const VerificationMeta _profileImageMeta = const VerificationMeta(
+    'profileImage',
   );
   @override
-  late final GeneratedColumn<Uint8List> imageUrl = GeneratedColumn<Uint8List>(
-    'image_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.blob,
-    requiredDuringInsert: false,
-  );
-  static const VerificationMeta _owedAmountMeta = const VerificationMeta(
-    'owedAmount',
-  );
+  late final GeneratedColumn<Uint8List> profileImage =
+      GeneratedColumn<Uint8List>(
+        'profile_image',
+        aliasedName,
+        true,
+        type: DriftSqlType.blob,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<double> owedAmount = GeneratedColumn<double>(
-    'owed_amount',
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+    'amount',
     aliasedName,
     false,
     type: DriftSqlType.double,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
+    defaultValue: Constant(0.0),
   );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
@@ -395,18 +420,27 @@ class $PersonTblTable extends PersonTbl
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _aboutMeta = const VerificationMeta('about');
+  @override
+  late final GeneratedColumn<String> about = GeneratedColumn<String>(
+    'about',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
     name,
-    isUserLoged,
-    contactNumber,
+    phoneNumber,
     email,
     password,
-    imageUrl,
-    owedAmount,
+    profileImage,
+    amount,
     createdAt,
     updatedAt,
+    about,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -431,15 +465,6 @@ class $PersonTblTable extends PersonTbl
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('is_user_loged')) {
-      context.handle(
-        _isUserLogedMeta,
-        isUserLoged.isAcceptableOrUnknown(
-          data['is_user_loged']!,
-          _isUserLogedMeta,
-        ),
-      );
-    }
     if (data.containsKey('email')) {
       context.handle(
         _emailMeta,
@@ -452,19 +477,20 @@ class $PersonTblTable extends PersonTbl
         password.isAcceptableOrUnknown(data['password']!, _passwordMeta),
       );
     }
-    if (data.containsKey('image_url')) {
+    if (data.containsKey('profile_image')) {
       context.handle(
-        _imageUrlMeta,
-        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
+        _profileImageMeta,
+        profileImage.isAcceptableOrUnknown(
+          data['profile_image']!,
+          _profileImageMeta,
+        ),
       );
     }
-    if (data.containsKey('owed_amount')) {
+    if (data.containsKey('amount')) {
       context.handle(
-        _owedAmountMeta,
-        owedAmount.isAcceptableOrUnknown(data['owed_amount']!, _owedAmountMeta),
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
       );
-    } else if (isInserting) {
-      context.missing(_owedAmountMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(
@@ -476,6 +502,12 @@ class $PersonTblTable extends PersonTbl
       context.handle(
         _updatedAtMeta,
         updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    }
+    if (data.containsKey('about')) {
+      context.handle(
+        _aboutMeta,
+        about.isAcceptableOrUnknown(data['about']!, _aboutMeta),
       );
     }
     return context;
@@ -492,11 +524,11 @@ class $PersonTblTable extends PersonTbl
             DriftSqlType.string,
             data['${effectivePrefix}name'],
           )!,
-      contactNumber: $PersonTblTable.$convertercontactNumbern.fromSql(
+      phoneNumber: $PersonTblTable.$converterphoneNumber.fromSql(
         attachedDatabase.typeMapping.read(
           DriftSqlType.string,
-          data['${effectivePrefix}contact_number'],
-        ),
+          data['${effectivePrefix}phone_number'],
+        )!,
       ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -506,13 +538,17 @@ class $PersonTblTable extends PersonTbl
         DriftSqlType.string,
         data['${effectivePrefix}email'],
       ),
+      about: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}about'],
+      ),
       password: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}password'],
       ),
-      imageUrl: attachedDatabase.typeMapping.read(
+      profileImage: attachedDatabase.typeMapping.read(
         DriftSqlType.blob,
-        data['${effectivePrefix}image_url'],
+        data['${effectivePrefix}profile_image'],
       ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
@@ -522,15 +558,10 @@ class $PersonTblTable extends PersonTbl
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
       ),
-      isUserLoged:
-          attachedDatabase.typeMapping.read(
-            DriftSqlType.bool,
-            data['${effectivePrefix}is_user_loged'],
-          )!,
-      owedAmount:
+      amount:
           attachedDatabase.typeMapping.read(
             DriftSqlType.double,
-            data['${effectivePrefix}owed_amount'],
+            data['${effectivePrefix}amount'],
           )!,
     );
   }
@@ -540,97 +571,95 @@ class $PersonTblTable extends PersonTbl
     return $PersonTblTable(attachedDatabase, alias);
   }
 
-  static TypeConverter<PhoneNumber, String> $convertercontactNumber =
+  static TypeConverter<PhoneNumber, String> $converterphoneNumber =
       PhoneNumberConverter();
-  static TypeConverter<PhoneNumber?, String?> $convertercontactNumbern =
-      NullAwareTypeConverter.wrap($convertercontactNumber);
 }
 
 class PersonTblCompanion extends UpdateCompanion<Person> {
   final Value<int?> id;
   final Value<String> name;
-  final Value<bool> isUserLoged;
-  final Value<PhoneNumber?> contactNumber;
+  final Value<PhoneNumber> phoneNumber;
   final Value<String?> email;
   final Value<String?> password;
-  final Value<Uint8List?> imageUrl;
-  final Value<double> owedAmount;
+  final Value<Uint8List?> profileImage;
+  final Value<double> amount;
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
+  final Value<String?> about;
   const PersonTblCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.isUserLoged = const Value.absent(),
-    this.contactNumber = const Value.absent(),
+    this.phoneNumber = const Value.absent(),
     this.email = const Value.absent(),
     this.password = const Value.absent(),
-    this.imageUrl = const Value.absent(),
-    this.owedAmount = const Value.absent(),
+    this.profileImage = const Value.absent(),
+    this.amount = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.about = const Value.absent(),
   });
   PersonTblCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    this.isUserLoged = const Value.absent(),
-    this.contactNumber = const Value.absent(),
+    required PhoneNumber phoneNumber,
     this.email = const Value.absent(),
     this.password = const Value.absent(),
-    this.imageUrl = const Value.absent(),
-    required double owedAmount,
+    this.profileImage = const Value.absent(),
+    this.amount = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.about = const Value.absent(),
   }) : name = Value(name),
-       owedAmount = Value(owedAmount);
+       phoneNumber = Value(phoneNumber);
   static Insertable<Person> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<bool>? isUserLoged,
-    Expression<String>? contactNumber,
+    Expression<String>? phoneNumber,
     Expression<String>? email,
     Expression<String>? password,
-    Expression<Uint8List>? imageUrl,
-    Expression<double>? owedAmount,
+    Expression<Uint8List>? profileImage,
+    Expression<double>? amount,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<String>? about,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (isUserLoged != null) 'is_user_loged': isUserLoged,
-      if (contactNumber != null) 'contact_number': contactNumber,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
       if (email != null) 'email': email,
       if (password != null) 'password': password,
-      if (imageUrl != null) 'image_url': imageUrl,
-      if (owedAmount != null) 'owed_amount': owedAmount,
+      if (profileImage != null) 'profile_image': profileImage,
+      if (amount != null) 'amount': amount,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (about != null) 'about': about,
     });
   }
 
   PersonTblCompanion copyWith({
     Value<int?>? id,
     Value<String>? name,
-    Value<bool>? isUserLoged,
-    Value<PhoneNumber?>? contactNumber,
+    Value<PhoneNumber>? phoneNumber,
     Value<String?>? email,
     Value<String?>? password,
-    Value<Uint8List?>? imageUrl,
-    Value<double>? owedAmount,
+    Value<Uint8List?>? profileImage,
+    Value<double>? amount,
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
+    Value<String?>? about,
   }) {
     return PersonTblCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      isUserLoged: isUserLoged ?? this.isUserLoged,
-      contactNumber: contactNumber ?? this.contactNumber,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
       password: password ?? this.password,
-      imageUrl: imageUrl ?? this.imageUrl,
-      owedAmount: owedAmount ?? this.owedAmount,
+      profileImage: profileImage ?? this.profileImage,
+      amount: amount ?? this.amount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      about: about ?? this.about,
     );
   }
 
@@ -643,12 +672,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (isUserLoged.present) {
-      map['is_user_loged'] = Variable<bool>(isUserLoged.value);
-    }
-    if (contactNumber.present) {
-      map['contact_number'] = Variable<String>(
-        $PersonTblTable.$convertercontactNumbern.toSql(contactNumber.value),
+    if (phoneNumber.present) {
+      map['phone_number'] = Variable<String>(
+        $PersonTblTable.$converterphoneNumber.toSql(phoneNumber.value),
       );
     }
     if (email.present) {
@@ -657,17 +683,20 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     if (password.present) {
       map['password'] = Variable<String>(password.value);
     }
-    if (imageUrl.present) {
-      map['image_url'] = Variable<Uint8List>(imageUrl.value);
+    if (profileImage.present) {
+      map['profile_image'] = Variable<Uint8List>(profileImage.value);
     }
-    if (owedAmount.present) {
-      map['owed_amount'] = Variable<double>(owedAmount.value);
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (about.present) {
+      map['about'] = Variable<String>(about.value);
     }
     return map;
   }
@@ -677,14 +706,14 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     return (StringBuffer('PersonTblCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('isUserLoged: $isUserLoged, ')
-          ..write('contactNumber: $contactNumber, ')
+          ..write('phoneNumber: $phoneNumber, ')
           ..write('email: $email, ')
           ..write('password: $password, ')
-          ..write('imageUrl: $imageUrl, ')
-          ..write('owedAmount: $owedAmount, ')
+          ..write('profileImage: $profileImage, ')
+          ..write('amount: $amount, ')
           ..write('createdAt: $createdAt, ')
-          ..write('updatedAt: $updatedAt')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('about: $about')
           ..write(')'))
         .toString();
   }
@@ -698,14 +727,14 @@ class _$PersonInsertable implements Insertable<Person> {
     return PersonTblCompanion(
       id: Value(_object.id),
       name: Value(_object.name),
-      isUserLoged: Value(_object.isUserLoged),
-      contactNumber: Value(_object.contactNumber),
+      phoneNumber: Value(_object.phoneNumber),
       email: Value(_object.email),
       password: Value(_object.password),
-      imageUrl: Value(_object.imageUrl),
-      owedAmount: Value(_object.owedAmount),
+      profileImage: Value(_object.profileImage),
+      amount: Value(_object.amount),
       createdAt: Value(_object.createdAt),
       updatedAt: Value(_object.updatedAt),
+      about: Value(_object.about),
     ).toColumns(false);
   }
 }
@@ -730,15 +759,15 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$SharedDataTableCreateCompanionBuilder =
     SharedDataCompanion Function({
+      Value<int> id,
       required bool isLogined,
       Value<int?> personId,
-      Value<int> rowid,
     });
 typedef $$SharedDataTableUpdateCompanionBuilder =
     SharedDataCompanion Function({
+      Value<int> id,
       Value<bool> isLogined,
       Value<int?> personId,
-      Value<int> rowid,
     });
 
 class $$SharedDataTableFilterComposer
@@ -750,6 +779,11 @@ class $$SharedDataTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<bool> get isLogined => $composableBuilder(
     column: $table.isLogined,
     builder: (column) => ColumnFilters(column),
@@ -770,6 +804,11 @@ class $$SharedDataTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isLogined => $composableBuilder(
     column: $table.isLogined,
     builder: (column) => ColumnOrderings(column),
@@ -790,6 +829,9 @@ class $$SharedDataTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<bool> get isLogined =>
       $composableBuilder(column: $table.isLogined, builder: (column) => column);
 
@@ -828,23 +870,23 @@ class $$SharedDataTableTableManager
               () => $$SharedDataTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<int> id = const Value.absent(),
                 Value<bool> isLogined = const Value.absent(),
                 Value<int?> personId = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => SharedDataCompanion(
+                id: id,
                 isLogined: isLogined,
                 personId: personId,
-                rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                Value<int> id = const Value.absent(),
                 required bool isLogined,
                 Value<int?> personId = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => SharedDataCompanion.insert(
+                id: id,
                 isLogined: isLogined,
                 personId: personId,
-                rowid: rowid,
               ),
           withReferenceMapper:
               (p0) =>
@@ -882,27 +924,27 @@ typedef $$PersonTblTableCreateCompanionBuilder =
     PersonTblCompanion Function({
       Value<int?> id,
       required String name,
-      Value<bool> isUserLoged,
-      Value<PhoneNumber?> contactNumber,
+      required PhoneNumber phoneNumber,
       Value<String?> email,
       Value<String?> password,
-      Value<Uint8List?> imageUrl,
-      required double owedAmount,
+      Value<Uint8List?> profileImage,
+      Value<double> amount,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
+      Value<String?> about,
     });
 typedef $$PersonTblTableUpdateCompanionBuilder =
     PersonTblCompanion Function({
       Value<int?> id,
       Value<String> name,
-      Value<bool> isUserLoged,
-      Value<PhoneNumber?> contactNumber,
+      Value<PhoneNumber> phoneNumber,
       Value<String?> email,
       Value<String?> password,
-      Value<Uint8List?> imageUrl,
-      Value<double> owedAmount,
+      Value<Uint8List?> profileImage,
+      Value<double> amount,
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
+      Value<String?> about,
     });
 
 class $$PersonTblTableFilterComposer
@@ -924,14 +966,9 @@ class $$PersonTblTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<bool> get isUserLoged => $composableBuilder(
-    column: $table.isUserLoged,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnWithTypeConverterFilters<PhoneNumber?, PhoneNumber, String>
-  get contactNumber => $composableBuilder(
-    column: $table.contactNumber,
+  ColumnWithTypeConverterFilters<PhoneNumber, PhoneNumber, String>
+  get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
@@ -945,13 +982,13 @@ class $$PersonTblTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<Uint8List> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
+  ColumnFilters<Uint8List> get profileImage => $composableBuilder(
+    column: $table.profileImage,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<double> get owedAmount => $composableBuilder(
-    column: $table.owedAmount,
+  ColumnFilters<double> get amount => $composableBuilder(
+    column: $table.amount,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -962,6 +999,11 @@ class $$PersonTblTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get about => $composableBuilder(
+    column: $table.about,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -985,13 +1027,8 @@ class $$PersonTblTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<bool> get isUserLoged => $composableBuilder(
-    column: $table.isUserLoged,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get contactNumber => $composableBuilder(
-    column: $table.contactNumber,
+  ColumnOrderings<String> get phoneNumber => $composableBuilder(
+    column: $table.phoneNumber,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1005,13 +1042,13 @@ class $$PersonTblTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<Uint8List> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
+  ColumnOrderings<Uint8List> get profileImage => $composableBuilder(
+    column: $table.profileImage,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<double> get owedAmount => $composableBuilder(
-    column: $table.owedAmount,
+  ColumnOrderings<double> get amount => $composableBuilder(
+    column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1022,6 +1059,11 @@ class $$PersonTblTableOrderingComposer
 
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get about => $composableBuilder(
+    column: $table.about,
     builder: (column) => ColumnOrderings(column),
   );
 }
@@ -1041,14 +1083,9 @@ class $$PersonTblTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<bool> get isUserLoged => $composableBuilder(
-    column: $table.isUserLoged,
-    builder: (column) => column,
-  );
-
-  GeneratedColumnWithTypeConverter<PhoneNumber?, String> get contactNumber =>
+  GeneratedColumnWithTypeConverter<PhoneNumber, String> get phoneNumber =>
       $composableBuilder(
-        column: $table.contactNumber,
+        column: $table.phoneNumber,
         builder: (column) => column,
       );
 
@@ -1058,19 +1095,22 @@ class $$PersonTblTableAnnotationComposer
   GeneratedColumn<String> get password =>
       $composableBuilder(column: $table.password, builder: (column) => column);
 
-  GeneratedColumn<Uint8List> get imageUrl =>
-      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
-  GeneratedColumn<double> get owedAmount => $composableBuilder(
-    column: $table.owedAmount,
+  GeneratedColumn<Uint8List> get profileImage => $composableBuilder(
+    column: $table.profileImage,
     builder: (column) => column,
   );
+
+  GeneratedColumn<double> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get about =>
+      $composableBuilder(column: $table.about, builder: (column) => column);
 }
 
 class $$PersonTblTableTableManager
@@ -1103,49 +1143,49 @@ class $$PersonTblTableTableManager
               ({
                 Value<int?> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<bool> isUserLoged = const Value.absent(),
-                Value<PhoneNumber?> contactNumber = const Value.absent(),
+                Value<PhoneNumber> phoneNumber = const Value.absent(),
                 Value<String?> email = const Value.absent(),
                 Value<String?> password = const Value.absent(),
-                Value<Uint8List?> imageUrl = const Value.absent(),
-                Value<double> owedAmount = const Value.absent(),
+                Value<Uint8List?> profileImage = const Value.absent(),
+                Value<double> amount = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> about = const Value.absent(),
               }) => PersonTblCompanion(
                 id: id,
                 name: name,
-                isUserLoged: isUserLoged,
-                contactNumber: contactNumber,
+                phoneNumber: phoneNumber,
                 email: email,
                 password: password,
-                imageUrl: imageUrl,
-                owedAmount: owedAmount,
+                profileImage: profileImage,
+                amount: amount,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                about: about,
               ),
           createCompanionCallback:
               ({
                 Value<int?> id = const Value.absent(),
                 required String name,
-                Value<bool> isUserLoged = const Value.absent(),
-                Value<PhoneNumber?> contactNumber = const Value.absent(),
+                required PhoneNumber phoneNumber,
                 Value<String?> email = const Value.absent(),
                 Value<String?> password = const Value.absent(),
-                Value<Uint8List?> imageUrl = const Value.absent(),
-                required double owedAmount,
+                Value<Uint8List?> profileImage = const Value.absent(),
+                Value<double> amount = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
+                Value<String?> about = const Value.absent(),
               }) => PersonTblCompanion.insert(
                 id: id,
                 name: name,
-                isUserLoged: isUserLoged,
-                contactNumber: contactNumber,
+                phoneNumber: phoneNumber,
                 email: email,
                 password: password,
-                imageUrl: imageUrl,
-                owedAmount: owedAmount,
+                profileImage: profileImage,
+                amount: amount,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
+                about: about,
               ),
           withReferenceMapper:
               (p0) =>
