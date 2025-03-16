@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/src/person/model/person.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -8,6 +10,27 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Colors.white),
+        forceMaterialTransparency: true,
+        // leading: Container(
+        //   decoration: BoxDecoration(
+        //     color: Colors.grey.shade500,
+        //     shape: BoxShape.circle,
+        //   ),
+        //   child: IconButton(
+        //     splashRadius: 20,
+        //     color: Colors.white,
+        //     onPressed: () {
+        //       context.pop();
+        //     },
+        //     icon: Icon(Icons.arrow_back),
+        //   ),
+        // ),
+      ),
+
+      extendBodyBehindAppBar: true,
       body: Column(
         children: [
           Stack(
@@ -17,9 +40,9 @@ class ProfileScreen extends StatelessWidget {
                 height: 350,
                 decoration: BoxDecoration(
                   image:
-                      person.imageUrl != null
+                      person.profileImage != null
                           ? DecorationImage(
-                            image: MemoryImage(person.imageUrl!),
+                            image: MemoryImage(person.profileImage!),
                             fit: BoxFit.cover,
                           )
                           : null,
@@ -74,25 +97,33 @@ class TabBarSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Column(
           children: [
             TabBar(
               labelColor: Colors.black,
               unselectedLabelColor: Colors.grey,
               indicatorColor: Colors.black,
-              tabs: [
-                Tab(text: 'About'),
-                Tab(text: 'Interactions'),
-                Tab(text: 'Contact'),
-              ],
+              tabs: [Tab(text: 'About'), Tab(text: 'Interactions')],
             ),
             Expanded(
               child: TabBarView(
                 children: [
                   AboutTab(),
-                  Center(child: Text('Interactions Content')),
-                  Center(child: Text('Contact Content')),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Interactions Content'),
+                        ElevatedButton(
+                          onPressed: () {
+                            context.goNamed(AppPage.transactionViewScreen.name);
+                          },
+                          child: Text("GOTO TRANSACTION PAGE"),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

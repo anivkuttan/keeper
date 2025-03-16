@@ -34,29 +34,14 @@ class PhoneField extends StatelessWidget {
           autofocus: autofocus,
           controller: phoneController,
           onSaved: onSaved,
-
-          // decoration: InputDecoration(
-          //   border: InputBorder.none,
-          //   contentPadding: const EdgeInsets.symmetric(
-          //     vertical: 12,
-          //     horizontal: 10,
-          //   ),
-          //   label: labelText != null ? Text(labelText!) : null,
-          //   hintText: hintText,
-          // ),
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             hintText: hintText,
             suffixIcon: suffixIcon,
           ),
           initialValue: initialValue,
-
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: validator,
-          // PhoneValidator.compose([
-          // PhoneValidator.validMobile(context),
-          // PhoneValidator.required(context),
-          // ]),
           textAlignVertical: TextAlignVertical.center,
           countrySelectorNavigator: const CountrySelectorNavigator.dialog(),
           onChanged: onChanged,

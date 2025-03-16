@@ -15,25 +15,6 @@ class PersonViewModel extends StateNotifier<PersonState> {
 
     state = state.copyWith(isUserLoggedIn: isLoggedIn);
   }
-  // final nameController = TextEditingController();
-
-  // final contactController = TextEditingController();
-
-  // final emailController = TextEditingController();
-
-  // final imageController = TextEditingController();
-
-  // final amountController = TextEditingController();
-
-  // @override
-  // void dispose() {
-  //   nameController.dispose();
-  //   contactController.dispose();
-  //   emailController.dispose();
-  //   imageController.dispose();
-  //   amountController.dispose();
-  //   super.dispose();
-  // }
 
   Future<bool> createOnePerson() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
@@ -170,19 +151,19 @@ class PersonViewModel extends StateNotifier<PersonState> {
       person:
           state.person?.copyWith(
             name: name,
-            contactNumber: contactNumber,
+            phoneNumber: contactNumber,
             email: email,
-            imageUrl: imageUrl,
-            owedAmount: owedAmount,
+            profileImage: imageUrl,
+            amount: owedAmount,
             password: password,
             removeImage: removeImage,
           ) ??
           Person(
             name: name ?? '',
-            contactNumber: contactNumber,
+            phoneNumber: const PhoneNumber(isoCode: IsoCode.IN, nsn: ''),
             email: email,
-            imageUrl: imageUrl,
-            owedAmount: owedAmount ?? 0.0,
+            profileImage: imageUrl,
+            amount: owedAmount ?? 0.0,
             password: password,
           ),
     );
@@ -191,11 +172,4 @@ class PersonViewModel extends StateNotifier<PersonState> {
 
 final personProvider = StateNotifierProvider<PersonViewModel, PersonState>(
   (ref) => PersonViewModel(),
-  // {
-  //   final viewModel = PersonViewModel();
-
-  //   ref.onDispose(() => viewModel.dispose());
-
-  //   return viewModel;
-  // }
 );

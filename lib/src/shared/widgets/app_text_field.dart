@@ -14,6 +14,7 @@ class AppTextForm extends StatefulWidget {
     this.onTap,
     this.isPassword = false,
     this.readOnly = false,
+    this.maxLines = 1,
   });
 
   final TextEditingController? controller;
@@ -26,6 +27,7 @@ class AppTextForm extends StatefulWidget {
   final Widget? suffixIcon;
   final bool readOnly;
   final VoidCallback? onTap;
+  final int maxLines;
 
   @override
   State<AppTextForm> createState() => _AppTextFormState();
@@ -56,7 +58,12 @@ class _AppTextFormState extends State<AppTextForm> {
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
       readOnly: widget.readOnly,
+      onTapOutside: (v) {
+        FocusScope.of(context).unfocus();
+      },
       onTap: widget.onTap,
+      maxLines: widget.maxLines,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         hintText: widget.hintText,

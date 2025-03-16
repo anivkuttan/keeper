@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/shared/model/dropdown_type.dart';
 import 'package:keeper/src/shared/widgets/app_dropdown_button.dart';
+import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/attachement_button.dart';
 import 'package:keeper/src/transaction/view/widgets/image_preview_row_widget.dart';
 
@@ -207,22 +208,14 @@ class _TransactionPageState extends State<TransactionPage> {
   }
 
   Widget _buildTextField(String hint) {
-    return TextFormField(
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+    return AppTextForm(
       maxLines: 5,
-      onTapOutside: (v) {
-        FocusScope.of(context).unfocus();
-      },
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please Enter $hint";
         }
         return null;
       },
-      decoration: InputDecoration(
-        hintText: hint,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
     );
   }
 

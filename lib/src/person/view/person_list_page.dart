@@ -14,12 +14,6 @@ class UsersPage extends ConsumerStatefulWidget {
 }
 
 class _UsersPageState extends ConsumerState<UsersPage> {
-  // void _addNewPerson(Person? person) {
-  //   if (person == null) return;
-  //   setState(() {
-  //     persons.add(person);
-  //   });
-  // }
   @override
   void initState() {
     super.initState();
@@ -106,7 +100,9 @@ class PersonListTile extends StatelessWidget {
     return CircleAvatar(
       radius: 40,
       backgroundImage:
-          person.imageUrl != null ? MemoryImage(person.imageUrl!) : null,
+          person.profileImage != null
+              ? MemoryImage(person.profileImage!)
+              : null,
     );
   }
 
@@ -132,7 +128,7 @@ class PersonListTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(person.name),
-              Text(person.contactNumber?.international ?? ''),
+              Text(person.phoneNumber.international ?? ''),
               Text(person.updatedAt?.toIso8601String() ?? ''),
             ],
           ),

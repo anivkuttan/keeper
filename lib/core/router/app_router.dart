@@ -11,6 +11,7 @@ import 'package:keeper/src/person/model/person.dart';
 import 'package:keeper/src/person/view/new_person_creation.dart';
 import 'package:keeper/src/person/view/person_details.dart';
 import 'package:keeper/src/person/view/person_list_page.dart';
+import 'package:keeper/src/transaction/view/pages/transaction_view_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -29,28 +30,6 @@ class AppRouter {
             name: AppPage.homeScreen.name,
             pageBuilder:
                 (context, state) => const MaterialPage(child: HomePage()),
-            // redirect: (context, state) {
-            //   final container = ProviderScope.containerOf(
-            //     context,
-            //     listen: false,
-            //   );
-            //   final isUserLoggedIn =
-            //       container.read(personProvider).isUserLoggedIn;
-
-            //   // If user is NOT logged in, redirect them to Sign-In page (except if already there)
-            //   if (!isUserLoggedIn &&
-            //       state.matchedLocation != AppPage.signInScreen.path) {
-            //     return AppPage.signInScreen.path;
-            //   }
-
-            //   // If user IS logged in and tries to access Sign-In, redirect them to Home
-            //   if (isUserLoggedIn &&
-            //       state.matchedLocation == AppPage.signInScreen.path) {
-            //     return AppPage.homeScreen.path;
-            //   }
-
-            //   return null; // No redirection needed
-            // },
           ),
           GoRoute(
             path: AppPage.transactionScreen.path,
@@ -121,6 +100,13 @@ class AppRouter {
           return ProfileScreen(person: person);
         },
       ),
+      GoRoute(
+        path: AppPage.transactionViewScreen.path,
+        name: AppPage.transactionViewScreen.name,
+        builder: (context, state) {
+          return TransactionDetailPage();
+        },
+      ),
     ],
   );
 }
@@ -134,6 +120,10 @@ enum AppPage {
   profileScreen(name: 'profile', path: '/profile'),
   newPersonScreen(name: 'newPerson', path: '/newPerson'),
   personDetails(name: 'personDetails', path: '/personDetails'),
+  transactionViewScreen(
+    name: 'transactionViewScreen',
+    path: '/transactionViewScreen',
+  ),
   homeScreen(name: 'homePage', path: '/homePage');
 
   const AppPage({required this.name, required this.path});

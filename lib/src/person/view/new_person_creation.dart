@@ -1,9 +1,6 @@
-import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:keeper/core/db/database.dart';
-import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/phone_number_field.dart';
@@ -11,15 +8,17 @@ import 'package:keeper/src/shared/widgets/profile_image.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 class NewPersonPage extends ConsumerWidget {
-  const NewPersonPage({super.key});
-
+  NewPersonPage({super.key});
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final personState = ref.watch(personProvider);
-    final viewModel = ref.read(personProvider.notifier);
-
     return Scaffold(
-      appBar: AppBar(title: Text("New Person Creating"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("New Person Creating"),
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+      ),
       body: Consumer(
         builder: (context, ref, child) {
           ref.listen(personProvider, (previous, next) {
@@ -34,76 +33,116 @@ class NewPersonPage extends ConsumerWidget {
           });
 
           return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                spacing: 16,
-                children: [
-                  ProfileImage(
-                    onImagePicked:
-                        (value) => viewModel.updatePerson(
-                          imageUrl: value,
-                          removeImage: value == null,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  spacing: 16,
+                  children: [
+                    ProfileImage(
+                      onImagePicked:
+                          (value) => ref
+                              .read(personProvider.notifier)
+                              .updatePerson(
+                                imageUrl: value,
+                                removeImage: value == null,
+                              ),
+                    ),
+                    AppTextForm(
+                      hintText: "Name *",
+                      suffixIcon: Icon(Icons.person),
+                      validator: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return 'Please enter Name';
+                        }
+                        return null;
+                      },
+                      onChanged:
+                          (value) => ref
+                              .read(personProvider.notifier)
+                              .updatePerson(name: value),
+                    ),
+                    PhoneField(
+                      hintText: 'Phone Number *',
+
+                      suffixIcon: Icon(Icons.phone_android_rounded),
+
+                      validator: PhoneValidator.compose([
+                        PhoneValidator.required(
+                          context,
+                          errorText: "You must enter a value",
                         ),
-                  ),
-                  AppTextForm(
-                    hintText: "Name *",
-                    suffixIcon: Icon(Icons.person),
-                    onChanged: (value) => viewModel.updatePerson(name: value),
-                  ),
-                  PhoneField(
-                    hintText: 'Phone Number *',
-                    suffixIcon: Icon(Icons.phone_android_rounded),
+                        PhoneValidator.validMobile(context),
+                      ]),
+                      onChanged:
+                          (value) => ref
+                              .read(personProvider.notifier)
+                              .updatePerson(contactNumber: value),
+                    ),
+                    AppTextForm(
+                      hintText: 'Email (Optional)',
+                      suffixIcon: Icon(Icons.email),
+                      onChanged:
+                          (value) => ref
+                              .read(personProvider.notifier)
+                              .updatePerson(email: value),
+                    ),
+                    AppTextForm(
+                      hintText: 'Initial Amount',
+                      keyboardType: TextInputType.number,
+                      suffixIcon: Icon(Icons.money),
 
-                    validator: PhoneValidator.compose([
-                      PhoneValidator.required(
-                        context,
-                        errorText: "You must enter a value",
-                      ),
-                      PhoneValidator.validMobile(context),
-                    ]),
-                    onChanged:
-                        (value) => viewModel.updatePerson(contactNumber: value),
-                  ),
-                  AppTextForm(
-                    hintText: 'Email (Optional)',
-                    suffixIcon: Icon(Icons.email),
-                    onChanged: (value) => viewModel.updatePerson(email: value),
-                  ),
-                  AppTextForm(
-                    hintText: 'Initial Amount',
-                    keyboardType: TextInputType.number,
-                    suffixIcon: Icon(Icons.money),
-                    onChanged:
-                        (value) => viewModel.updatePerson(
-                          owedAmount: double.tryParse(value) ?? 0.0,
-                        ),
-                  ),
-
-                  ElevatedButton(
-                    onPressed:
-                        personState.isLoading
-                            ? null
-                            : () async {
-                              final success = await viewModel.createOnePerson();
-                              if (success) {
-                                if (!context.mounted) return;
-                                context.pop(true);
-                              } else {
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Failed to create person!"),
-                                  ),
-                                );
-                              }
-                            },
-                    child:
-                        personState.isLoading
-                            ? const CircularProgressIndicator()
-                            : const Text("Submit"),
-                  ),
-
+                      onChanged:
+                          (value) => ref
+                              .read(personProvider.notifier)
+                              .updatePerson(
+                                owedAmount: double.tryParse(value) ?? 0.0,
+                              ),
+                    ),
+                    AppTextForm(hintText: "About", maxLines: 3),
+                    ElevatedButton(
+                      onPressed:
+                          personState.isLoading
+                              ? null
+                              : () async {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  final success =
+                                      await ref
+                                          .read(personProvider.notifier)
+                                          .createOnePerson();
+                                  if (success) {
+                                    if (!context.mounted) return;
+                                    context.pop(true);
+                                  } else {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Failed to create person!",
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                      child:
+                          personState.isLoading
+                              ? const CircularProgressIndicator()
+                              : const Text("Submit"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+/* 
                   ElevatedButton(
                     onPressed: () {
                       final db = getIt<AppDatabase>();
@@ -115,13 +154,4 @@ class NewPersonPage extends ConsumerWidget {
                     },
 
                     child: Text("DB"),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
+                  ), */
