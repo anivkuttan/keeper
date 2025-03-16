@@ -1,64 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/person/model/person.dart';
-import 'package:keeper/src/person/view_model/person_view_model.dart';
 
-class UsersPage extends ConsumerStatefulWidget {
+class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
 
   @override
-  ConsumerState createState() => _UsersPageState();
+  State createState() => _UsersPageState();
 }
 
-class _UsersPageState extends ConsumerState<UsersPage> {
+class _UsersPageState extends State<UsersPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      ref.read(personProvider.notifier).getAllPersons();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final personState = ref.watch(personProvider);
-
     return Scaffold(
       appBar: AppBar(title: Text("Persons"), centerTitle: true),
-      body:
-          personState.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : personState.errorMessage != null
-              ? Center(child: Text("Error: ${personState.errorMessage}"))
-              : personState.personList.isEmpty
-              ? Center(child: Text("No Person available"))
-              : ListView.separated(
-                padding: EdgeInsets.all(8),
-                itemCount: personState.personList.length,
-                itemBuilder: (context, index) {
-                  return PersonListTile(
-                    person: personState.personList[index],
+      body: Center(child: Text("No Person available")),
 
-                    onEdit: () {
-                      // Handle edit action
-                    },
-                    onDelete: () {
-                      // Handle delete action
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 10);
-                },
-              ),
+      // personState.isLoading
+      //     ? const Center(child: CircularProgressIndicator())
+      //     : personState.errorMessage != null
+      //     ? Center(child: Text("Error: ${personState.errorMessage}"))
+      //     : personState.personList.isEmpty
+      //     ? Center(child: Text("No Person available"))
+      //     : ListView.separated(
+      //       padding: EdgeInsets.all(8),
+      //       itemCount: personState.personList.length,
+      //       itemBuilder: (context, index) {
+      //         return PersonListTile(
+      //           person: personState.personList[index],
 
+      //           onEdit: () {
+      //             // Handle edit action
+      //           },
+      //           onDelete: () {
+      //             // Handle delete action
+      //           },
+      //         );
+      //       },
+      //       separatorBuilder: (context, index) {
+      //         return SizedBox(height: 10);
+      //       },
+      //     ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await context.pushNamed<bool>(AppPage.newPersonScreen.name);
-          ref.read(personProvider.notifier).getAllPersons();
         },
         child: const Icon(Icons.add),
       ),
@@ -128,7 +120,7 @@ class PersonListTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(person.name),
-              Text(person.phoneNumber.international ?? ''),
+              Text(person.phoneNumber.international),
               Text(person.updatedAt?.toIso8601String() ?? ''),
             ],
           ),

@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/pages/sign_in_screen.dart';
-import 'package:keeper/src/person/view_model/person_view_model.dart';
 import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/phone_number_field.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-class SignUpScreen extends ConsumerStatefulWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  ConsumerState createState() => _SignUpScreenState();
+  State createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.read(personProvider.notifier);
-    final agreeToTerms = ref.watch(agreeToTermsProvider);
+    // final viewModel = ref.read(personProvider.notifier);
+    // final agreeToTerms = ref.watch(agreeToTermsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -44,29 +42,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               const SignUpFormFields(),
               _TermsAndConditions(),
               AppButton(
-                onTap:
-                    agreeToTerms
-                        ? () async {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            final isSuccess = await viewModel.createOnePerson();
-                            if (isSuccess.data ?? false) {
-                              if (!context.mounted) return;
-                              final login = await viewModel.logIn();
-                              if (!context.mounted) return;
-                              if (login) {
-                                context.goNamed(AppPage.homeScreen.name);
-                              }
-                            } else {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(isSuccess.message ?? ''),
-                                ),
-                              );
-                            }
-                          }
-                        }
-                        : null,
+                onTap: null,
+                // agreeToTerms
+                //     ? () async {
+                //       if (_formKey.currentState?.validate() ?? false) {
+                //         final isSuccess = await viewModel.createOnePerson();
+                //         if (isSuccess.data ?? false) {
+                //           if (!context.mounted) return;
+                //           final login = await viewModel.logIn();
+                //           if (!context.mounted) return;
+                //           if (login) {
+                //             context.goNamed(AppPage.homeScreen.name);
+                //           }
+                //         } else {
+                //           if (!context.mounted) return;
+                //           ScaffoldMessenger.of(context).showSnackBar(
+                //             SnackBar(
+                //               content: Text(isSuccess.message ?? ''),
+                //             ),
+                //           );
+                //         }
+                //       }
+                //     }
+                //     : null,
                 title: 'Sign Up',
               ),
               Align(
@@ -93,25 +91,23 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   }
 }
 
-class SignUpFormFields extends ConsumerWidget {
+class SignUpFormFields extends StatelessWidget {
   const SignUpFormFields({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.read(personProvider.notifier);
-
+  Widget build(BuildContext context) {
     return Column(
       children: [
         AppTextForm(
           hintText: 'Name *',
           validator:
               (p0) => p0?.trim().isEmpty ?? true ? 'Please Enter Name' : null,
-          onChanged: (value) => viewModel.updatePerson(name: value),
+          // onChanged: (value) => viewModel.updatePerson(name: value),
         ),
         const SizedBox(height: 16),
         AppTextForm(
           hintText: 'Email',
-          onChanged: (value) => viewModel.updatePerson(email: value),
+          // onChanged: (value) => viewModel.updatePerson(email: value),
         ),
         const SizedBox(height: 16),
         PhoneField(
@@ -123,7 +119,7 @@ class SignUpFormFields extends ConsumerWidget {
             ),
             PhoneValidator.validMobile(context),
           ]),
-          onChanged: (value) => viewModel.updatePerson(phoneNumber: value),
+          // onChanged: (value) => viewModel.updatePerson(phoneNumber: value),
         ),
         const SizedBox(height: 16),
         AppTextForm(
@@ -132,29 +128,23 @@ class SignUpFormFields extends ConsumerWidget {
           validator:
               (p0) =>
                   p0?.trim().isEmpty ?? true ? 'Please Enter Password' : null,
-          onChanged: (value) => viewModel.updatePerson(password: value),
+          // onChanged: (value) => viewModel.updatePerson(password: value),
         ),
       ],
     );
   }
 }
 
-class _TermsAndConditions extends ConsumerWidget {
+class _TermsAndConditions extends StatelessWidget {
   const _TermsAndConditions();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final agreeToTerms = ref.watch(agreeToTermsProvider);
+  Widget build(BuildContext context) {
+    // final agreeToTerms = ref.watch(agreeToTermsProvider);
 
     return Row(
       children: [
-        Checkbox(
-          value: agreeToTerms,
-          onChanged:
-              (value) =>
-                  ref.read(agreeToTermsProvider.notifier).state =
-                      value ?? false,
-        ),
+        Checkbox(value: true, onChanged: (value) {}),
         Expanded(
           child: RichText(
             text: TextSpan(
@@ -174,4 +164,4 @@ class _TermsAndConditions extends ConsumerWidget {
   }
 }
 
-final agreeToTermsProvider = StateProvider<bool>((ref) => false);
+// final agreeToTermsProvider = StateProvider<bool>((ref) => false);
