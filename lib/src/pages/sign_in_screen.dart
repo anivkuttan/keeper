@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
-import 'package:keeper/src/shared/widgets/app_button.dart';
-import 'package:keeper/src/pages/sign_up_screen.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
+import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
+import 'package:keeper/src/shared/widgets/phone_number_field.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -37,13 +37,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           children: [
             Expanded(flex: 2, child: Image.asset(AppImage.signInBG)),
             const SizedBox(height: 16),
-            AppTextForm(
-              hintText: 'Email',
-              onChanged: (value) => viewModel.updatePerson(email: value),
+            PhoneField(
+              hintText: 'Phone Number *',
+              onChanged: (value) => viewModel.updatePerson(phoneNumber: value),
             ),
             const SizedBox(height: 16),
             AppTextForm(
-              hintText: 'Password',
+              hintText: 'Password *',
               isPassword: true,
               onChanged: (value) => viewModel.updatePerson(password: value),
             ),

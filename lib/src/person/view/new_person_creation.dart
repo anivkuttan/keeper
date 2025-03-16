@@ -78,7 +78,7 @@ class NewPersonPage extends ConsumerWidget {
                       onChanged:
                           (value) => ref
                               .read(personProvider.notifier)
-                              .updatePerson(contactNumber: value),
+                              .updatePerson(phoneNumber: value),
                     ),
                     AppTextForm(
                       hintText: 'Email (Optional)',
@@ -112,7 +112,7 @@ class NewPersonPage extends ConsumerWidget {
                                       await ref
                                           .read(personProvider.notifier)
                                           .createOnePerson();
-                                  if (success) {
+                                  if (success.data??false) {
                                     if (!context.mounted) return;
                                     context.pop(true);
                                   } else {

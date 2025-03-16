@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:keeper/core/db/database.dart';
@@ -16,7 +18,7 @@ class PersonViewModel extends StateNotifier<PersonState> {
     state = state.copyWith(isUserLoggedIn: isLoggedIn);
   }
 
-  Future<bool> createOnePerson() async {
+  Future<AppResponse<bool>> createOnePerson() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final db = getIt<AppDatabase>();
@@ -30,10 +32,11 @@ class PersonViewModel extends StateNotifier<PersonState> {
             ),
           );
       state = state.copyWith(isLoading: false);
-      return true;
+      return AppResponse<bool>(data: true, message: "Login Successfully");
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
-      return false;
+      log(e.toString());
+      return AppResponse<bool>(data: false, message: e.toString());
     }
   }
 
@@ -95,14 +98,14 @@ class PersonViewModel extends StateNotifier<PersonState> {
   }
 
   Future<bool> logIn() async {
-    String email = state.person?.email ?? '';
+    String phoneNumber = state.person?.phoneNumber.nsn ?? '';
     String password = state.person?.password ?? "";
     try {
       final db = getIt<AppDatabase>();
 
       final user =
           await (db.select(db.personTbl)..where(
-            (tbl) => tbl.email.equals(email) & tbl.password.equals(password),
+            (tbl) => tbl.email.equals(phoneNumber) & tbl.password.equals(password),
           )).getSingleOrNull();
 
       if (user == null) {
@@ -140,7 +143,7 @@ class PersonViewModel extends StateNotifier<PersonState> {
 
   void updatePerson({
     String? name,
-    PhoneNumber? contactNumber,
+    PhoneNumber? phoneNumber,
     String? email,
     Uint8List? imageUrl,
     double? owedAmount,
@@ -151,7 +154,7 @@ class PersonViewModel extends StateNotifier<PersonState> {
       person:
           state.person?.copyWith(
             name: name,
-            phoneNumber: contactNumber,
+            phoneNumber: phoneNumber,
             email: email,
             profileImage: imageUrl,
             amount: owedAmount,
@@ -173,3 +176,9 @@ class PersonViewModel extends StateNotifier<PersonState> {
 final personProvider = StateNotifierProvider<PersonViewModel, PersonState>(
   (ref) => PersonViewModel(),
 );
+
+final class AppResponse<T> {
+  final String? message;
+  final T? data;
+  const AppResponse({this.message, this.data});
+}

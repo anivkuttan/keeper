@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
-import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/pages/sign_in_screen.dart';
 import 'package:keeper/src/person/view_model/person_view_model.dart';
+import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/phone_number_field.dart';
 import 'package:phone_form_field/phone_form_field.dart';
@@ -19,117 +19,159 @@ class SignUpScreen extends ConsumerStatefulWidget {
 }
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
-  bool _agreeToTerms = false;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.read(personProvider.notifier);
+    final agreeToTerms = ref.watch(agreeToTermsProvider);
 
     return Scaffold(
-      appBar: AppBar(automaticallyImplyLeading: true, title: Text("Sign Up")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          spacing: 16,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(flex: 2, child: Image.asset(AppImage.signUpBG)),
-            AppTextForm(
-              hintText: 'Name',
-              onChanged: (value) => viewModel.updatePerson(name: value),
-            ),
-
-            AppTextForm(
-              hintText: 'Email',
-              onChanged: (value) => viewModel.updatePerson(email: value),
-            ),
-
-            PhoneField(
-              validator: PhoneValidator.compose([
-                PhoneValidator.required(
-                  context,
-                  errorText: "You must enter a value",
-                ),
-                PhoneValidator.validMobile(context),
-              ]),
-              onChanged:
-                  (value) => viewModel.updatePerson(contactNumber: value),
-            ),
-
-            AppTextForm(
-              hintText: 'Password',
-              isPassword: true,
-              onChanged: (value) => viewModel.updatePerson(password: value),
-            ),
-
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Checkbox(
-                  value: _agreeToTerms,
-                  onChanged: (value) {
-                    setState(() {
-                      _agreeToTerms = value ?? false;
-                    });
-                  },
-                ),
-                Expanded(
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'By signing up, you agree to the ',
-                      style: TextStyle(color: Colors.black),
-                      children: [
-                        TextSpan(
-                          text: 'Terms of Service and Privacy Policy',
-                          style: TextStyle(color: AppColor.primaryColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            AppButton(
-              onTap:
-                  _agreeToTerms
-                      ? () async {
-                        final isSuccess =
-                            await ref
-                                .read(personProvider.notifier)
-                                .createOnePerson();
-
-                        if (isSuccess) {
-                          if (!context.mounted) return;
-                          final login =
-                              await ref.read(personProvider.notifier).logIn();
-                          if (!context.mounted) return;
-                          if (login) {
-                            context.goNamed(AppPage.homeScreen.name);
+      appBar: AppBar(
+        title: const Text("Sign Up"),
+        forceMaterialTransparency: true,
+      ),
+      extendBodyBehindAppBar: true,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            spacing: 10,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Image.asset(AppImage.signUpBG),
+              const SignUpFormFields(),
+              _TermsAndConditions(),
+              AppButton(
+                onTap:
+                    agreeToTerms
+                        ? () async {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            final isSuccess = await viewModel.createOnePerson();
+                            if (isSuccess.data ?? false) {
+                              if (!context.mounted) return;
+                              final login = await viewModel.logIn();
+                              if (!context.mounted) return;
+                              if (login) {
+                                context.goNamed(AppPage.homeScreen.name);
+                              }
+                            } else {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(isSuccess.message ?? ''),
+                                ),
+                              );
+                            }
                           }
                         }
-                      }
-                      : null,
-              title: 'Sign Up',
-            ),
-            Spacer(),
-            SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClickableText(
-                    prefixText: 'Already have an account? ',
-                    clickableText: 'SignIn',
-                    onTap: () {
-                      context.pushReplacement(AppPage.signInScreen.path);
-                    },
-                  ),
-                ],
+                        : null,
+                title: 'Sign Up',
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClickableText(
+                      prefixText: 'Already have an account? ',
+                      clickableText: 'SignIn',
+                      onTap:
+                          () => context.pushReplacement(
+                            AppPage.signInScreen.path,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+class SignUpFormFields extends ConsumerWidget {
+  const SignUpFormFields({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.read(personProvider.notifier);
+
+    return Column(
+      children: [
+        AppTextForm(
+          hintText: 'Name *',
+          validator:
+              (p0) => p0?.trim().isEmpty ?? true ? 'Please Enter Name' : null,
+          onChanged: (value) => viewModel.updatePerson(name: value),
+        ),
+        const SizedBox(height: 16),
+        AppTextForm(
+          hintText: 'Email',
+          onChanged: (value) => viewModel.updatePerson(email: value),
+        ),
+        const SizedBox(height: 16),
+        PhoneField(
+          hintText: "Phone Number *",
+          validator: PhoneValidator.compose([
+            PhoneValidator.required(
+              context,
+              errorText: "You must enter a value",
+            ),
+            PhoneValidator.validMobile(context),
+          ]),
+          onChanged: (value) => viewModel.updatePerson(phoneNumber: value),
+        ),
+        const SizedBox(height: 16),
+        AppTextForm(
+          hintText: 'Password *',
+          isPassword: true,
+          validator:
+              (p0) =>
+                  p0?.trim().isEmpty ?? true ? 'Please Enter Password' : null,
+          onChanged: (value) => viewModel.updatePerson(password: value),
+        ),
+      ],
+    );
+  }
+}
+
+class _TermsAndConditions extends ConsumerWidget {
+  const _TermsAndConditions();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final agreeToTerms = ref.watch(agreeToTermsProvider);
+
+    return Row(
+      children: [
+        Checkbox(
+          value: agreeToTerms,
+          onChanged:
+              (value) =>
+                  ref.read(agreeToTermsProvider.notifier).state =
+                      value ?? false,
+        ),
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              text: 'By signing up, you agree to the ',
+              style: const TextStyle(color: Colors.black),
+              children: [
+                TextSpan(
+                  text: 'Terms of Service and Privacy Policy',
+                  style: TextStyle(color: AppColor.primaryColor),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+final agreeToTermsProvider = StateProvider<bool>((ref) => false);

@@ -17,7 +17,7 @@ class AppRouter {
   AppRouter._();
 
   static GoRouter router = GoRouter(
-    initialLocation: AppPage.homeScreen.path,
+    initialLocation: AppPage.onboardingScreen.path,
     routes: [
       ShellRoute(
         navigatorKey: GlobalKey<NavigatorState>(),
