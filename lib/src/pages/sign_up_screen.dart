@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
+import 'package:keeper/src/login/view_model/cubit/login_cubit.dart';
 import 'package:keeper/src/pages/sign_in_screen.dart';
 import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
@@ -21,9 +23,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final viewModel = ref.read(personProvider.notifier);
-    // final agreeToTerms = ref.watch(agreeToTermsProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Sign Up"),
@@ -32,61 +31,70 @@ class _SignUpScreenState extends State<SignUpScreen> {
       extendBodyBehindAppBar: true,
       body: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            spacing: 10,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Image.asset(AppImage.signUpBG),
-              const SignUpFormFields(),
-              _TermsAndConditions(),
-              AppButton(
-                onTap: null,
-                // agreeToTerms
-                //     ? () async {
-                //       if (_formKey.currentState?.validate() ?? false) {
-                //         final isSuccess = await viewModel.createOnePerson();
-                //         if (isSuccess.data ?? false) {
-                //           if (!context.mounted) return;
-                //           final login = await viewModel.logIn();
-                //           if (!context.mounted) return;
-                //           if (login) {
-                //             context.goNamed(AppPage.homeScreen.name);
-                //           }
-                //         } else {
-                //           if (!context.mounted) return;
-                //           ScaffoldMessenger.of(context).showSnackBar(
-                //             SnackBar(
-                //               content: Text(isSuccess.message ?? ''),
-                //             ),
-                //           );
-                //         }
-                //       }
-                //     }
-                //     : null,
-                title: 'Sign Up',
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ClickableText(
-                      prefixText: 'Already have an account? ',
-                      clickableText: 'SignIn',
-                      onTap:
-                          () => context.pushReplacement(
-                            AppPage.signInScreen.path,
-                          ),
-                    ),
-                  ],
+        child: BlocListener<LoginCubit, LoginCubitState>(
+          listener: (context, state) {
+            if (state.status == LoginStatus.failure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.info?.message ?? '')),
+              );
+            }
+            if (state.status == LoginStatus.success) {
+              context.pop();
+            }
+          },
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              spacing: 10,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 300),
+                  child: Image.asset(AppImage.signUpBG),
                 ),
-              ),
-            ],
+                const SignUpFormFields(),
+                _TermsAndConditions(),
+                signInButton(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClickableText(
+                        prefixText: 'Already have an account? ',
+                        clickableText: 'SignIn',
+                        onTap:
+                            () => context.pushReplacement(
+                              AppPage.signInScreen.path,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  BlocBuilder<LoginCubit, LoginCubitState> signInButton() {
+    return BlocBuilder<LoginCubit, LoginCubitState>(
+      builder: (context, loginCubitState) {
+        return AppButton(
+          onTap:
+              (loginCubitState.person?.agreeToTerms ?? false)
+                  ? () async {
+                    final isValid = _formKey.currentState?.validate() ?? false;
+                    if (isValid) {
+                      await context.read<LoginCubit>().createOnePerson();
+                    }
+                  }
+                  : null,
+          title: 'Sign Up',
+        );
+      },
     );
   }
 }
@@ -102,12 +110,14 @@ class SignUpFormFields extends StatelessWidget {
           hintText: 'Name *',
           validator:
               (p0) => p0?.trim().isEmpty ?? true ? 'Please Enter Name' : null,
-          // onChanged: (value) => viewModel.updatePerson(name: value),
+          onChanged:
+              (value) => context.read<LoginCubit>().updatePerson(name: value),
         ),
         const SizedBox(height: 16),
         AppTextForm(
           hintText: 'Email',
-          // onChanged: (value) => viewModel.updatePerson(email: value),
+          onChanged:
+              (value) => context.read<LoginCubit>().updatePerson(email: value),
         ),
         const SizedBox(height: 16),
         PhoneField(
@@ -119,7 +129,9 @@ class SignUpFormFields extends StatelessWidget {
             ),
             PhoneValidator.validMobile(context),
           ]),
-          // onChanged: (value) => viewModel.updatePerson(phoneNumber: value),
+          onChanged:
+              (value) =>
+                  context.read<LoginCubit>().updatePerson(phoneNumber: value),
         ),
         const SizedBox(height: 16),
         AppTextForm(
@@ -128,7 +140,9 @@ class SignUpFormFields extends StatelessWidget {
           validator:
               (p0) =>
                   p0?.trim().isEmpty ?? true ? 'Please Enter Password' : null,
-          // onChanged: (value) => viewModel.updatePerson(password: value),
+          onChanged:
+              (value) =>
+                  context.read<LoginCubit>().updatePerson(password: value),
         ),
       ],
     );
@@ -140,11 +154,18 @@ class _TermsAndConditions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final agreeToTerms = ref.watch(agreeToTermsProvider);
-
     return Row(
       children: [
-        Checkbox(value: true, onChanged: (value) {}),
+        BlocBuilder<LoginCubit, LoginCubitState>(
+          builder: (context, loginCubitState) {
+            return Checkbox(
+              value: loginCubitState.person?.agreeToTerms ?? false,
+              onChanged: (value) {
+                context.read<LoginCubit>().updatePerson(agreeToTerms: value);
+              },
+            );
+          },
+        ),
         Expanded(
           child: RichText(
             text: TextSpan(
@@ -163,5 +184,3 @@ class _TermsAndConditions extends StatelessWidget {
     );
   }
 }
-
-// final agreeToTermsProvider = StateProvider<bool>((ref) => false);

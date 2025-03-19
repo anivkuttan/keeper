@@ -14,4 +14,5 @@ class PersonTbl extends Table {
   late final createdAt = dateTime().nullable()();
   late final updatedAt = dateTime().nullable()();
   late final about = text().nullable()();
+  late final agreeToTerms = boolean().withDefault(Constant(false))();
 }

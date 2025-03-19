@@ -1,8 +1,9 @@
 import 'package:drift/drift.dart';
+import 'package:equatable/equatable.dart';
 import 'package:keeper/core/db/database.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
-class Person {
+class Person extends Equatable {
   final int? id;
   final String name;
   final PhoneNumber phoneNumber;
@@ -13,8 +14,9 @@ class Person {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final String? about;
+  final bool agreeToTerms;
 
-  Person({
+  const Person({
     required this.name,
     this.phoneNumber = const PhoneNumber(isoCode: IsoCode.IN, nsn: ''),
     this.id,
@@ -22,6 +24,7 @@ class Person {
     this.about,
     this.password,
     this.profileImage,
+    this.agreeToTerms = false,
     this.createdAt,
     this.updatedAt,
     this.amount = 0.0,
@@ -36,6 +39,7 @@ class Person {
     String? about,
     double? amount,
     String? password,
+    bool? agreeToTerms,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? removeImage,
@@ -47,6 +51,7 @@ class Person {
       email: email ?? this.email,
       password: password ?? this.password,
       amount: amount ?? this.amount,
+      agreeToTerms: agreeToTerms ?? this.agreeToTerms,
       profileImage:
           removeImage == true ? null : profileImage ?? this.profileImage,
       about: about ?? this.about,
@@ -65,9 +70,25 @@ class Person {
       profileImage: Value(profileImage),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      agreeToTerms: Value(agreeToTerms),
       id: Value(id),
     );
   }
+
+  @override
+  List<Object?> get props => [
+    name,
+    phoneNumber,
+    id,
+    email,
+    about,
+    password,
+    profileImage,
+    agreeToTerms,
+    createdAt,
+    updatedAt,
+    amount,
+  ];
 }
 
 

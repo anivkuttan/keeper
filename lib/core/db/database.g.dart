@@ -283,6 +283,7 @@ mixin $PersonTblTableToColumns implements Insertable<Person> {
   DateTime? get createdAt;
   DateTime? get updatedAt;
   String? get about;
+  bool get agreeToTerms;
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -314,6 +315,7 @@ mixin $PersonTblTableToColumns implements Insertable<Person> {
     if (!nullToAbsent || about != null) {
       map['about'] = Variable<String>(about);
     }
+    map['agree_to_terms'] = Variable<bool>(agreeToTerms);
     return map;
   }
 }
@@ -429,6 +431,21 @@ class $PersonTblTable extends PersonTbl
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _agreeToTermsMeta = const VerificationMeta(
+    'agreeToTerms',
+  );
+  @override
+  late final GeneratedColumn<bool> agreeToTerms = GeneratedColumn<bool>(
+    'agree_to_terms',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("agree_to_terms" IN (0, 1))',
+    ),
+    defaultValue: Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -441,6 +458,7 @@ class $PersonTblTable extends PersonTbl
     createdAt,
     updatedAt,
     about,
+    agreeToTerms,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -510,6 +528,15 @@ class $PersonTblTable extends PersonTbl
         about.isAcceptableOrUnknown(data['about']!, _aboutMeta),
       );
     }
+    if (data.containsKey('agree_to_terms')) {
+      context.handle(
+        _agreeToTermsMeta,
+        agreeToTerms.isAcceptableOrUnknown(
+          data['agree_to_terms']!,
+          _agreeToTermsMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -550,6 +577,11 @@ class $PersonTblTable extends PersonTbl
         DriftSqlType.blob,
         data['${effectivePrefix}profile_image'],
       ),
+      agreeToTerms:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.bool,
+            data['${effectivePrefix}agree_to_terms'],
+          )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -586,6 +618,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
   final Value<DateTime?> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<String?> about;
+  final Value<bool> agreeToTerms;
   const PersonTblCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -597,6 +630,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.about = const Value.absent(),
+    this.agreeToTerms = const Value.absent(),
   });
   PersonTblCompanion.insert({
     this.id = const Value.absent(),
@@ -609,6 +643,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.about = const Value.absent(),
+    this.agreeToTerms = const Value.absent(),
   }) : name = Value(name),
        phoneNumber = Value(phoneNumber);
   static Insertable<Person> custom({
@@ -622,6 +657,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? about,
+    Expression<bool>? agreeToTerms,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -634,6 +670,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (about != null) 'about': about,
+      if (agreeToTerms != null) 'agree_to_terms': agreeToTerms,
     });
   }
 
@@ -648,6 +685,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     Value<DateTime?>? createdAt,
     Value<DateTime?>? updatedAt,
     Value<String?>? about,
+    Value<bool>? agreeToTerms,
   }) {
     return PersonTblCompanion(
       id: id ?? this.id,
@@ -660,6 +698,7 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       about: about ?? this.about,
+      agreeToTerms: agreeToTerms ?? this.agreeToTerms,
     );
   }
 
@@ -698,6 +737,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     if (about.present) {
       map['about'] = Variable<String>(about.value);
     }
+    if (agreeToTerms.present) {
+      map['agree_to_terms'] = Variable<bool>(agreeToTerms.value);
+    }
     return map;
   }
 
@@ -713,7 +755,8 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
           ..write('amount: $amount, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('about: $about')
+          ..write('about: $about, ')
+          ..write('agreeToTerms: $agreeToTerms')
           ..write(')'))
         .toString();
   }
@@ -735,6 +778,7 @@ class _$PersonInsertable implements Insertable<Person> {
       createdAt: Value(_object.createdAt),
       updatedAt: Value(_object.updatedAt),
       about: Value(_object.about),
+      agreeToTerms: Value(_object.agreeToTerms),
     ).toColumns(false);
   }
 }
@@ -932,6 +976,7 @@ typedef $$PersonTblTableCreateCompanionBuilder =
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
       Value<String?> about,
+      Value<bool> agreeToTerms,
     });
 typedef $$PersonTblTableUpdateCompanionBuilder =
     PersonTblCompanion Function({
@@ -945,6 +990,7 @@ typedef $$PersonTblTableUpdateCompanionBuilder =
       Value<DateTime?> createdAt,
       Value<DateTime?> updatedAt,
       Value<String?> about,
+      Value<bool> agreeToTerms,
     });
 
 class $$PersonTblTableFilterComposer
@@ -1004,6 +1050,11 @@ class $$PersonTblTableFilterComposer
 
   ColumnFilters<String> get about => $composableBuilder(
     column: $table.about,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get agreeToTerms => $composableBuilder(
+    column: $table.agreeToTerms,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -1066,6 +1117,11 @@ class $$PersonTblTableOrderingComposer
     column: $table.about,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get agreeToTerms => $composableBuilder(
+    column: $table.agreeToTerms,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PersonTblTableAnnotationComposer
@@ -1111,6 +1167,11 @@ class $$PersonTblTableAnnotationComposer
 
   GeneratedColumn<String> get about =>
       $composableBuilder(column: $table.about, builder: (column) => column);
+
+  GeneratedColumn<bool> get agreeToTerms => $composableBuilder(
+    column: $table.agreeToTerms,
+    builder: (column) => column,
+  );
 }
 
 class $$PersonTblTableTableManager
@@ -1151,6 +1212,7 @@ class $$PersonTblTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<String?> about = const Value.absent(),
+                Value<bool> agreeToTerms = const Value.absent(),
               }) => PersonTblCompanion(
                 id: id,
                 name: name,
@@ -1162,6 +1224,7 @@ class $$PersonTblTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 about: about,
+                agreeToTerms: agreeToTerms,
               ),
           createCompanionCallback:
               ({
@@ -1175,6 +1238,7 @@ class $$PersonTblTableTableManager
                 Value<DateTime?> createdAt = const Value.absent(),
                 Value<DateTime?> updatedAt = const Value.absent(),
                 Value<String?> about = const Value.absent(),
+                Value<bool> agreeToTerms = const Value.absent(),
               }) => PersonTblCompanion.insert(
                 id: id,
                 name: name,
@@ -1186,6 +1250,7 @@ class $$PersonTblTableTableManager
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 about: about,
+                agreeToTerms: agreeToTerms,
               ),
           withReferenceMapper:
               (p0) =>
