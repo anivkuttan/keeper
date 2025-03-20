@@ -2,11 +2,9 @@ import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:keeper/core/db/tables/person/person_db_table.dart';
-import 'package:keeper/core/db/tables/person/phone_number_converter.dart';
 import 'package:keeper/core/db/tables/shared_prefrence/shared_data.dart';
 import 'package:keeper/src/person/model/person.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:phone_form_field/phone_form_field.dart' show PhoneNumber;
 
 part 'database.g.dart';
 
