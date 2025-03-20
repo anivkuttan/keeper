@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
+import 'package:keeper/core/const/enums.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/src/login/view_model/cubit/login_cubit.dart';
 import 'package:keeper/src/shared/widgets/app_button.dart';
@@ -34,13 +35,13 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
       body: BlocListener<LoginCubit, LoginCubitState>(
         listener: (context, state) {
-          if (state.status == LoginStatus.failure) {
+          if (state.status == StateStatus.failure) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.info?.message ?? '')));
             context.read<LoginCubit>().resetStateStatus();
           }
-          if (state.status == LoginStatus.success) {
+          if (state.status == StateStatus.success) {
             context.goNamed(AppPage.homeScreen.name);
 
             ScaffoldMessenger.of(
@@ -141,7 +142,7 @@ class _SignInScreenState extends State<SignInScreen> {
             return AppButton(
               title: 'SignIn',
               onTap:
-                  state.status == LoginStatus.loading
+                  state.status == StateStatus.loading
                       ? null
                       : () async {
                         final isValid = _formKey.currentState!.validate();

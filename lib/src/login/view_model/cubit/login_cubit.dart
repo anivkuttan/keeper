@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:keeper/core/const/enums.dart';
 import 'package:keeper/src/login/modal/repo/login_local.dart';
 import 'package:keeper/src/person/model/person.dart';
 import 'package:keeper/src/shared/model/data_response.dart';
@@ -14,43 +15,43 @@ class LoginCubit extends Cubit<LoginCubitState> {
   final LoginLocal _loginLocalRepo;
   LoginCubit(this._loginLocalRepo)
     : super(
-        LoginCubitState(status: LoginStatus.initial, person: Person(name: '')),
+        LoginCubitState(status: StateStatus.initial, person: Person(name: '')),
       );
 
   Future<void> signUp() async {
     if (state.person != null) {
-      emit(state.copyWith(status: LoginStatus.loading));
+      emit(state.copyWith(status: StateStatus.loading));
       final person = state.person!;
       final response = await _loginLocalRepo.signUp(person);
       if (response.isSuccess) {
-        emit(state.copyWith(status: LoginStatus.success, info: response.info));
+        emit(state.copyWith(status: StateStatus.success, info: response.info));
       } else {
-        emit(state.copyWith(status: LoginStatus.failure, info: response.info));
+        emit(state.copyWith(status: StateStatus.failure, info: response.info));
       }
     }
   }
 
   Future<void> signIn() async {
     if (state.person != null) {
-      emit(state.copyWith(status: LoginStatus.loading));
+      emit(state.copyWith(status: StateStatus.loading));
       final person = state.person!;
       final response = await _loginLocalRepo.signIn(person);
       if (response.isSuccess) {
-        emit(state.copyWith(status: LoginStatus.success, info: response.info));
+        emit(state.copyWith(status: StateStatus.success, info: response.info));
       } else {
-        emit(state.copyWith(status: LoginStatus.failure, info: response.info));
+        emit(state.copyWith(status: StateStatus.failure, info: response.info));
       }
     }
   }
 
   void resetLoginState() {
     emit(
-      LoginCubitState(status: LoginStatus.initial, person: Person(name: '')),
+      LoginCubitState(status: StateStatus.initial, person: Person(name: '')),
     );
   }
 
   void resetStateStatus() {
-    emit(state.copyWith(status: LoginStatus.initial));
+    emit(state.copyWith(status: StateStatus.initial));
   }
 
   void updatePerson({

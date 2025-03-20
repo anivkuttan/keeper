@@ -69,9 +69,9 @@ class Person extends Equatable {
   PersonTblCompanion get toCompanian {
     return PersonTblCompanion.insert(
       name: name,
-      nsn: nsn,
+      nsn: phoneNumber.nsn,
       isoCode: Value(phoneNumber.isoCode.name),
-      countryCode: Value(phoneNumber.countryCode), 
+      countryCode: Value(phoneNumber.countryCode),
       amount: Value(amount),
       password: Value(password),
       email: Value(email),

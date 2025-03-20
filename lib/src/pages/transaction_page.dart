@@ -111,18 +111,18 @@ class _TransactionPageState extends State<TransactionPage> {
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.all(10),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   _buildDropdownButton(),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   _buildTextField("Description"),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   _buildImagePreview(),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   _buildAttachmentBox(),
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       _formKey.currentState?.validate();
@@ -138,49 +138,6 @@ class _TransactionPageState extends State<TransactionPage> {
           ],
         ),
       ),
-
-      // Expanded(
-      //   child: Container(
-      //     padding: EdgeInsets.all(20),
-      //     decoration: BoxDecoration(
-      //       color: Colors.white,
-      //       borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-      //     ),
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.stretch,
-      //       children: [
-      //         SizedBox(height: 15),
-      //         _buildDropdownButton(),
-      //         SizedBox(height: 15),
-      //         _buildTextField("Description"),
-      //         SizedBox(height: 15),
-      //         _buildImagePreview(),
-      //         SizedBox(height: 15),
-      //         _buildAttachmentBox(),
-
-      //         ElevatedButton(
-      //           style: ElevatedButton.styleFrom(
-      //             backgroundColor: AppColor.primaryColor,
-      //             shape: RoundedRectangleBorder(
-      //               borderRadius: BorderRadius.circular(10),
-      //             ),
-      //             padding: EdgeInsets.symmetric(vertical: 15),
-      //           ),
-      //           onPressed: () {
-      //             _formKey.currentState!.validate();
-      //           },
-      //           child: Text(
-      //             "Continue",
-      //             style: TextStyle(fontSize: 18, color: Colors.white),
-      //           ),
-      //         ),
-      //         SizedBox(height: 20),
-      //       ],
-      //     ),
-      //   ),
-      // ),
-      //   ],
-      // ),
     );
   }
 

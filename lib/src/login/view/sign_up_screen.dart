@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
+import 'package:keeper/core/const/enums.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
+import 'package:keeper/src/login/view/sign_in_screen.dart';
 import 'package:keeper/src/login/view_model/cubit/login_cubit.dart';
-import 'package:keeper/src/pages/sign_in_screen.dart';
 import 'package:keeper/src/shared/widgets/app_button.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/phone_number_field.dart';
@@ -33,12 +34,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         key: _formKey,
         child: BlocListener<LoginCubit, LoginCubitState>(
           listener: (context, state) {
-            if (state.status == LoginStatus.failure) {
+            if (state.status.isFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.info?.message ?? '')),
               );
             }
-            if (state.status == LoginStatus.success) {
+            if (state.status.isSuccess) {
               context.pop();
               context.read<LoginCubit>().resetLoginState();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -89,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         return AppButton(
           onTap:
               ((loginCubitState.person?.agreeToTerms ?? false) &&
-                      (loginCubitState.status != LoginStatus.loading))
+                      (loginCubitState.status != StateStatus.loading))
                   ? () async {
                     final isValid = _formKey.currentState?.validate() ?? false;
                     if (isValid) {
