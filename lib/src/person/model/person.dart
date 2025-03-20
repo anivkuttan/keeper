@@ -7,6 +7,9 @@ class Person extends Equatable {
   final int? id;
   final String name;
   final PhoneNumber phoneNumber;
+  final String? isoCode;
+  final String? countryCode;
+  final String nsn;
   final String? email;
   final String? password;
   final Uint8List? profileImage;
@@ -20,6 +23,9 @@ class Person extends Equatable {
     required this.name,
     this.phoneNumber = const PhoneNumber(isoCode: IsoCode.IN, nsn: ''),
     this.id,
+    this.isoCode,
+    this.countryCode,
+    this.nsn = '',
     this.email,
     this.about,
     this.password,
@@ -63,7 +69,9 @@ class Person extends Equatable {
   PersonTblCompanion get toCompanian {
     return PersonTblCompanion.insert(
       name: name,
-      phoneNumber: phoneNumber,
+      nsn: nsn,
+      isoCode: Value(phoneNumber.isoCode.name),
+      countryCode: Value(phoneNumber.countryCode), 
       amount: Value(amount),
       password: Value(password),
       email: Value(email),

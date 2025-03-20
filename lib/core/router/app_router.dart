@@ -1,5 +1,9 @@
+import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:keeper/core/db/database.dart';
+import 'package:keeper/core/di/di.dart';
+import 'package:keeper/src/login/modal/repo/login_local.dart';
 import 'package:keeper/src/pages/home_page.dart';
 import 'package:keeper/src/pages/main_page.dart';
 import 'package:keeper/src/pages/on_boarding_screen.dart';
@@ -18,6 +22,30 @@ class AppRouter {
 
   static GoRouter router = GoRouter(
     initialLocation: AppPage.onboardingScreen.path,
+    redirect: (context, state) async {
+      final isUserLoggedIn = await getIt<LoginLocal>().isLogined();
+
+      // If the user is not logged in, allow onboarding and login/signup
+      final isAuthPages =
+          state.matchedLocation == AppPage.signInScreen.path ||
+          state.matchedLocation == AppPage.signUpScreen.path ||
+          state.matchedLocation == AppPage.onboardingScreen.path;
+
+      if (!isUserLoggedIn) {
+        // If trying to access other pages while not logged in, redirect to onboarding
+        if (!isAuthPages) {
+          return AppPage.onboardingScreen.path;
+        }
+      } else {
+        // If already logged in, prevent visiting onboarding or login pages
+        if (isAuthPages) {
+          return AppPage.homeScreen.path;
+        }
+      }
+
+      // No redirect needed
+      return null;
+    },
     routes: [
       ShellRoute(
         navigatorKey: GlobalKey<NavigatorState>(),
@@ -51,24 +79,6 @@ class AppRouter {
                 (context, state) => const MaterialPage(child: ProfilePage()),
           ),
         ],
-        // redirect: (context, state) {
-        //   final container = ProviderScope.containerOf(context, listen: false);
-        //   final isUserLoggedIn = container.read(personProvider).isUserLoggedIn;
-
-        //   // If user is NOT logged in, redirect them to Sign-In page (except if already there)
-        //   if (!isUserLoggedIn &&
-        //       state.matchedLocation != AppPage.signInScreen.path) {
-        //     return AppPage.signInScreen.path;
-        //   }
-
-        //   // If user IS logged in and tries to access Sign-In, redirect them to Home
-        //   if (isUserLoggedIn &&
-        //       state.matchedLocation == AppPage.signInScreen.path) {
-        //     return AppPage.homeScreen.path;
-        //   }
-
-        //   return null; // No redirection needed
-        // },
       ),
       GoRoute(
         path: AppPage.onboardingScreen.path,
@@ -107,6 +117,13 @@ class AppRouter {
           return TransactionDetailPage();
         },
       ),
+      GoRoute(
+        path: AppPage.db.path,
+        name: AppPage.db.name,
+        builder: (context, state) {
+          return DriftDbViewer(getIt<AppDatabase>());
+        },
+      ),
     ],
   );
 }
@@ -124,7 +141,9 @@ enum AppPage {
     name: 'transactionViewScreen',
     path: '/transactionViewScreen',
   ),
-  homeScreen(name: 'homePage', path: '/homePage');
+  homeScreen(name: 'homePage', path: '/homePage'),
+  // removre this in production
+  db(name: 'db', path: '/db');
 
   const AppPage({required this.name, required this.path});
   final String name;

@@ -5,4 +5,7 @@ abstract class AuthRepo {
   Future<DataResponse<void>> signIn(Person person);
   Future<DataResponse<void>> signUp(Person person);
   Future<DataResponse<void>> signOut();
+  Future<bool> saveLocalLoginStatus(int id);
+  Future<bool> isLogined();
+  Future<bool> logOut();
 }

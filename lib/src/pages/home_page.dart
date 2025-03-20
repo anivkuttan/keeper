@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:keeper/core/router/app_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,9 +13,14 @@ class HomePage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            const Text(
-              'Account Balance',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
+            InkWell(
+              onTap: () async {
+                context.pushNamed(AppPage.db.name);
+              },
+              child: const Text(
+                'Account Balance',
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
             ),
             const Text(
               '\$9400',

@@ -40,6 +40,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             }
             if (state.status == LoginStatus.success) {
               context.pop();
+              context.read<LoginCubit>().resetLoginState();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.info?.message ?? '')),
+              );
             }
           },
           child: SingleChildScrollView(
@@ -84,11 +88,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       builder: (context, loginCubitState) {
         return AppButton(
           onTap:
-              (loginCubitState.person?.agreeToTerms ?? false)
+              ((loginCubitState.person?.agreeToTerms ?? false) &&
+                      (loginCubitState.status != LoginStatus.loading))
                   ? () async {
                     final isValid = _formKey.currentState?.validate() ?? false;
                     if (isValid) {
-                      await context.read<LoginCubit>().createOnePerson();
+                      await context.read<LoginCubit>().signUp();
                     }
                   }
                   : null,
@@ -122,6 +127,7 @@ class SignUpFormFields extends StatelessWidget {
         const SizedBox(height: 16),
         PhoneField(
           hintText: "Phone Number *",
+          initialValue: PhoneNumber(isoCode: IsoCode.IN, nsn: "9092343966"),
           validator: PhoneValidator.compose([
             PhoneValidator.required(
               context,

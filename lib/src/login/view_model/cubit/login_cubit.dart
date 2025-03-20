@@ -17,8 +17,9 @@ class LoginCubit extends Cubit<LoginCubitState> {
         LoginCubitState(status: LoginStatus.initial, person: Person(name: '')),
       );
 
-  Future<void> createOnePerson() async {
+  Future<void> signUp() async {
     if (state.person != null) {
+      emit(state.copyWith(status: LoginStatus.loading));
       final person = state.person!;
       final response = await _loginLocalRepo.signUp(person);
       if (response.isSuccess) {
@@ -27,6 +28,29 @@ class LoginCubit extends Cubit<LoginCubitState> {
         emit(state.copyWith(status: LoginStatus.failure, info: response.info));
       }
     }
+  }
+
+  Future<void> signIn() async {
+    if (state.person != null) {
+      emit(state.copyWith(status: LoginStatus.loading));
+      final person = state.person!;
+      final response = await _loginLocalRepo.signIn(person);
+      if (response.isSuccess) {
+        emit(state.copyWith(status: LoginStatus.success, info: response.info));
+      } else {
+        emit(state.copyWith(status: LoginStatus.failure, info: response.info));
+      }
+    }
+  }
+
+  void resetLoginState() {
+    emit(
+      LoginCubitState(status: LoginStatus.initial, person: Person(name: '')),
+    );
+  }
+
+  void resetStateStatus() {
+    emit(state.copyWith(status: LoginStatus.initial));
   }
 
   void updatePerson({

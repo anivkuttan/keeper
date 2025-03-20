@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/app_image.dart';
+import 'package:keeper/core/di/di.dart';
+import 'package:keeper/core/router/app_router.dart';
+import 'package:keeper/src/login/modal/repo/login_local.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -84,8 +88,10 @@ class ProfilePage extends StatelessWidget {
                   _buildMenuItem(
                     icon: Icons.logout,
                     text: 'Logout',
-                    onTap: () {
-                      // Logout action
+                    onTap: () async {
+                      await getIt<LoginLocal>().logOut();
+                      if (!context.mounted) return;
+                      context.goNamed(AppPage.onboardingScreen.name);
                     },
                     color: Colors.red,
                   ),

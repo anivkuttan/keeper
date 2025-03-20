@@ -275,7 +275,9 @@ class SharedDataCompanion extends UpdateCompanion<SharedDataData> {
 mixin $PersonTblTableToColumns implements Insertable<Person> {
   int? get id;
   String get name;
-  PhoneNumber get phoneNumber;
+  String? get isoCode;
+  String? get countryCode;
+  String get nsn;
   String? get email;
   String? get password;
   Uint8List? get profileImage;
@@ -291,11 +293,13 @@ mixin $PersonTblTableToColumns implements Insertable<Person> {
       map['id'] = Variable<int>(id);
     }
     map['name'] = Variable<String>(name);
-    {
-      map['phone_number'] = Variable<String>(
-        $PersonTblTable.$converterphoneNumber.toSql(phoneNumber),
-      );
+    if (!nullToAbsent || isoCode != null) {
+      map['iso_code'] = Variable<String>(isoCode);
     }
+    if (!nullToAbsent || countryCode != null) {
+      map['country_code'] = Variable<String>(countryCode);
+    }
+    map['nsn'] = Variable<String>(nsn);
     if (!nullToAbsent || email != null) {
       map['email'] = Variable<String>(email);
     }
@@ -348,16 +352,38 @@ class $PersonTblTable extends PersonTbl
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _isoCodeMeta = const VerificationMeta(
+    'isoCode',
+  );
   @override
-  late final GeneratedColumnWithTypeConverter<PhoneNumber, String> phoneNumber =
-      GeneratedColumn<String>(
-        'phone_number',
-        aliasedName,
-        false,
-        type: DriftSqlType.string,
-        requiredDuringInsert: true,
-        defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
-      ).withConverter<PhoneNumber>($PersonTblTable.$converterphoneNumber);
+  late final GeneratedColumn<String> isoCode = GeneratedColumn<String>(
+    'iso_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _countryCodeMeta = const VerificationMeta(
+    'countryCode',
+  );
+  @override
+  late final GeneratedColumn<String> countryCode = GeneratedColumn<String>(
+    'country_code',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _nsnMeta = const VerificationMeta('nsn');
+  @override
+  late final GeneratedColumn<String> nsn = GeneratedColumn<String>(
+    'nsn',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
   static const VerificationMeta _emailMeta = const VerificationMeta('email');
   @override
   late final GeneratedColumn<String> email = GeneratedColumn<String>(
@@ -450,7 +476,9 @@ class $PersonTblTable extends PersonTbl
   List<GeneratedColumn> get $columns => [
     id,
     name,
-    phoneNumber,
+    isoCode,
+    countryCode,
+    nsn,
     email,
     password,
     profileImage,
@@ -482,6 +510,29 @@ class $PersonTblTable extends PersonTbl
       );
     } else if (isInserting) {
       context.missing(_nameMeta);
+    }
+    if (data.containsKey('iso_code')) {
+      context.handle(
+        _isoCodeMeta,
+        isoCode.isAcceptableOrUnknown(data['iso_code']!, _isoCodeMeta),
+      );
+    }
+    if (data.containsKey('country_code')) {
+      context.handle(
+        _countryCodeMeta,
+        countryCode.isAcceptableOrUnknown(
+          data['country_code']!,
+          _countryCodeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('nsn')) {
+      context.handle(
+        _nsnMeta,
+        nsn.isAcceptableOrUnknown(data['nsn']!, _nsnMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nsnMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
@@ -551,16 +602,23 @@ class $PersonTblTable extends PersonTbl
             DriftSqlType.string,
             data['${effectivePrefix}name'],
           )!,
-      phoneNumber: $PersonTblTable.$converterphoneNumber.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}phone_number'],
-        )!,
-      ),
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       ),
+      isoCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}iso_code'],
+      ),
+      countryCode: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}country_code'],
+      ),
+      nsn:
+          attachedDatabase.typeMapping.read(
+            DriftSqlType.string,
+            data['${effectivePrefix}nsn'],
+          )!,
       email: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}email'],
@@ -602,15 +660,14 @@ class $PersonTblTable extends PersonTbl
   $PersonTblTable createAlias(String alias) {
     return $PersonTblTable(attachedDatabase, alias);
   }
-
-  static TypeConverter<PhoneNumber, String> $converterphoneNumber =
-      PhoneNumberConverter();
 }
 
 class PersonTblCompanion extends UpdateCompanion<Person> {
   final Value<int?> id;
   final Value<String> name;
-  final Value<PhoneNumber> phoneNumber;
+  final Value<String?> isoCode;
+  final Value<String?> countryCode;
+  final Value<String> nsn;
   final Value<String?> email;
   final Value<String?> password;
   final Value<Uint8List?> profileImage;
@@ -622,7 +679,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
   const PersonTblCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.phoneNumber = const Value.absent(),
+    this.isoCode = const Value.absent(),
+    this.countryCode = const Value.absent(),
+    this.nsn = const Value.absent(),
     this.email = const Value.absent(),
     this.password = const Value.absent(),
     this.profileImage = const Value.absent(),
@@ -635,7 +694,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
   PersonTblCompanion.insert({
     this.id = const Value.absent(),
     required String name,
-    required PhoneNumber phoneNumber,
+    this.isoCode = const Value.absent(),
+    this.countryCode = const Value.absent(),
+    required String nsn,
     this.email = const Value.absent(),
     this.password = const Value.absent(),
     this.profileImage = const Value.absent(),
@@ -645,11 +706,13 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     this.about = const Value.absent(),
     this.agreeToTerms = const Value.absent(),
   }) : name = Value(name),
-       phoneNumber = Value(phoneNumber);
+       nsn = Value(nsn);
   static Insertable<Person> custom({
     Expression<int>? id,
     Expression<String>? name,
-    Expression<String>? phoneNumber,
+    Expression<String>? isoCode,
+    Expression<String>? countryCode,
+    Expression<String>? nsn,
     Expression<String>? email,
     Expression<String>? password,
     Expression<Uint8List>? profileImage,
@@ -662,7 +725,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (phoneNumber != null) 'phone_number': phoneNumber,
+      if (isoCode != null) 'iso_code': isoCode,
+      if (countryCode != null) 'country_code': countryCode,
+      if (nsn != null) 'nsn': nsn,
       if (email != null) 'email': email,
       if (password != null) 'password': password,
       if (profileImage != null) 'profile_image': profileImage,
@@ -677,7 +742,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
   PersonTblCompanion copyWith({
     Value<int?>? id,
     Value<String>? name,
-    Value<PhoneNumber>? phoneNumber,
+    Value<String?>? isoCode,
+    Value<String?>? countryCode,
+    Value<String>? nsn,
     Value<String?>? email,
     Value<String?>? password,
     Value<Uint8List?>? profileImage,
@@ -690,7 +757,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     return PersonTblCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      isoCode: isoCode ?? this.isoCode,
+      countryCode: countryCode ?? this.countryCode,
+      nsn: nsn ?? this.nsn,
       email: email ?? this.email,
       password: password ?? this.password,
       profileImage: profileImage ?? this.profileImage,
@@ -711,10 +780,14 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (phoneNumber.present) {
-      map['phone_number'] = Variable<String>(
-        $PersonTblTable.$converterphoneNumber.toSql(phoneNumber.value),
-      );
+    if (isoCode.present) {
+      map['iso_code'] = Variable<String>(isoCode.value);
+    }
+    if (countryCode.present) {
+      map['country_code'] = Variable<String>(countryCode.value);
+    }
+    if (nsn.present) {
+      map['nsn'] = Variable<String>(nsn.value);
     }
     if (email.present) {
       map['email'] = Variable<String>(email.value);
@@ -748,7 +821,9 @@ class PersonTblCompanion extends UpdateCompanion<Person> {
     return (StringBuffer('PersonTblCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('phoneNumber: $phoneNumber, ')
+          ..write('isoCode: $isoCode, ')
+          ..write('countryCode: $countryCode, ')
+          ..write('nsn: $nsn, ')
           ..write('email: $email, ')
           ..write('password: $password, ')
           ..write('profileImage: $profileImage, ')
@@ -770,7 +845,9 @@ class _$PersonInsertable implements Insertable<Person> {
     return PersonTblCompanion(
       id: Value(_object.id),
       name: Value(_object.name),
-      phoneNumber: Value(_object.phoneNumber),
+      isoCode: Value(_object.isoCode),
+      countryCode: Value(_object.countryCode),
+      nsn: Value(_object.nsn),
       email: Value(_object.email),
       password: Value(_object.password),
       profileImage: Value(_object.profileImage),
@@ -968,7 +1045,9 @@ typedef $$PersonTblTableCreateCompanionBuilder =
     PersonTblCompanion Function({
       Value<int?> id,
       required String name,
-      required PhoneNumber phoneNumber,
+      Value<String?> isoCode,
+      Value<String?> countryCode,
+      required String nsn,
       Value<String?> email,
       Value<String?> password,
       Value<Uint8List?> profileImage,
@@ -982,7 +1061,9 @@ typedef $$PersonTblTableUpdateCompanionBuilder =
     PersonTblCompanion Function({
       Value<int?> id,
       Value<String> name,
-      Value<PhoneNumber> phoneNumber,
+      Value<String?> isoCode,
+      Value<String?> countryCode,
+      Value<String> nsn,
       Value<String?> email,
       Value<String?> password,
       Value<Uint8List?> profileImage,
@@ -1012,10 +1093,19 @@ class $$PersonTblTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<PhoneNumber, PhoneNumber, String>
-  get phoneNumber => $composableBuilder(
-    column: $table.phoneNumber,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
+  ColumnFilters<String> get isoCode => $composableBuilder(
+    column: $table.isoCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get countryCode => $composableBuilder(
+    column: $table.countryCode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nsn => $composableBuilder(
+    column: $table.nsn,
+    builder: (column) => ColumnFilters(column),
   );
 
   ColumnFilters<String> get email => $composableBuilder(
@@ -1078,8 +1168,18 @@ class $$PersonTblTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get phoneNumber => $composableBuilder(
-    column: $table.phoneNumber,
+  ColumnOrderings<String> get isoCode => $composableBuilder(
+    column: $table.isoCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get countryCode => $composableBuilder(
+    column: $table.countryCode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nsn => $composableBuilder(
+    column: $table.nsn,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1139,11 +1239,16 @@ class $$PersonTblTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<PhoneNumber, String> get phoneNumber =>
-      $composableBuilder(
-        column: $table.phoneNumber,
-        builder: (column) => column,
-      );
+  GeneratedColumn<String> get isoCode =>
+      $composableBuilder(column: $table.isoCode, builder: (column) => column);
+
+  GeneratedColumn<String> get countryCode => $composableBuilder(
+    column: $table.countryCode,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get nsn =>
+      $composableBuilder(column: $table.nsn, builder: (column) => column);
 
   GeneratedColumn<String> get email =>
       $composableBuilder(column: $table.email, builder: (column) => column);
@@ -1204,7 +1309,9 @@ class $$PersonTblTableTableManager
               ({
                 Value<int?> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<PhoneNumber> phoneNumber = const Value.absent(),
+                Value<String?> isoCode = const Value.absent(),
+                Value<String?> countryCode = const Value.absent(),
+                Value<String> nsn = const Value.absent(),
                 Value<String?> email = const Value.absent(),
                 Value<String?> password = const Value.absent(),
                 Value<Uint8List?> profileImage = const Value.absent(),
@@ -1216,7 +1323,9 @@ class $$PersonTblTableTableManager
               }) => PersonTblCompanion(
                 id: id,
                 name: name,
-                phoneNumber: phoneNumber,
+                isoCode: isoCode,
+                countryCode: countryCode,
+                nsn: nsn,
                 email: email,
                 password: password,
                 profileImage: profileImage,
@@ -1230,7 +1339,9 @@ class $$PersonTblTableTableManager
               ({
                 Value<int?> id = const Value.absent(),
                 required String name,
-                required PhoneNumber phoneNumber,
+                Value<String?> isoCode = const Value.absent(),
+                Value<String?> countryCode = const Value.absent(),
+                required String nsn,
                 Value<String?> email = const Value.absent(),
                 Value<String?> password = const Value.absent(),
                 Value<Uint8List?> profileImage = const Value.absent(),
@@ -1242,7 +1353,9 @@ class $$PersonTblTableTableManager
               }) => PersonTblCompanion.insert(
                 id: id,
                 name: name,
-                phoneNumber: phoneNumber,
+                isoCode: isoCode,
+                countryCode: countryCode,
+                nsn: nsn,
                 email: email,
                 password: password,
                 profileImage: profileImage,

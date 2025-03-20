@@ -1,12 +1,14 @@
 import 'package:drift/drift.dart';
-import 'package:keeper/core/db/tables/person/phone_number_converter.dart';
 import 'package:keeper/src/person/model/person.dart';
 
 @UseRowClass(Person, generateInsertable: true)
 class PersonTbl extends Table {
   late final id = integer().nullable().autoIncrement()();
   late final name = text()();
-  late final phoneNumber = text().map(PhoneNumberConverter()).unique()();
+  // late final phoneNumber = text().map(phoneNumberConverter).unique()(); 
+  late final isoCode = text().nullable()();
+  late final countryCode = text().nullable()();
+  late final nsn = text().unique()();
   late final email = text().nullable()();
   late final password = text().nullable()();
   late final profileImage = blob().nullable()();
