@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:keeper/core/db/database.dart';
 import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/login/modal/repo/login_local.dart';
+import 'package:keeper/src/login/view/sign_in_screen.dart';
+import 'package:keeper/src/login/view/sign_up_screen.dart';
 import 'package:keeper/src/pages/home_page.dart';
 import 'package:keeper/src/pages/main_page.dart';
 import 'package:keeper/src/pages/on_boarding_screen.dart';
 import 'package:keeper/src/pages/profile_page.dart';
-import 'package:keeper/src/login/view/sign_in_screen.dart';
-import 'package:keeper/src/login/view/sign_up_screen.dart';
 import 'package:keeper/src/pages/transaction_page.dart';
 import 'package:keeper/src/person/model/person.dart';
 import 'package:keeper/src/person/view/new_person_creation.dart';
@@ -30,7 +30,10 @@ class AppRouter {
           state.matchedLocation == AppPage.signInScreen.path ||
           state.matchedLocation == AppPage.signUpScreen.path ||
           state.matchedLocation == AppPage.onboardingScreen.path;
-
+      final isDb = state.matchedLocation == AppPage.db.path;
+      if (isDb) {
+        return AppPage.db.path;
+      }
       if (!isUserLoggedIn) {
         // If trying to access other pages while not logged in, redirect to onboarding
         if (!isAuthPages) {

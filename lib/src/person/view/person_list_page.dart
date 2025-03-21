@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:keeper/core/const/enums.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/person/model/person.dart';
+import 'package:keeper/src/person/view_model/cubit/person/person_cubit.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});
@@ -15,13 +18,32 @@ class _UsersPageState extends State<UsersPage> {
   @override
   void initState() {
     super.initState();
+    context.read<PersonCubit>().getAllPersons();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Persons"), centerTitle: true),
-      body: Center(child: Text("No Person available")),
+      body: BlocBuilder<PersonCubit, PersonCubitState>(
+        builder: (context, state) {
+          if (state.status.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state.personList.isEmpty) {
+            return Center(child: Text("No Person fount"));
+          }
+          return ListView.builder(
+            itemCount: state.personList.length,
+            itemBuilder: (context, index) {
+              final person = state.personList[index];
+              return PersonListTile(person: person);
+            },
+          );
+        },
+      ),
+
+      // Center(child: Text("No Person available")),
 
       // personState.isLoading
       //     ? const Center(child: CircularProgressIndicator())

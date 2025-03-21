@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:keeper/core/const/enums.dart';
-import 'package:keeper/src/person/view_model/cubit/new_person_cubit.dart';
+import 'package:keeper/src/person/view_model/cubit/new_person/new_person_cubit.dart';
+import 'package:keeper/src/person/view_model/cubit/person/person_cubit.dart';
 import 'package:keeper/src/shared/widgets/app_text_field.dart';
 import 'package:keeper/src/shared/widgets/phone_number_field.dart';
 import 'package:keeper/src/shared/widgets/profile_image.dart';
@@ -16,6 +17,7 @@ class NewPersonPage extends StatelessWidget {
     return BlocListener<NewPersonCubit, NewPersonCubitState>(
       listener: (context, state) {
         if (state.status.isSuccess) {
+          context.read<PersonCubit>().getAllPersons();
           context.pop();
         }
         if (state.status.isFailure) {
