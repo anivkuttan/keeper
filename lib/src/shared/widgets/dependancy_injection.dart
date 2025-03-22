@@ -4,6 +4,7 @@ import 'package:keeper/core/di/di.dart';
 import 'package:keeper/src/login/view_model/cubit/login_cubit.dart';
 import 'package:keeper/src/person/view_model/cubit/new_person/new_person_cubit.dart';
 import 'package:keeper/src/person/view_model/cubit/person/person_cubit.dart';
+import 'package:keeper/src/transaction/view_model/cubit/transaction_cubit.dart';
 
 class DependancyInjection extends StatelessWidget {
   const DependancyInjection({super.key, required this.child});
@@ -14,6 +15,9 @@ class DependancyInjection extends StatelessWidget {
       providers: [
         BlocProvider<LoginCubit>(create: (context) => getIt<LoginCubit>()),
         BlocProvider<PersonCubit>(create: (context) => getIt<PersonCubit>()),
+        BlocProvider<TransactionCubit>(
+          create: (context) => getIt<TransactionCubit>(),
+        ),
         BlocProvider<NewPersonCubit>(
           create: (context) => getIt<NewPersonCubit>(),
         ),

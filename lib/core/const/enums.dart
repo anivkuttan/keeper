@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 @JsonEnum()
-enum StateStatus { initial, loading, success, failure }
+enum StateStatus { initial, loading, success, failure, update }
 
 extension StateStatusX on StateStatus {
   bool get isInitial => this == StateStatus.initial;

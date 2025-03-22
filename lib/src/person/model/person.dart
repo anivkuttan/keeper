@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:equatable/equatable.dart';
 import 'package:keeper/core/db/database.dart';
+import 'package:keeper/src/shared/model/dropdown_type.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 
 class Person extends Equatable {
@@ -75,7 +76,7 @@ class Person extends Equatable {
       amount: Value(amount),
       password: Value(password),
       email: Value(email),
-      profileImage: Value(profileImage), 
+      profileImage: Value(profileImage),
       updatedAt: Value(updatedAt),
       agreeToTerms: Value(agreeToTerms),
       id: Value(id),
@@ -98,7 +99,6 @@ class Person extends Equatable {
     amount,
   ];
 }
-
 
 /* import 'dart:typed_data';
 
@@ -187,19 +187,55 @@ class Person {
   }
 }
 
-class Transaction {
-  final int? id;
-  final double amount; // Positive for borrowed, negative for repaid
-  final DateTime date;
-  final String method; // "Cash", "Card", "Bank Transfer"
-  final String? note;
-
-  Transaction({
-    this.id,
-    required this.amount,
-    required this.date,
-    required this.method,
-    this.note,
-  });
-}
  */
+
+class Transaction extends Equatable {
+  final int? id;
+  final double amount;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DropDownType? method;
+  final String note;
+  final List<Uint8List>? attachmentList;
+
+  const Transaction({
+    this.id,
+    this.amount = 0.0,
+    this.createdAt,
+    this.updatedAt,
+    this.method,
+    this.attachmentList,
+    this.note = '',
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+    amount,
+    createdAt,
+    updatedAt,
+    method,
+    note,
+    attachmentList,
+  ];
+
+  Transaction copyWith({
+    int? id,
+    double? amount,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DropDownType? method,
+    String? note,
+    List<Uint8List>? attachmentList,
+  }) {
+    return Transaction(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      method: method ?? this.method,
+      note: note ?? this.note,
+      attachmentList: attachmentList ?? this.attachmentList,
+    );
+  }
+}
