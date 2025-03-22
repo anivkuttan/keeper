@@ -12,6 +12,7 @@ class AppTextForm extends StatefulWidget {
     this.inputFormatters,
     this.suffixIcon,
     this.onTap,
+    this.initialValue,
     this.isPassword = false,
     this.readOnly = false,
     this.maxLines = 1,
@@ -28,6 +29,7 @@ class AppTextForm extends StatefulWidget {
   final bool readOnly;
   final VoidCallback? onTap;
   final int maxLines;
+  final String? initialValue;
 
   @override
   State<AppTextForm> createState() => _AppTextFormState();
@@ -51,6 +53,7 @@ class _AppTextFormState extends State<AppTextForm> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialValue,
       controller: widget.controller,
       obscureText: passwordVisibility,
       onChanged: widget.onChanged,

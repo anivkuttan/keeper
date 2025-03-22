@@ -5,6 +5,7 @@ import 'package:keeper/core/const/enums.dart';
 import 'package:keeper/core/router/app_router.dart';
 import 'package:keeper/core/theme/theme.dart';
 import 'package:keeper/src/person/model/person.dart';
+import 'package:keeper/src/person/view_model/cubit/new_person/new_person_cubit.dart';
 import 'package:keeper/src/person/view_model/cubit/person/person_cubit.dart';
 
 class UsersPage extends StatefulWidget {
@@ -96,16 +97,20 @@ class PersonListTile extends StatelessWidget {
       onTap: () {
         context.pushNamed(AppPage.personDetails.name, extra: person);
       },
-      child: Container(
-        color: AppColor.secondry,
-        height: 70,
-        child: Row(
+      child: ListTile(
+        tileColor: AppColor.secondry,
+        leading: leadingWidget(),
+        title: Text(person.name),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 2, child: Container(child: leadingWidget())),
-            Expanded(flex: 8, child: Container(child: nameWidget())),
-            Expanded(flex: 1, child: Container(child: optionWidget())),
+            Text(person.flullNumber ?? ""),
+            Text(person.about ?? ''),
+            Text(person.amount.toStringAsFixed(3)),
+            Text(person.updatedAt?.toIso8601String() ?? '-'),
           ],
         ),
+        trailing: optionWidget(context),
       ),
     );
   }
@@ -113,6 +118,7 @@ class PersonListTile extends StatelessWidget {
   Widget leadingWidget() {
     return CircleAvatar(
       radius: 40,
+      backgroundColor: Colors.purple,
       backgroundImage:
           person.profileImage != null
               ? MemoryImage(person.profileImage!)
@@ -120,38 +126,22 @@ class PersonListTile extends StatelessWidget {
     );
   }
 
-  Widget nameWidget() {
+  Widget optionWidget(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
-          flex: 1,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(Icons.person, size: 20),
-              Icon(Icons.phone, size: 20),
-              Icon(Icons.timer_sharp, size: 20),
-            ],
-          ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.delete, color: Colors.red),
         ),
-        Expanded(
-          flex: 8,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(person.name),
-              Text(person.phoneNumber.international),
-              Text(person.updatedAt?.toIso8601String() ?? ''),
-            ],
-          ),
+        IconButton(
+          onPressed: () {
+            context.read<NewPersonCubit>().loadOnePerson(person);
+            context.pushNamed(AppPage.newPersonScreen.name);
+          },
+          icon: Icon(Icons.edit),
         ),
       ],
     );
-  }
-
-  Widget optionWidget() {
-    return IconButton(onPressed: () {}, icon: Icon(Icons.delete));
   }
 }

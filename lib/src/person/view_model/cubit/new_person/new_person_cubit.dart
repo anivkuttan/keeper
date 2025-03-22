@@ -49,45 +49,105 @@ class NewPersonCubit extends Cubit<NewPersonCubitState> {
     emit(state.copyWith(person: updatedPerson));
   }
 
-  Future<void> createOnePerson() async {
+  Future<void> createOrUpdatePerson() async {
     try {
       final db = getIt<AppDatabase>();
-      final person = state.person!.toCompanian;
-      await db
-          .into(db.personTbl)
-          .insert(
-            person.copyWith(
-              createdAt: Value(DateTime.now()),
-              updatedAt: Value(DateTime.now()),
-            ),
-          );
-      emit(
-        state.copyWith(
-          status: StateStatus.success,
-          info: Info(message: "User created successfully"),
-        ),
+      final person = state.person!.toCompanian.copyWith(
+        updatedAt: Value(DateTime.now()),
       );
+
+      if (state.person!.id != null) {
+        await db.managers.personTbl
+            .filter((f) => f.id.equals(state.person!.id!))
+            .update((v) => person);
+        emit(
+          state.copyWith(
+            status: StateStatus.success,
+            info: Info(message: "User updated successfully"),
+          ),
+        );
+      } else {
+        // Insert new person
+        await db
+            .into(db.personTbl)
+            .insert(person.copyWith(updatedAt: Value(DateTime.now())));
+        emit(
+          state.copyWith(
+            status: StateStatus.success,
+            info: Info(message: "User created successfully"),
+          ),
+        );
+      }
     } catch (e) {
       emit(
         state.copyWith(
           status: StateStatus.failure,
-          info: Info(message: "User created failed $e"),
+          info: Info(message: "User operation failed: $e"),
         ),
       );
     }
   }
 
-  Future<Person?> getPersonById(int id) async {
-    try {
-      final db = getIt<AppDatabase>();
+  // Future<void> createOnePerson() async {
+  //   try {
+  //     final db = getIt<AppDatabase>();
+  //     final person = state.person!.toCompanian;
+  //     await db
+  //         .into(db.personTbl)
+  //         .insert(
+  //           person.copyWith(
+  //             createdAt: Value(DateTime.now()),
+  //             updatedAt: Value(DateTime.now()),
+  //           ),
+  //         );
+  //     emit(
+  //       state.copyWith(
+  //         status: StateStatus.success,
+  //         info: Info(message: "User created successfully"),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     emit(
+  //       state.copyWith(
+  //         status: StateStatus.failure,
+  //         info: Info(message: "User created failed $e"),
+  //       ),
+  //     );
+  //   }
+  // }
 
-      final person =
-          await (db.select(db.personTbl)
-            ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  // Future<Person?> getPersonById(int id) async {
+  //   try {
+  //     final db = getIt<AppDatabase>();
 
-      return person;
-    } catch (e) {
-      return null;
-    }
+  //     final person =
+  //         await (db.select(db.personTbl)
+  //           ..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+
+  //     return person;
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
+
+  void loadOnePerson(Person? person) {
+    if (person == null) return;
+    emit(
+      NewPersonCubitState(
+        status: StateStatus.initial,
+        person: person,
+        isEdit: true,
+      ),
+    );
+  }
+
+  void resetStatus() {
+    emit(
+      state.copyWith(
+        status: StateStatus.initial,
+        person: Person(name: ''),
+        isEdit: false,
+      ),
+    );
   }
 }

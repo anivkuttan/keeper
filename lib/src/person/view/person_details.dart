@@ -67,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Kelly Hirschfield',
+                      person.name,
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
-          TabBarSection(),
+          TabBarSection(person: person),
         ],
       ),
     );
@@ -91,8 +91,8 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class TabBarSection extends StatelessWidget {
-  const TabBarSection({super.key});
-
+  const TabBarSection({super.key, required this.person});
+  final Person person;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -109,7 +109,7 @@ class TabBarSection extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  AboutTab(),
+                  AboutTab(person: person),
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +117,9 @@ class TabBarSection extends StatelessWidget {
                         Text('Interactions Content'),
                         ElevatedButton(
                           onPressed: () {
-                            context.goNamed(AppPage.transactionViewScreen.name);
+                            context.pushNamed(
+                              AppPage.transactionViewScreen.name,
+                            );
                           },
                           child: Text("GOTO TRANSACTION PAGE"),
                         ),
@@ -135,8 +137,8 @@ class TabBarSection extends StatelessWidget {
 }
 
 class AboutTab extends StatelessWidget {
-  const AboutTab({super.key});
-
+  const AboutTab({super.key, required this.person});
+  final Person person;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -149,10 +151,7 @@ class AboutTab extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8),
-          Text(
-            'Family woman, patriot, Hirschfield. Founder @GlobalExpansionExecs. Formerly: EIC, The New York Observer; founding editor, Gawker. Brooklynite via Alabama.',
-            style: TextStyle(fontSize: 14),
-          ),
+          Text(person.about ?? '', style: TextStyle(fontSize: 14)),
           SizedBox(height: 16),
           Row(
             children: [

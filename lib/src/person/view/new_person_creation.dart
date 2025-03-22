@@ -18,6 +18,7 @@ class NewPersonPage extends StatelessWidget {
       listener: (context, state) {
         if (state.status.isSuccess) {
           context.read<PersonCubit>().getAllPersons();
+          context.read<NewPersonCubit>().resetStatus();
           context.pop();
         }
         if (state.status.isFailure) {
@@ -47,19 +48,28 @@ class NewPersonPage extends StatelessWidget {
                           removeImage: value == null,
                         ),
                   ),
-                  AppTextForm(
-                    hintText: "Name *",
-                    suffixIcon: Icon(Icons.person),
-                    validator: (p0) {
-                      if (p0 == null || p0.isEmpty) {
-                        return 'Please enter Name';
-                      }
-                      return null;
+                  BlocSelector<NewPersonCubit, NewPersonCubitState, String?>(
+                    selector: (state) {
+                      return state.person?.name;
                     },
-                    onChanged:
-                        (value) => context.read<NewPersonCubit>().updatePerson(
-                          name: value,
-                        ),
+                    builder: (context, name) {
+                      return AppTextForm(
+                        hintText: "Name *",
+                        initialValue: name,
+                        suffixIcon: Icon(Icons.person),
+                        validator: (p0) {
+                          if (p0 == null || p0.isEmpty) {
+                            return 'Please enter Name';
+                          }
+                          return null;
+                        },
+
+                        onChanged:
+                            (value) => context
+                                .read<NewPersonCubit>()
+                                .updatePerson(name: value),
+                      );
+                    },
                   ),
                   PhoneField(
                     hintText: 'Phone Number *',
@@ -82,25 +92,57 @@ class NewPersonPage extends StatelessWidget {
                           phoneNumber: value,
                         ),
                   ),
-                  AppTextForm(
-                    hintText: 'Email (Optional)',
-                    suffixIcon: Icon(Icons.email),
-                    onChanged:
-                        (value) => context.read<NewPersonCubit>().updatePerson(
-                          email: value,
-                        ),
+                  BlocSelector<NewPersonCubit, NewPersonCubitState, String?>(
+                    selector: (state) {
+                      return state.person?.email;
+                    },
+                    builder: (context, email) {
+                      return AppTextForm(
+                        hintText: 'Email (Optional)',
+                        suffixIcon: Icon(Icons.email),
+                        initialValue: email,
+                        onChanged:
+                            (value) => context
+                                .read<NewPersonCubit>()
+                                .updatePerson(email: value),
+                      );
+                    },
                   ),
-                  AppTextForm(
-                    hintText: 'Initial Amount',
-                    keyboardType: TextInputType.number,
-                    suffixIcon: Icon(Icons.money),
+                  BlocSelector<NewPersonCubit, NewPersonCubitState, double?>(
+                    selector: (state) {
+                      return state.person?.amount;
+                    },
+                    builder: (context, amount) {
+                      return AppTextForm(
+                        hintText: 'Initial Amount',
+                        initialValue: amount.toString(),
+                        keyboardType: TextInputType.number,
+                        suffixIcon: Icon(Icons.money),
 
-                    onChanged:
-                        (value) => context.read<NewPersonCubit>().updatePerson(
-                          amount: double.tryParse(value) ?? 0.0,
-                        ),
+                        onChanged:
+                            (value) =>
+                                context.read<NewPersonCubit>().updatePerson(
+                                  amount: double.tryParse(value) ?? 0.0,
+                                ),
+                      );
+                    },
                   ),
-                  AppTextForm(hintText: "About", maxLines: 3),
+                  BlocSelector<NewPersonCubit, NewPersonCubitState, String?>(
+                    selector: (state) {
+                      return state.person?.about;
+                    },
+                    builder: (context, about) {
+                      return AppTextForm(
+                        initialValue: about,
+                        hintText: "About",
+                        maxLines: 3,
+                        onChanged:
+                            (value) => context
+                                .read<NewPersonCubit>()
+                                .updatePerson(about: value),
+                      );
+                    },
+                  ),
                   newCreationButton(context),
                 ],
               ),
@@ -120,7 +162,9 @@ class NewPersonPage extends StatelessWidget {
                   ? null
                   : () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      await context.read<NewPersonCubit>().createOnePerson();
+                      await context
+                          .read<NewPersonCubit>()
+                          .createOrUpdatePerson();
                     }
                   },
           child:

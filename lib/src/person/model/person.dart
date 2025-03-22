@@ -35,7 +35,7 @@ class Person extends Equatable {
     this.updatedAt,
     this.amount = 0.0,
   });
-
+  String? get flullNumber => "+$countryCode$nsn";
   Person copyWith({
     int? id,
     String? name,
@@ -75,11 +75,11 @@ class Person extends Equatable {
       amount: Value(amount),
       password: Value(password),
       email: Value(email),
-      profileImage: Value(profileImage),
-      createdAt: Value(createdAt),
+      profileImage: Value(profileImage), 
       updatedAt: Value(updatedAt),
       agreeToTerms: Value(agreeToTerms),
       id: Value(id),
+      about: Value(about),
     );
   }
 

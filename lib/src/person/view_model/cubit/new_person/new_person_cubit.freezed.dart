@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NewPersonCubitState {
 
- StateStatus get status; Person? get person; Info? get info;
+ StateStatus get status; Person? get person; Info? get info; bool get isEdit;
 /// Create a copy of NewPersonCubitState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $NewPersonCubitStateCopyWith<NewPersonCubitState> get copyWith => _$NewPersonCub
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NewPersonCubitState&&(identical(other.status, status) || other.status == status)&&(identical(other.person, person) || other.person == person)&&(identical(other.info, info) || other.info == info));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NewPersonCubitState&&(identical(other.status, status) || other.status == status)&&(identical(other.person, person) || other.person == person)&&(identical(other.info, info) || other.info == info)&&(identical(other.isEdit, isEdit) || other.isEdit == isEdit));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,person,info);
+int get hashCode => Object.hash(runtimeType,status,person,info,isEdit);
 
 @override
 String toString() {
-  return 'NewPersonCubitState(status: $status, person: $person, info: $info)';
+  return 'NewPersonCubitState(status: $status, person: $person, info: $info, isEdit: $isEdit)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $NewPersonCubitStateCopyWith<$Res>  {
   factory $NewPersonCubitStateCopyWith(NewPersonCubitState value, $Res Function(NewPersonCubitState) _then) = _$NewPersonCubitStateCopyWithImpl;
 @useResult
 $Res call({
- StateStatus status, Person? person, Info? info
+ StateStatus status, Person? person, Info? info, bool isEdit
 });
 
 
@@ -63,12 +63,13 @@ class _$NewPersonCubitStateCopyWithImpl<$Res>
 
 /// Create a copy of NewPersonCubitState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? person = freezed,Object? info = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? person = freezed,Object? info = freezed,Object? isEdit = null,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StateStatus,person: freezed == person ? _self.person : person // ignore: cast_nullable_to_non_nullable
 as Person?,info: freezed == info ? _self.info : info // ignore: cast_nullable_to_non_nullable
-as Info?,
+as Info?,isEdit: null == isEdit ? _self.isEdit : isEdit // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -79,12 +80,13 @@ as Info?,
 
 
 class _NewPersonCubitState implements NewPersonCubitState {
-  const _NewPersonCubitState({required this.status, this.person, this.info});
+  const _NewPersonCubitState({required this.status, this.person, this.info, this.isEdit = false});
   
 
 @override final  StateStatus status;
 @override final  Person? person;
 @override final  Info? info;
+@override@JsonKey() final  bool isEdit;
 
 /// Create a copy of NewPersonCubitState
 /// with the given fields replaced by the non-null parameter values.
@@ -96,16 +98,16 @@ _$NewPersonCubitStateCopyWith<_NewPersonCubitState> get copyWith => __$NewPerson
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NewPersonCubitState&&(identical(other.status, status) || other.status == status)&&(identical(other.person, person) || other.person == person)&&(identical(other.info, info) || other.info == info));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NewPersonCubitState&&(identical(other.status, status) || other.status == status)&&(identical(other.person, person) || other.person == person)&&(identical(other.info, info) || other.info == info)&&(identical(other.isEdit, isEdit) || other.isEdit == isEdit));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,status,person,info);
+int get hashCode => Object.hash(runtimeType,status,person,info,isEdit);
 
 @override
 String toString() {
-  return 'NewPersonCubitState(status: $status, person: $person, info: $info)';
+  return 'NewPersonCubitState(status: $status, person: $person, info: $info, isEdit: $isEdit)';
 }
 
 
@@ -116,7 +118,7 @@ abstract mixin class _$NewPersonCubitStateCopyWith<$Res> implements $NewPersonCu
   factory _$NewPersonCubitStateCopyWith(_NewPersonCubitState value, $Res Function(_NewPersonCubitState) _then) = __$NewPersonCubitStateCopyWithImpl;
 @override @useResult
 $Res call({
- StateStatus status, Person? person, Info? info
+ StateStatus status, Person? person, Info? info, bool isEdit
 });
 
 
@@ -133,12 +135,13 @@ class __$NewPersonCubitStateCopyWithImpl<$Res>
 
 /// Create a copy of NewPersonCubitState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? person = freezed,Object? info = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? person = freezed,Object? info = freezed,Object? isEdit = null,}) {
   return _then(_NewPersonCubitState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as StateStatus,person: freezed == person ? _self.person : person // ignore: cast_nullable_to_non_nullable
 as Person?,info: freezed == info ? _self.info : info // ignore: cast_nullable_to_non_nullable
-as Info?,
+as Info?,isEdit: null == isEdit ? _self.isEdit : isEdit // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
